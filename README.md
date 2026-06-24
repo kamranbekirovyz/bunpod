@@ -31,4 +31,4 @@ The whole journey is shared on X — design calls, code, the messy middle.
 
 ---
 
-<p align="center"><i>I design &amp; build products like this — <a href="https://kamranbekirov.com">kamranbekirov.com</a></i></p>
+<p align="center"><i>I design &amp; build products like this — <a href="https://kamranbekirov.com" target="_blank" rel="noopener">kamranbekirov.com</a></i></p>
