@@ -6,29 +6,21 @@
 <h1 align="center">BunPod</h1>
 
 <p align="center">
-  An open-source podcast player — built in the open.
+  An open-source podcast player — Flutter, M3 Expressive and Serverpod!
 </p>
 
 ---
 
-## What is this?
-
-A podcast player, crafted with care:
-
-- 🎙️ **Flutter** — one codebase, every screen.
-- 🧩 **Serverpod** — the Dart backend powering it all.
-- 🎨 **Material 3 Expressive** — bold shapes, living color, motion with personality.
-
 ## Status
 
-🚧 **Coming soon.** Being built piece by piece, out loud.
+🚧 **Coming soon.** 
 
 ## Follow along
 
-The whole journey is shared on X — design calls, code, the messy middle.
+The whole journey is shared on X — follow along.
 
 👉 **[@kamranbekirovyz](https://x.com/kamranbekirovyz)**
 
 ---
 
-<p align="center"><i>I design &amp; build products like this — <a href="https://kamranbekirov.com" target="_blank" rel="noopener">kamranbekirov.com</a></i></p>
+<p align="center"><i>I build Flutter apps — <a href="https://kamranbekirov.com" target="_blank" rel="noopener">kamranbekirov.com</a></i></p>
