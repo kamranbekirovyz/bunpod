@@ -13,13 +13,7 @@
 
 ## Status
 
-🚧 **Coming soon.** 
-
-## Follow along
-
-The whole journey is shared on X — follow along.
-
-👉 **[@kamranbekirovyz](https://x.com/kamranbekirovyz)**
+🚧 BunPod is a work in progress. If you want to follow the progress, follow me on X at **[@kamranbekirovyz](https://x.com/kamranbekirovyz)**. If you notice any issues, please [open an issue](https://github.com/kamranbekirovyz/bunpod/issues).
 
 ---
 
