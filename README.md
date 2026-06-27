@@ -1,4 +1,3 @@
-<!-- Drop your cover at .github/assets/cover.png -->
 <p align="center">
   <img src=".github/assets/cover.png" alt="BunPod" width="100%" />
 </p>
