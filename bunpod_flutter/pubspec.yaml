@@ -13,7 +13,7 @@ resolution: workspace
 
 dependencies:
   google_fonts: ^8.1.0
-  flutter_svg: ^2.0.10+1
+  flutter_svg: ^2.3.0
   motor: ^1.1.0
   flutter:
     sdk: flutter
