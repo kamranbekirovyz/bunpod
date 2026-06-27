@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: bunpod
+      POSTGRES_PASSWORD: "PbKVktzBoePLzdWVTGHYopWcPZBCxcdD"
+    volumes:
+      - bunpod_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "ya6St9zEu8eynQHnF4YcTeStS4ftYnCF"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: bunpod_test
+      POSTGRES_PASSWORD: "rfUXJAEkgdxxEnh8kEpnMJI6skxb20lD"
+    volumes:
+      - bunpod_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "RDJoQmzKFm9bjItPnPGbAe3cDASdsuXO"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  bunpod_data:
+  bunpod_test_data:

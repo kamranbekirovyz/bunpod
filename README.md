@@ -13,7 +13,7 @@
 
 ## Status
 
-🚧 BunPod is a work in progress. If you want to follow the progress, follow me on X at **[@kamranbekirovyz](https://x.com/kamranbekirovyz)**. If you notice any issues, please [open an issue](https://github.com/kamranbekirovyz/bunpod/issues).
+🚧 BunPod is a work in progress. If you want to follow the progress, follow me on X at <a href="https://x.com/kamranbekirovyz" target="_blank" rel="noopener"><strong>@kamranbekirovyz</strong></a>. If you notice any issues, please <a href="https://github.com/kamranbekirovyz/bunpod/issues" target="_blank" rel="noopener">open an issue</a>.
 
 ---
 

@@ -1,0 +1,51 @@
+name: bunpod_flutter
+description: Open-source podcast player app with Flutter, M3E and Serverpod.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '^3.10.3'
+  flutter: '^3.38.4'
+
+resolution: workspace
+
+dependencies:
+  google_fonts: ^8.1.0
+  flutter_svg: ^2.0.10+1
+  motor: ^1.1.0
+  flutter:
+    sdk: flutter
+  bunpod_client:
+    path: ../bunpod_client
+  material_shapes:
+    path: ../packages/material_shapes
+  material_wavy_progress_indicator:
+    path: ../packages/material_wavy_progress_indicator
+  serverpod_flutter: 3.5.0-beta.8
+  serverpod_auth_idp_flutter: 3.5.0-beta.8
+  gap: ^3.0.1
+
+dependency_overrides:
+  flutter_secure_storage: ^10.0.0
+
+dev_dependencies:
+  flutter_lints: '>=3.0.0 <7.0.0'
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/app-icon.png
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/config.json
+    - assets/vectors/
+

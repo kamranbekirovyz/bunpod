@@ -1,0 +1,16 @@
+name: material_shapes
+description: "Material Shapes — vendored from github.com/ksokolovskyi/material_shapes"
+version: 1.0.0
+publish_to: "none"
+
+resolution: workspace
+
+environment:
+  sdk: ^3.10.3
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.15.0
+  vector_math: ^2.1.4

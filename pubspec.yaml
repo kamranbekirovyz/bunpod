@@ -1,0 +1,13 @@
+name: _
+publish_to: none
+
+environment:
+  sdk: '^3.10.3'
+
+workspace:
+  - bunpod_client
+  - bunpod_server
+  - bunpod_flutter
+  - packages/material_shapes
+  - packages/material_wavy_progress_indicator
+

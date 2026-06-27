@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Attaches to the Flutter app `serverpod start` spawns. Don't
+      // launch a second instance here - it would race for the port.
+      "name": "bunpod_flutter",
+      "type": "dart",
+      "request": "attach",
+      "vmServiceInfoFile": "${workspaceFolder}/bunpod_server/.dart_tool/serverpod/flutter-vm-service-info.json",
+      "preLaunchTask": "serverpod_start",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "bunpod_server",
+      "type": "dart",
+      "request": "attach",
+      "vmServiceInfoFile": "${workspaceFolder}/bunpod_server/.dart_tool/serverpod/vm-service-info.json",
+      "preLaunchTask": "serverpod_start",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "bunpod (full stack)",
+      "configurations": ["bunpod_server", "bunpod_flutter"],
+      // Stopping one session stops both; the orphan blocks re-attach.
+      "stopAll": true,
+      "presentation": {
+        "order": 1
+      }
+    }
+  ]
+}
