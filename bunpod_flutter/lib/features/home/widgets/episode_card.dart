@@ -1,8 +1,11 @@
 import 'package:bunpod_flutter/bunpod_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';
 
-class EpisodeCard extends StatelessWidget {
+class EpisodeCard extends StatefulWidget {
   const EpisodeCard({
     super.key,
     required this.episode,
@@ -15,7 +18,45 @@ class EpisodeCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<EpisodeCard> createState() => _EpisodeCardState();
+}
+
+class _EpisodeCardState extends State<EpisodeCard>
+    with SingleTickerProviderStateMixin {
+  static const Duration _marqueeCycle = Duration(seconds: 20);
+
+  late final AnimationController _marquee = AnimationController(
+    vsync: this,
+    duration: _marqueeCycle,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.playing) _marquee.repeat();
+  }
+
+  @override
+  void didUpdateWidget(EpisodeCard old) {
+    super.didUpdateWidget(old);
+    if (widget.playing && !_marquee.isAnimating) {
+      _marquee.repeat();
+    } else if (!widget.playing && _marquee.isAnimating) {
+      _marquee.stop();
+      _marquee.value = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _marquee.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final Episode episode = widget.episode;
+    final bool playing = widget.playing;
     final ColorScheme cs = episode.scheme(context);
     final double progress = episode.progress;
 
@@ -36,40 +77,73 @@ class EpisodeCard extends StatelessWidget {
           child: child,
         );
       },
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ClipRect(
-              clipper: _FillClipper(start: _kFillStart, fraction: progress),
-              child: ColoredBox(color: fill),
-            ),
-          ),
-          _content(context, cs, cs.onSurface),
-          Positioned.fill(
-            child: ClipRect(
-              clipper: _FillClipper(start: _kFillStart, fraction: progress),
-              child: _content(context, cs, onFill),
-            ),
-          ),
-          Positioned.fill(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(onTap: onTap),
-            ),
-          ),
-        ],
+      child: AnimatedBuilder(
+        animation: _marquee,
+        builder: (context, _) {
+          final double marqueeTime =
+              _marquee.value * _marqueeCycle.inMilliseconds / 1000.0;
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: ClipRect(
+                  clipper: _FillClipper(start: _kFillStart, fraction: progress),
+                  child: ColoredBox(color: fill),
+                ),
+              ),
+              _content(context, cs, cs.onSurface, marqueeTime),
+              Positioned.fill(
+                child: ClipRect(
+                  clipper: _FillClipper(start: _kFillStart, fraction: progress),
+                  child: _content(context, cs, onFill, marqueeTime),
+                ),
+              ),
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(onTap: widget.onTap),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _trailing(BuildContext context, Color fg) {
+  Widget _trailing(BuildContext context, ColorScheme cs, Color fg) {
+    final Episode episode = widget.episode;
     if (episode.progress >= 1.0) {
-      return Icon(Icons.check_circle_rounded, size: 20, color: fg);
+      return Container(
+        width: 30,
+        height: 30,
+        decoration: ShapeDecoration(
+          color: fg,
+          shape: MaterialShapeBorder(shape: MaterialShapes.cookie7Sided),
+        ),
+        child: Icon(Icons.check_rounded, size: 18, color: cs.primary),
+      );
     }
-    return const SizedBox.shrink();
+    final bool started = episode.listened > Duration.zero;
+    final Duration remaining = episode.total - episode.listened;
+    return Text(
+      started ? '-${_formatRemaining(remaining)}' : _formatRemaining(remaining),
+      style: GoogleFonts.unbounded(
+        color: fg,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.5,
+        fontFeatures: const [FontFeature.tabularFigures()],
+      ),
+    );
   }
 
-  Widget _content(BuildContext context, ColorScheme cs, Color fg) {
+  Widget _content(
+    BuildContext context,
+    ColorScheme cs,
+    Color fg,
+    double marqueeTime,
+  ) {
+    final Episode episode = widget.episode;
     final TextTheme tt = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -77,7 +151,7 @@ class EpisodeCard extends StatelessWidget {
         children: [
           SingleMotionBuilder(
             motion: const MaterialSpringMotion.standardSpatialFast(),
-            value: playing ? 1.0 : 0.0,
+            value: widget.playing ? 1.0 : 0.0,
             builder: (context, t, child) => ClipPath(
               clipper: ShapeBorderClipper(shape: ShapeValues.coverBorder(t)),
               child: child,
@@ -103,24 +177,149 @@ class EpisodeCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  episode.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                _Title(
+                  text: episode.title,
                   style: tt.titleMedium?.copyWith(
                     color: fg,
                     fontWeight: FontWeight.w700,
                   ),
+                  playing: widget.playing,
+                  marqueeTime: marqueeTime,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          _trailing(context, fg),
+          const SizedBox(width: 16),
+          _trailing(context, cs, fg),
         ],
       ),
     );
   }
+}
+
+String _formatRemaining(Duration d) {
+  final int h = d.inHours;
+  final int m = d.inMinutes.remainder(60);
+  if (h > 0) return m > 0 ? '${h}h ${m}m' : '${h}h';
+  if (m > 0) return '${m}m';
+
+  return '${d.inSeconds}s';
+}
+
+class _Title extends StatelessWidget {
+  const _Title({
+    required this.text,
+    required this.style,
+    required this.playing,
+    required this.marqueeTime,
+  });
+
+  final String text;
+  final TextStyle? style;
+  final bool playing;
+  final double marqueeTime;
+
+  static const double _speed = 45;
+  static const double _minTravel = 1.4;
+  static const double _maxTravel = 6.0;
+  static const double _holdStart = 2.0;
+  static const double _holdEnd = 1.5;
+  static const double _fadePx = 22;
+
+  static final SpringSimulation _spring = SpringSimulation(
+    const MaterialSpringMotion.standardSpatialSlow().description,
+    0,
+    1,
+    0,
+  );
+  static final double _settle = _settleTime();
+
+  static double _settleTime() {
+    double t = 0;
+    while (!_spring.isDone(t) && t < 4) {
+      t += 1 / 240;
+    }
+    return t;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double maxWidth = constraints.maxWidth;
+        final TextPainter tp = TextPainter(
+          text: TextSpan(text: text, style: style),
+          maxLines: 1,
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final double overflow = tp.width - maxWidth;
+
+        if (overflow <= 0.5) {
+          return Text(
+            text,
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.clip,
+            style: style,
+          );
+        }
+
+        final double offset = playing ? _offset(overflow) : 0;
+        final double frac = (_fadePx / maxWidth).clamp(0.0, 0.45);
+        final double leftFade = (offset / _fadePx).clamp(0.0, 1.0);
+        final double rightFade = ((overflow - offset) / _fadePx).clamp(0.0, 1.0);
+
+        final Widget scrolling = SizedBox(
+          width: maxWidth,
+          height: tp.height,
+          child: ClipRect(
+            child: OverflowBox(
+              maxWidth: double.infinity,
+              alignment: Alignment.centerLeft,
+              child: Transform.translate(
+                offset: Offset(-offset, 0),
+                child: Text(text, maxLines: 1, softWrap: false, style: style),
+              ),
+            ),
+          ),
+        );
+
+        return ShaderMask(
+          blendMode: BlendMode.dstIn,
+          shaderCallback: (Rect bounds) => LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color.fromRGBO(0, 0, 0, 1 - leftFade),
+              const Color(0xFF000000),
+              const Color(0xFF000000),
+              Color.fromRGBO(0, 0, 0, 1 - rightFade),
+            ],
+            stops: [0.0, frac, 1 - frac, 1.0],
+          ).createShader(bounds),
+          child: scrolling,
+        );
+      },
+    );
+  }
+
+  double _offset(double overflow) {
+    final double travel = (overflow / _speed).clamp(_minTravel, _maxTravel);
+    final double t = marqueeTime;
+    if (t < _holdStart) return 0;
+    if (t < _holdStart + travel) {
+      return _curve((t - _holdStart) / travel) * overflow;
+    }
+    if (t < _holdStart + travel + _holdEnd) return overflow;
+    if (t < _holdStart + 2 * travel + _holdEnd) {
+      final double p = (t - _holdStart - travel - _holdEnd) / travel;
+      return (1 - _curve(p)) * overflow;
+    }
+    return 0;
+  }
+
+  double _curve(double p) => _spring.x(p * _settle).clamp(0.0, 1.0);
 }
 
 const double _kFillStart = 0;
