@@ -24,6 +24,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     orElse: () => mockEpisodes.first,
   );
 
+  void _openPlayer() {
+    Navigator.of(context).push(PlayerPage.route(_playing));
+  }
+
   static List<String?> _buildTabValues() {
     final Set<String> seen = <String>{};
     final List<String?> values = <String?>[null];
@@ -91,15 +95,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   24.gap,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: PlayerCard(
-                      scheme: _playing.scheme(context),
-                      imageUrl: _playing.image,
-                      channel: _playing.channel,
-                      title: _playing.title,
-                      progress: _playing.progress,
-                      timeLeft: _playing.total - _playing.listened,
-                      coverShape: ShapeValues.coverFocused,
-                      onPlayPause: () {},
+                    child: GestureDetector(
+                      onTap: _openPlayer,
+                      child: PlayerCard(
+                        scheme: _playing.scheme(context),
+                        imageUrl: _playing.image,
+                        channel: _playing.channel,
+                        title: _playing.title,
+                        progress: _playing.progress,
+                        timeLeft: _playing.total - _playing.listened,
+                        coverShape: ShapeValues.coverFocused,
+                        onPlayPause: () {},
+                      ),
                     ),
                   ),
                   32.gap,
@@ -176,6 +183,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 setState(() {
                   _playing = ep;
                 });
+                _openPlayer();
               },
             ),
           ),
