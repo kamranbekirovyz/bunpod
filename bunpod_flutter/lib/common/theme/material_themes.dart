@@ -3,12 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 const MaterialColor seedColor = MaterialColor(0xffF5A623, {});
 
+const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
+  builders: {
+    .android: ZoomPageTransitionsBuilder(),
+    .iOS: ZoomPageTransitionsBuilder(),
+  },
+);
+
 abstract final class MaterialThemes {
   static ThemeData get light {
     return ThemeData(
       colorSchemeSeed: seedColor,
       brightness: .light,
       textTheme: GoogleFonts.googleSansTextTheme(),
+      pageTransitionsTheme: _pageTransitionsTheme,
     );
   }
 
@@ -17,6 +25,7 @@ abstract final class MaterialThemes {
       colorSchemeSeed: seedColor,
       brightness: .dark,
       textTheme: GoogleFonts.googleSansTextTheme(),
+      pageTransitionsTheme: _pageTransitionsTheme,
     );
   }
 }
