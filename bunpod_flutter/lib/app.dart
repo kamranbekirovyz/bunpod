@@ -9,7 +9,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: AppValues.title,
       debugShowCheckedModeBanner: false,
-      themeMode: .system,
+      themeMode: .dark,
       theme: MaterialThemes.light,
       darkTheme: MaterialThemes.dark,
       home: const HomePage(),
