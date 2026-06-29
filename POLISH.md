@@ -18,3 +18,4 @@ Subtle things to improve to make it feel better.
 - [ ] Use theme extensions for additional values
 - [ ] Adaptiv android app icon
 - [ ] Add haptics
+- [ ] Give the player control buttons a Material 3 Expressive jumpy (springy overshoot) effect when tapped
