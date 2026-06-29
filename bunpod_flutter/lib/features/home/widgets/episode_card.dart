@@ -81,7 +81,8 @@ class _EpisodeCardState extends State<EpisodeCard>
         animation: _marquee,
         builder: (context, _) {
           final double marqueeTime =
-              _marquee.value * _marqueeCycle.inMilliseconds / 1000.0;
+              _marquee.value * _marqueeCycle.inMilliseconds / 1000;
+
           return Stack(
             children: [
               Positioned.fill(
@@ -112,21 +113,30 @@ class _EpisodeCardState extends State<EpisodeCard>
 
   Widget _trailing(BuildContext context, ColorScheme cs, Color fg) {
     final Episode episode = widget.episode;
+
     if (episode.progress >= 1.0) {
       return Container(
         width: 30,
         height: 30,
         decoration: ShapeDecoration(
           color: fg,
-          shape: MaterialShapeBorder(shape: MaterialShapes.cookie7Sided),
+          shape: MaterialShapeBorder(
+            shape: MaterialShapes.cookie7Sided,
+          ),
         ),
-        child: Icon(Icons.check_rounded, size: 18, color: cs.primary),
+        child: Icon(
+          Icons.check_rounded,
+          size: 18,
+          color: cs.primary,
+        ),
       );
     }
+
     final bool started = episode.listened > Duration.zero;
     final Duration remaining = episode.total - episode.listened;
+
     return Text(
-      started ? '-${_formatRemaining(remaining)}' : _formatRemaining(remaining),
+      started ? '-${remaining.remainingLabel}' : remaining.remainingLabel,
       style: GoogleFonts.unbounded(
         color: fg,
         fontSize: 15,
@@ -197,15 +207,6 @@ class _EpisodeCardState extends State<EpisodeCard>
   }
 }
 
-String _formatRemaining(Duration d) {
-  final int h = d.inHours;
-  final int m = d.inMinutes.remainder(60);
-  if (h > 0) return m > 0 ? '${h}h ${m}m' : '${h}h';
-  if (m > 0) return '${m}m';
-
-  return '${d.inSeconds}s';
-}
-
 class _Title extends StatelessWidget {
   const _Title({
     required this.text,
@@ -268,7 +269,10 @@ class _Title extends StatelessWidget {
         final double offset = playing ? _offset(overflow) : 0;
         final double frac = (_fadePx / maxWidth).clamp(0.0, 0.45);
         final double leftFade = (offset / _fadePx).clamp(0.0, 1.0);
-        final double rightFade = ((overflow - offset) / _fadePx).clamp(0.0, 1.0);
+        final double rightFade = ((overflow - offset) / _fadePx).clamp(
+          0.0,
+          1.0,
+        );
 
         final Widget scrolling = SizedBox(
           width: maxWidth,
