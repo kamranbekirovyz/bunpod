@@ -4,13 +4,22 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
 
 class PlayerPage extends StatefulWidget {
-  const PlayerPage({super.key, required this.episode});
+  const PlayerPage({
+    super.key,
+    required this.episode,
+    this.fromChannel = false,
+  });
 
   final Episode episode;
 
-  static Route<void> route(Episode episode) {
+  /// Whether the player was opened from this episode's channel page. When true,
+  /// tapping the channel name pops back instead of pushing a duplicate page.
+  final bool fromChannel;
+
+  static Route<void> route(Episode episode, {bool fromChannel = false}) {
     return MaterialPageRoute<void>(
-      builder: (context) => PlayerPage(episode: episode),
+      builder: (context) =>
+          PlayerPage(episode: episode, fromChannel: fromChannel),
     );
   }
 
@@ -21,6 +30,17 @@ class PlayerPage extends StatefulWidget {
 class _PlayerPageState extends State<PlayerPage> {
   late bool _playing = widget.episode.playing;
   bool _fav = false;
+
+  void _openChannel() {
+    if (widget.fromChannel) {
+      Navigator.of(context).pop();
+      return;
+    }
+    final Channel? channel = channelByName(widget.episode.channel);
+    if (channel != null) {
+      Navigator.of(context).push(ChannelPage.route(channel));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +60,7 @@ class _PlayerPageState extends State<PlayerPage> {
       backgroundColor: cs.surface,
       appBar: AppBar(
         backgroundColor: cs.surface,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
+        leading: const StyledBackButton(),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
@@ -53,11 +68,26 @@ class _PlayerPageState extends State<PlayerPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             16.gap,
-            Text(
-              episode.channel.toUpperCase(),
-              style: tt.labelMedium?.copyWith(
-                color: cs.onSurfaceVariant,
-                fontWeight: FontWeight.w700,
+            GestureDetector(
+              onTap: _openChannel,
+              behavior: HitTestBehavior.opaque,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    episode.channel.toUpperCase(),
+                    style: tt.labelMedium?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  4.gap,
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 18,
+                    color: cs.onSurfaceVariant,
+                  ),
+                ],
               ),
             ),
             12.gap,
