@@ -17,8 +17,8 @@
 First the UI:
 
 - [x] Home page UI
-- [ ] Player page UI _(in progress)_
-- [ ] Channel page UI
+- [x] Player page UI
+- [x] Channel page UI
 - [ ] Menu page UI
 - [ ] Downloads page UI
 - [ ] Feedback page UI
