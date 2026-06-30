@@ -19,3 +19,4 @@ Subtle things to improve to make it feel better.
 - [ ] Adaptiv android app icon
 - [ ] Add haptics
 - [ ] Give the player control buttons a Material 3 Expressive jumpy (springy overshoot) effect when tapped
+- [ ] Add a scrollbar to the home and channel pages
