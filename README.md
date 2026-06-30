@@ -22,6 +22,7 @@ First the UI:
 - [ ] Menu page UI
 - [ ] Downloads page UI
 - [ ] Feedback page UI
+- [ ] Home widgets 
 
 Then the backend:
 
