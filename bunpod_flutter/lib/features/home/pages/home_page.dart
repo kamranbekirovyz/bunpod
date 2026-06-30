@@ -129,6 +129,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         tabs: tabs,
                         selected: _channel,
                         onSelected: (value) {
+                          // Tapping the already-selected channel a second time
+                          // opens its channel page (the "All" tab is exempt).
+                          if (value != null && value == _channel) {
+                            final Channel? channel = channelByName(value);
+                            if (channel != null) {
+                              Navigator.of(
+                                context,
+                              ).push(ChannelPage.route(channel));
+                            }
+                            return;
+                          }
                           final int i = _tabValues.indexOf(value);
                           if (i != -1) _tabController.animateTo(i);
                         },
