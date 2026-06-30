@@ -9,9 +9,21 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: AppValues.title,
       debugShowCheckedModeBanner: false,
-      themeMode: .dark,
+      themeMode: .light,
       theme: MaterialThemes.light,
       darkTheme: MaterialThemes.dark,
+      builder: (context, child) {
+        final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+        return MediaQuery(
+          data: mediaQueryData.copyWith(
+            textScaler: mediaQueryData.textScaler.clamp(
+              maxScaleFactor: 1.1,
+            ),
+          ),
+          child: child!,
+        );
+      },
       home: const HomePage(),
     );
   }
