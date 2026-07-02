@@ -130,6 +130,7 @@ class _PlayerPageState extends State<PlayerPage> {
               onPlayPause: () => setState(() => _playing = !_playing),
               onFav: () => setState(() => _fav = !_fav),
             ),
+            const BottomPadding(),
           ],
         ),
       ),
