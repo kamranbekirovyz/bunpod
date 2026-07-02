@@ -19,6 +19,10 @@ const String _alanWattsImage =
     'https://i.scdn.co/image/ab6765630000ba8a1bbd127cfafc8760b4ce9311';
 const String _krishnamurtiImage =
     'https://pbcdn1.podbean.com/imglogo/image-logo/15600968/Black_Simple_Business_Podcast_Cover_1_92o7s.png';
+const String _manpasiImage =
+    'https://i.scdn.co/image/ab6765630000ba8ac0eaabc9372807788e548bdc';
+const String _sohbetgahImage =
+    'https://i.scdn.co/image/ab67656300005f1fc869eb49ed98bc5664c9990c';
 
 const List<Episode> mockEpisodes = <Episode>[
   Episode(
@@ -362,5 +366,93 @@ const List<Episode> mockEpisodes = <Episode>[
     image: _kurcalaImage,
     total: Duration(hours: 1, minutes: 58),
     listened: Duration(hours: 1, minutes: 58),
+  ),
+  Episode(
+    bucket: Bucket.today,
+    channel: 'MANPASI',
+    host: 'DJ Fateh & Rəvan Bağırov',
+    title: 'Kimi şəxsən tanımasanız da ona simpatiyanız var',
+    date: 'Jul 3',
+    seed: Color(0xFFEF6C1A),
+    image: _manpasiImage,
+    total: Duration(hours: 1, minutes: 52),
+    listened: Duration(minutes: 27),
+  ),
+  Episode(
+    bucket: Bucket.yesterday,
+    channel: 'MANPASI',
+    host: 'DJ Fateh & Rəvan Bağırov',
+    title: 'Səhər söhbəti: yay istisi və şəhər həyatı',
+    date: 'Jul 2',
+    seed: Color(0xFFEF6C1A),
+    image: _manpasiImage,
+    total: Duration(hours: 1, minutes: 47),
+    listened: Duration.zero,
+  ),
+  Episode(
+    bucket: Bucket.thisWeek,
+    channel: 'MANPASI',
+    host: 'DJ Fateh & Rəvan Bağırov',
+    title: 'Məsləhətli mövzu',
+    date: 'Jun 30',
+    seed: Color(0xFFEF6C1A),
+    image: _manpasiImage,
+    total: Duration(hours: 2, minutes: 3),
+    listened: Duration(hours: 1, minutes: 14),
+  ),
+  Episode(
+    bucket: Bucket.thisMonth,
+    channel: 'MANPASI',
+    host: 'DJ Fateh & Rəvan Bağırov',
+    title: 'Dinləyici zəngləri və gündəm',
+    date: 'Jun 18',
+    seed: Color(0xFFEF6C1A),
+    image: _manpasiImage,
+    total: Duration(hours: 1, minutes: 41),
+    listened: Duration(hours: 1, minutes: 41),
+  ),
+  Episode(
+    bucket: Bucket.today,
+    channel: 'Söhbətgah',
+    host: 'DJ Tural & Əli Xəyyam',
+    title: 'Azərbaycanda kino, aktyorluq, səhv bildiklərimiz | Kamran Ağabalayev',
+    date: 'Jul 3',
+    seed: Color(0xFF1F7A6B),
+    image: _sohbetgahImage,
+    total: Duration(hours: 2, minutes: 11),
+    listened: Duration(minutes: 38),
+  ),
+  Episode(
+    bucket: Bucket.yesterday,
+    channel: 'Söhbətgah',
+    host: 'DJ Tural & Əli Xəyyam',
+    title: 'Alqoritmlər bizi necə idarə edir? | Müzəffər Qaraxanlı',
+    date: 'Jul 2',
+    seed: Color(0xFF1F7A6B),
+    image: _sohbetgahImage,
+    total: Duration(hours: 1, minutes: 56),
+    listened: Duration(minutes: 15),
+  ),
+  Episode(
+    bucket: Bucket.thisWeek,
+    channel: 'Söhbətgah',
+    host: 'DJ Tural & Əli Xəyyam',
+    title: 'Qidalanma vərdişləri və sağlamlıq | Dr. Fərhad Burzu',
+    date: 'Jun 29',
+    seed: Color(0xFF1F7A6B),
+    image: _sohbetgahImage,
+    total: Duration(hours: 1, minutes: 44),
+    listened: Duration(hours: 1, minutes: 44),
+  ),
+  Episode(
+    bucket: Bucket.thisMonth,
+    channel: 'Söhbətgah',
+    host: 'DJ Tural & Əli Xəyyam',
+    title: 'Biznes, fintex və gələcək | Zeynal Kərimzadə',
+    date: 'Jun 15',
+    seed: Color(0xFF1F7A6B),
+    image: _sohbetgahImage,
+    total: Duration(hours: 2, minutes: 2),
+    listened: Duration(minutes: 51),
   ),
 ];

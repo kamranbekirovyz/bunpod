@@ -31,6 +31,14 @@ const Map<String, String> _channelDescriptions = <String, String>{
   'Kurcala Podcast Yaptı':
       'Günlük hayata dair merak edilenleri kurcalayan, eğlenceli ve içten bir '
       'sohbet podcast’i.',
+  'MANPASI':
+      'İctimai Radionun 90FM səhər proqramının rəsmi podkastı — DJ Fateh və '
+      'Rəvan Bağırov ilə gündəm, məsləhətli mövzular və dinləyici zəngləri '
+      'üzərində canlı, isti səhər söhbətləri.',
+  'Söhbətgah':
+      'DJ Tural və Əli Xəyyamın hər həftə fərqli qonaqla mövzunu dərinliyinə '
+      'qədər açdığı Azərbaycan söhbət podkastı — mədəniyyət, texnologiya, '
+      'sağlamlıq və biznes üzərinə təzadlı baxışlar.',
 };
 
 /// All channels in the catalog, derived from [mockEpisodes] in first-seen order
