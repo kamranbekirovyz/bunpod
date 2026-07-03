@@ -5,8 +5,8 @@ const MaterialColor seedColor = MaterialColor(0xffF5A623, {});
 
 const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
   builders: {
-    .android: ZoomPageTransitionsBuilder(),
-    .iOS: ZoomPageTransitionsBuilder(),
+    .android: FadeForwardsPageTransitionsBuilder(),
+    .iOS: FadeForwardsPageTransitionsBuilder(),
   },
 );
 
