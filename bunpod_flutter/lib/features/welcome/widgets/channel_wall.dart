@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';
@@ -137,7 +138,10 @@ class _FloatingTileState extends State<_FloatingTile> {
   /// How long the loaded cover is held as a square before it morphs.
   static const Duration _hold = Duration(milliseconds: 300);
 
-  late final ImageProvider _provider = NetworkImage(widget.channel.image);
+  late final ImageProvider _provider = ExtendedNetworkImageProvider(
+    widget.channel.image,
+    cache: true,
+  );
   ImageStream? _stream;
   ImageStreamListener? _listener;
   Timer? _holdTimer;

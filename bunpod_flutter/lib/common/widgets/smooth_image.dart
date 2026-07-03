@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_fade/image_fade.dart';
 
@@ -51,7 +52,10 @@ class SmoothImage extends StatelessWidget {
     );
 
     return ImageFade(
-      image: NetworkImage(url),
+      image: ExtendedNetworkImageProvider(
+        url,
+        cache: true,
+      ),
       fit: fit,
       width: width,
       height: height,

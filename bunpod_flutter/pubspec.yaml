@@ -27,6 +27,7 @@ dependencies:
   serverpod_auth_idp_flutter: 3.5.0-beta.8
   gap: ^3.0.1
   image_fade: ^0.6.2
+  extended_image: ^10.0.1
 
 dependency_overrides:
   flutter_secure_storage: ^10.0.0
