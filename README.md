@@ -20,7 +20,7 @@ First the UI:
 - [x] Player page UI
 - [x] Channel page UI
 - [ ] Auth page
-- [ ] Welcome page
+- [x] Welcome page
 - [ ] Onboarding?
 - [ ] Menu page UI
 - [ ] Explore page UI
