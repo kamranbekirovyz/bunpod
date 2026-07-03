@@ -353,17 +353,13 @@ class _Cover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget placeholder() => Container(
-      color: scheme.primaryContainer,
-      alignment: Alignment.center,
-      child: Icon(Icons.podcasts_rounded, color: scheme.onPrimaryContainer),
-    );
-    return Image.network(
-      episode.image,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, progress) =>
-          progress == null ? child : placeholder(),
-      errorBuilder: (context, error, stack) => placeholder(),
+    return SmoothImage(
+      url: episode.image,
+      placeholderColor: scheme.primaryContainer,
+      placeholderChild:
+          Icon(Icons.podcasts_rounded, color: scheme.onPrimaryContainer),
+      errorChild:
+          Icon(Icons.podcasts_rounded, color: scheme.onPrimaryContainer),
     );
   }
 }

@@ -342,21 +342,16 @@ class _Cover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget placeholder() => Container(
-      color: scheme.primaryContainer,
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.podcasts_rounded,
-        color: scheme.onPrimaryContainer,
-        size: 48,
-      ),
+    final Widget glyph = Icon(
+      Icons.podcasts_rounded,
+      color: scheme.onPrimaryContainer,
+      size: 48,
     );
-    return Image.network(
-      channel.image,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, progress) =>
-          progress == null ? child : placeholder(),
-      errorBuilder: (context, error, stack) => placeholder(),
+    return SmoothImage(
+      url: channel.image,
+      placeholderColor: scheme.primaryContainer,
+      placeholderChild: glyph,
+      errorChild: glyph,
     );
   }
 }

@@ -20,3 +20,4 @@ Subtle things to improve to make it feel better.
 - [ ] Add haptics
 - [ ] Give the player control buttons a Material 3 Expressive jumpy (springy overshoot) effect when tapped
 - [ ] Add a scrollbar to the home and channel pages
+- [ ] Haptics: light haptic (`HapticFeedback.selectionClick`) when tapping a welcome mosaic shape morphs it to a random one — see `channel_wall.dart` `_onTap`.
