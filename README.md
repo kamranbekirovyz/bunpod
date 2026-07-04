@@ -22,7 +22,7 @@ First the UI:
 - [ ] Auth page
 - [x] Welcome page
 - [ ] Onboarding?
-- [ ] Menu page UI
+- [x] Menu page UI
 - [ ] Explore page UI
 - [ ] Downloads page UI
 - [ ] Feedback page UI
@@ -32,6 +32,7 @@ Then the backend:
 
 - [ ] Serverpod API & data layer
 - [ ] Force update mechanism
+- [ ] Localization
 
 ---
 
