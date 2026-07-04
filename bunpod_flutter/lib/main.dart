@@ -19,5 +19,7 @@ void main() async {
 
   client.auth.initialize();
 
+  setupLocator();
+
   runApp(const App());
 }
