@@ -4,12 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_shapes/material_shapes.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key, this.onExplore, this.onProfile});
-
-  final VoidCallback? onExplore;
-  final VoidCallback? onProfile;
-
-  static const double _pad = 16;
+  const HomeAppBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -20,7 +15,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
-      titleSpacing: _pad,
       title: Row(
         children: [
           SvgPicture.asset(
@@ -39,22 +33,33 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: onExplore,
+                onTap: () {},
                 child: SizedBox(
                   width: 40,
                   height: 40,
                   child: Icon(
                     Icons.add_rounded,
                     color: cs.onSecondaryContainer,
-                    size: 22,
+                    size: 20,
                   ),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 8),
-          GestureDetector(
-            onTap: onProfile,
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MenuPage();
+                  },
+                ),
+              );
+            },
+            customBorder: MaterialShapeBorder(
+              shape: MaterialShapes.pill,
+            ),
             child: ClipPath(
               clipper: ShapeBorderClipper(
                 shape: MaterialShapeBorder(

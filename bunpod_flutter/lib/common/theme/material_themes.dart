@@ -11,20 +11,21 @@ const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
 );
 
 abstract final class MaterialThemes {
-  static ThemeData get light {
-    return ThemeData(
-      colorSchemeSeed: seedColor,
-      brightness: .light,
-      textTheme: GoogleFonts.googleSansTextTheme(),
-      pageTransitionsTheme: _pageTransitionsTheme,
-    );
-  }
+  static ThemeData get light => _theme(.light);
 
-  static ThemeData get dark {
-    return ThemeData(
-      colorSchemeSeed: seedColor,
-      brightness: .dark,
-      textTheme: GoogleFonts.googleSansTextTheme(),
+  static ThemeData get dark => _theme(.dark);
+
+  // GoogleFonts.googleSansTextTheme() without a base bakes in light-theme
+  // text colors, breaking dark mode; derive it from the brightness-correct
+  // base theme instead.
+  static ThemeData _theme(Brightness brightness) {
+    final ThemeData base = ThemeData(
+      colorSchemeSeed: Colors.yellow,
+      brightness: brightness,
+    );
+
+    return base.copyWith(
+      textTheme: GoogleFonts.googleSansTextTheme(base.textTheme),
       pageTransitionsTheme: _pageTransitionsTheme,
     );
   }
