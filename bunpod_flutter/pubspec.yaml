@@ -28,6 +28,10 @@ dependencies:
   gap: ^3.0.1
   image_fade: ^0.6.2
   extended_image: ^10.0.1
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  url_launcher: ^6.3.2
+  package_info_plus: ^9.0.1
 
 dependency_overrides:
   flutter_secure_storage: ^10.0.0
