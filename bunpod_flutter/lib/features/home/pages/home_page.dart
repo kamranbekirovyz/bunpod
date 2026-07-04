@@ -67,10 +67,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         icon: Icons.grid_view_rounded,
       ),
     ];
+
     for (final String? value in _tabValues) {
       if (value == null) continue;
       final Episode e = mockEpisodes.firstWhere((e) => e.channel == value);
       final ColorScheme scheme = e.scheme(context);
+
       tabs.add(
         FilterTab(
           value: e.channel,
@@ -85,7 +87,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      appBar: const HomeAppBar(),
+      appBar: HomeAppBar(),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerScrolled) {
           return [
@@ -114,9 +116,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
             SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                context,
-              ),
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: SliverPersistentHeader(
                 pinned: true,
                 delegate: _PinnedTabsDelegate(
