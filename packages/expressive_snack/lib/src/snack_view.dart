@@ -34,6 +34,10 @@ class SnackViewState extends State<SnackView> with TickerProviderStateMixin {
   // smaller it renders. The usual card stack recipe.
   static const double _peek = 12;
   static const double _shrink = 0.05;
+  // How much of the theme's shadow color each depth step lays over a pill.
+  // The pills share one surface color, so without this the stacked ones
+  // melt into each other.
+  static const double _shade = 0.15;
   // Sideways impulse for the duplicate message shake, in px/s. Swings the
   // pill about 15px on the first swing.
   static const double _shakeVelocity = 600;
@@ -139,6 +143,8 @@ class SnackViewState extends State<SnackView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final Color shadow = Theme.of(context).colorScheme.shadow;
+
     // The outer spring chases the dealt depth (moving back or forward in
     // the stack). The inner spring drives entry and exit. Both use the
     // pill's fast bounce.
@@ -166,7 +172,18 @@ class SnackViewState extends State<SnackView> with TickerProviderStateMixin {
               // Clamped so it does not wiggle with the spring's overshoot.
               child: Opacity(
                 opacity: _removing ? 1 - t.clamp(0.0, 1.0) : 1,
-                child: child,
+                // The shade rides the depth spring: a pill darkens as it
+                // recedes and clears as it comes forward.
+                child: DecoratedBox(
+                  position: DecorationPosition.foreground,
+                  decoration: ShapeDecoration(
+                    shape: const StadiumBorder(),
+                    color: shadow.withValues(
+                      alpha: (depth * _shade).clamp(0.0, 0.5),
+                    ),
+                  ),
+                  child: child,
+                ),
               ),
             ),
           ),

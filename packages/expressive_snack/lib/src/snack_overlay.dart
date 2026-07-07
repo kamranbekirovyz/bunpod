@@ -26,6 +26,18 @@ abstract final class SnackOverlay {
     }
   }
 
+  /// Moves [snack] to the newest spot so the stack deals it to the front.
+  /// The depth springs animate the reorder, so the pill slides forward
+  /// while the others settle back.
+  static void promote(Snack snack) {
+    if (snacks.value.last == snack) return;
+    snacks.value = [
+      for (final Snack s in snacks.value)
+        if (s != snack) s,
+      snack,
+    ];
+  }
+
   static void remove(Snack snack) {
     snacks.value = [...snacks.value]..remove(snack);
     if (snacks.value.isEmpty) {

@@ -27,9 +27,12 @@ void showExpressiveSnack({
   final OverlayState overlay = Overlay.of(context, rootOverlay: true);
   final List<Snack> alive = SnackOverlay.alive;
 
-  // A duplicate does not add a pill. The one already saying it shakes.
+  // A duplicate does not add a pill. The one already saying it comes to
+  // the front and shakes. The forward slide and the sideways wobble run
+  // on separate axes, so together they read as one smooth pull-and-shake.
   for (final Snack snack in alive) {
     if (snack.message == message && snack.icon == icon) {
+      SnackOverlay.promote(snack);
       snack.key.currentState?.shake();
       return;
     }
