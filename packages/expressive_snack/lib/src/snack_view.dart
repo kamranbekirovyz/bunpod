@@ -210,19 +210,26 @@ class _Pill extends StatelessWidget {
   final Snack snack;
   final VoidCallback onTap;
 
-  /// [MaterialShapes.arch] turned so its dome points left, matching the
-  /// stadium curve of the pill's left end.
-  static final RoundedPolygon _archLeft = MaterialShapes.arch
-      .transformed(
-        (Matrix4.identity()..rotateZ(-math.pi / 2)).asPointTransformer(),
-      )
-      .normalized();
+  /// [MaterialShapes.arch] turned so its dome points to the text start
+  /// side, matching the stadium curve of the pill's end. One per text
+  /// direction: the chip sits on the left in LTR and on the right in RTL.
+  static final RoundedPolygon _archLtr = _arch(-math.pi / 2);
+  static final RoundedPolygon _archRtl = _arch(math.pi / 2);
+
+  static RoundedPolygon _arch(double rotation) {
+    return MaterialShapes.arch
+        .transformed(
+          (Matrix4.identity()..rotateZ(rotation)).asPointTransformer(),
+        )
+        .normalized();
+  }
 
   @override
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
     final TextTheme tt = Theme.of(context).textTheme;
     final IconData? icon = snack.icon;
+    final bool ltr = Directionality.of(context) == TextDirection.ltr;
 
     return Material(
       color: cs.inverseSurface,
@@ -236,7 +243,7 @@ class _Pill extends StatelessWidget {
           // height: 8dp around the 32dp chip, or 14dp around the 20dp
           // body medium line when there is no chip.
           padding: icon != null
-              ? const EdgeInsets.fromLTRB(8, 8, 20, 8)
+              ? const EdgeInsetsDirectional.fromSTEB(8, 8, 20, 8)
               : const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -247,7 +254,9 @@ class _Pill extends StatelessWidget {
                   height: 32,
                   decoration: ShapeDecoration(
                     color: cs.inversePrimary,
-                    shape: MaterialShapeBorder(shape: _archLeft),
+                    shape: MaterialShapeBorder(
+                      shape: ltr ? _archLtr : _archRtl,
+                    ),
                   ),
                   child: Icon(icon, size: 18, color: cs.inverseSurface),
                 ),
@@ -258,6 +267,8 @@ class _Pill extends StatelessWidget {
                   liveRegion: true,
                   child: Text(
                     snack.message,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: tt.bodyMedium?.copyWith(
                       color: cs.onInverseSurface,
                       fontWeight: FontWeight.w500,

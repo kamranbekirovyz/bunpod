@@ -15,7 +15,15 @@ class SnackStack extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          // The keyboard reports through viewInsets, which SafeArea does
+          // not cover. Without this a snack shown while typing hides
+          // behind the keyboard.
+          padding: EdgeInsets.fromLTRB(
+            16,
+            0,
+            16,
+            16 + MediaQuery.viewInsetsOf(context).bottom,
+          ),
           child: ValueListenableBuilder(
             valueListenable: SnackOverlay.snacks,
             builder: (context, snacks, _) {
