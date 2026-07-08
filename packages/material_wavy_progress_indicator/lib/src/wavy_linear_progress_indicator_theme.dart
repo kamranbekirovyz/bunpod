@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_wavy_progress_indicator/wavy_linear_progress_indicator.dart';
+import 'package:material_wavy_progress_indicator/src/wavy_linear_progress_indicator.dart';
 
 /// Defines the visual properties of [WavyLinearProgressIndicator] widgets.
 ///

@@ -9,8 +9,11 @@ abstract final class ShapeValues {
     final double tc = t.clamp(0.0, 1.0);
     final MaterialShapeBorder normal = MaterialShapeBorder(shape: cover);
     if (tc <= 0) return normal;
-    final MaterialShapeBorder focused = MaterialShapeBorder(shape: coverFocused);
+    final MaterialShapeBorder focused = MaterialShapeBorder(
+      shape: coverFocused,
+    );
     if (tc >= 1) return focused;
+
     return normal.lerpTo(focused, tc)!;
   }
 }

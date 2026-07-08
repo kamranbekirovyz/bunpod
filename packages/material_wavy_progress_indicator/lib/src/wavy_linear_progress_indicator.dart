@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
-import 'package:material_wavy_progress_indicator/wavy_linear_progress_indicator_theme.dart';
+import 'package:material_wavy_progress_indicator/src/wavy_linear_progress_indicator_theme.dart';
 
 const double _kFullAmplitudeProgressMin = 0.1;
 const double _kFullAmplitudeProgressMax = 0.9;

@@ -20,7 +20,7 @@ abstract final class MaterialThemes {
   // base theme instead.
   static ThemeData _theme(Brightness brightness) {
     final ThemeData base = ThemeData(
-      colorSchemeSeed: Colors.yellow,
+      colorSchemeSeed: Colors.primaries.elementAt(12),
       brightness: brightness,
     );
 

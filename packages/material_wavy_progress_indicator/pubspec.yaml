@@ -12,3 +12,5 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  material_shapes:
+    path: ../material_shapes
