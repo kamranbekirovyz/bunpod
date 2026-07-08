@@ -19,6 +19,8 @@ dependencies:
     sdk: flutter
   bunpod_client:
     path: ../bunpod_client
+  expressive_snack:
+    path: ../packages/expressive_snack
   material_shapes:
     path: ../packages/material_shapes
   material_wavy_progress_indicator:
