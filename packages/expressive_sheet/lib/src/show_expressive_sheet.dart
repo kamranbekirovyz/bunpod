@@ -1,3 +1,6 @@
+import 'dart:ui' show SemanticsHitTestBehavior;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:motor/motor.dart';
 
@@ -14,17 +17,39 @@ Future<T?> showExpressiveSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
 }) {
-  return Navigator.of(context).push(ExpressiveSheetRoute<T>(builder: builder));
+  assert(debugCheckHasMediaQuery(context));
+  assert(debugCheckHasMaterialLocalizations(context));
+
+  final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+  return Navigator.of(context).push(
+    ExpressiveSheetRoute<T>(
+      builder: builder,
+      barrierLabel: localizations.scrimLabel,
+      barrierOnTapHint: localizations.scrimOnTapHint(
+        localizations.bottomSheetLabel,
+      ),
+    ),
+  );
 }
 
 /// A route that shows a spring-driven modal sheet at the bottom of the
 /// screen.
 class ExpressiveSheetRoute<T> extends PopupRoute<T> {
   /// Creates a route for a spring-driven modal sheet.
-  ExpressiveSheetRoute({required this.builder, super.settings});
+  ExpressiveSheetRoute({
+    required this.builder,
+    this.barrierLabel,
+    this.barrierOnTapHint,
+    super.settings,
+  });
 
   /// Builds the content of the sheet.
   final WidgetBuilder builder;
+
+  /// The semantic hint text that informs users what will happen if they tap
+  /// on the scrim.
+  final String? barrierOnTapHint;
 
   static const Motion _enter = MaterialSpringMotion.expressiveSpatialDefault();
   static const Motion _exit = MaterialSpringMotion.standardSpatialFast();
@@ -50,7 +75,7 @@ class ExpressiveSheetRoute<T> extends PopupRoute<T> {
   bool get barrierDismissible => true;
 
   @override
-  String? get barrierLabel => 'Dismiss';
+  final String? barrierLabel;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 500);
@@ -85,6 +110,36 @@ class ExpressiveSheetRoute<T> extends PopupRoute<T> {
       start: controller?.value ?? 0,
       end: forward ? 1 : 0,
       velocity: -velocity,
+    );
+  }
+
+  // Same as the default barrier, with the tap hint added so screen readers
+  // announce what tapping the scrim does.
+  @override
+  Widget buildModalBarrier() {
+    final Color? scrimColor = barrierColor;
+    if (scrimColor != null && scrimColor.a != 0 && !offstage) {
+      final Animation<Color?> color = animation!.drive(
+        ColorTween(
+          begin: scrimColor.withValues(alpha: 0.0),
+          end: scrimColor,
+        ).chain(CurveTween(curve: barrierCurve)),
+      );
+
+      return AnimatedModalBarrier(
+        color: color,
+        dismissible: barrierDismissible,
+        semanticsLabel: barrierLabel,
+        barrierSemanticsDismissible: semanticsDismissible,
+        semanticsOnTapHint: barrierOnTapHint,
+      );
+    }
+
+    return ModalBarrier(
+      dismissible: barrierDismissible,
+      semanticsLabel: barrierLabel,
+      barrierSemanticsDismissible: semanticsDismissible,
+      semanticsOnTapHint: barrierOnTapHint,
     );
   }
 
@@ -146,41 +201,69 @@ class ExpressiveSheetRoute<T> extends PopupRoute<T> {
     }
   }
 
+  // On iOS and macOS the route announces itself, so no label is needed.
+  String _routeLabel(MaterialLocalizations localizations) {
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.iOS || TargetPlatform.macOS => '',
+      _ => localizations.dialogLabel,
+    };
+  }
+
   @override
   Widget buildPage(
     BuildContext context,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return Align(
-      alignment: .bottomCenter,
-      child: AnimatedBuilder(
-        animation: controller!,
-        builder: (context, child) {
-          return FractionalTranslation(
-            translation: Offset(0, 1 - controller!.value),
-            child: child,
-          );
-        },
-        child: Builder(
-          builder: (context) {
-            // Drag deltas are normalized by the sheet's own height, so the
-            // gesture and the route animation share one coordinate space.
-            double height() => context.size?.height ?? 1;
+    final String routeLabel = _routeLabel(MaterialLocalizations.of(context));
 
-            return GestureDetector(
-              onVerticalDragUpdate: (details) {
-                _dragBy(details.primaryDelta! / height());
-              },
-              onVerticalDragEnd: (details) {
-                _endDrag(details.velocity.pixelsPerSecond.dy / height());
-              },
-              onVerticalDragCancel: () {
-                _endDrag(0);
-              },
-              child: builder(context),
+    return AnimatedPadding(
+      // Keeps the sheet above the keyboard.
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.decelerate,
+      child: Align(
+        alignment: .bottomCenter,
+        child: AnimatedBuilder(
+          animation: controller!,
+          builder: (context, child) {
+            return FractionalTranslation(
+              translation: Offset(0, 1 - controller!.value),
+              child: child,
             );
           },
+          child: Semantics(
+            scopesRoute: true,
+            namesRoute: true,
+            label: routeLabel,
+            explicitChildNodes: true,
+            // Prevents taps inside the sheet from reaching the barrier.
+            child: Semantics(
+              hitTestBehavior: SemanticsHitTestBehavior.opaque,
+              child: Builder(
+                builder: (context) {
+                  // Drag deltas are normalized by the sheet's own height, so
+                  // the gesture and the route animation share one coordinate
+                  // space.
+                  double height() => context.size?.height ?? 1;
+
+                  return GestureDetector(
+                    excludeFromSemantics: true,
+                    onVerticalDragUpdate: (details) {
+                      _dragBy(details.primaryDelta! / height());
+                    },
+                    onVerticalDragEnd: (details) {
+                      _endDrag(details.velocity.pixelsPerSecond.dy / height());
+                    },
+                    onVerticalDragCancel: () {
+                      _endDrag(0);
+                    },
+                    child: builder(context),
+                  );
+                },
+              ),
+            ),
+          ),
         ),
       ),
     );
