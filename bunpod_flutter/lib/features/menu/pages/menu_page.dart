@@ -1,4 +1,6 @@
 import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:expressive_snack/expressive_snack.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,22 +16,17 @@ class MenuPage extends StatelessWidget {
   }
 }
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
+class _Body extends StatefulWidget {
+  const _Body();
 
   @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: const StyledBackButton(),
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  State<_Body> createState() => _BodyState();
 }
 
-class _Body extends StatelessWidget {
-  const _Body();
+class _BodyState extends State<_Body> {
+  // TODO(kamran): local until real settings storage lands.
+  bool _wifiOnly = true;
+  bool _alerts = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +49,13 @@ class _Body extends StatelessWidget {
               icon: Icons.download_outlined,
               title: 'Downloads',
               onTap: () {
-                ComingSoon.show(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) {
+                      return DownloadsPage();
+                    },
+                  ),
+                );
               },
             ),
             MenuTile(
@@ -77,7 +80,7 @@ class _Body extends StatelessWidget {
           children: [
             MenuTile(
               icon: Icons.brightness_6_outlined,
-              title: 'Theme',
+              title: 'Dark theme',
               trailing: BlocBuilder<ThemeModeCubit, ThemeMode>(
                 bloc: locator<ThemeModeCubit>(),
                 builder: (context, state) {
@@ -86,8 +89,12 @@ class _Body extends StatelessWidget {
                   return Switch(
                     value: themeMode == .dark,
                     thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
-                      WidgetState.selected: Icon(Icons.dark_mode_rounded),
-                      WidgetState.any: Icon(Icons.light_mode_rounded),
+                      WidgetState.selected: Icon(
+                        Icons.dark_mode_rounded,
+                      ),
+                      WidgetState.any: Icon(
+                        Icons.light_mode_rounded,
+                      ),
                     }),
                     onChanged: (_) {
                       locator<ThemeModeCubit>().toggle();
@@ -97,15 +104,35 @@ class _Body extends StatelessWidget {
               ),
             ),
             MenuTile(
+              icon: Icons.download_outlined,
+              title: 'Download over Wi-Fi only',
+              trailing: Switch(
+                value: _wifiOnly,
+                // Off means "any network", which no single icon says
+                // honestly — the X just negates the label.
+                thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
+                  WidgetState.selected: Icon(Icons.wifi_rounded),
+                  WidgetState.any: Icon(Icons.close_rounded),
+                }),
+                onChanged: (value) {
+                  setState(() => _wifiOnly = value);
+                },
+              ),
+            ),
+            MenuTile(
               icon: Icons.notifications_outlined,
               title: 'New episode alerts',
               trailing: Switch(
-                value: false,
+                value: _alerts,
+                // The tile's leading icon already says "notifications";
+                // a bell on the thumb would repeat it.
                 thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
                   WidgetState.selected: Icon(Icons.check_rounded),
                   WidgetState.any: Icon(Icons.close_rounded),
                 }),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  setState(() => _alerts = value);
+                },
               ),
             ),
           ],
@@ -132,16 +159,13 @@ class _Body extends StatelessWidget {
             ),
             MenuTile(
               icon: Icons.alternate_email_outlined,
-              title: 'Contact',
+              title: 'Report an issue',
               onTap: () {
-                ComingSoon.show(context);
-              },
-            ),
-            MenuTile(
-              icon: Icons.code_outlined,
-              title: 'GitHub repo',
-              onTap: () {
-                ComingSoon.show(context);
+                showExpressiveSnack(
+                  context: context,
+                  message: 'Subscribe to premium for support',
+                  icon: Icons.handshake,
+                );
               },
             ),
           ],
@@ -192,4 +216,18 @@ class _Body extends StatelessWidget {
       ],
     );
   }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: const StyledBackButton(),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
