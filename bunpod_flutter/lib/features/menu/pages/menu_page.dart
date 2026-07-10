@@ -178,7 +178,7 @@ class _BodyState extends State<_Body> {
               icon: Icons.logout_outlined,
               title: 'Log out',
               onTap: () {
-                ConfirmSheet.show(
+                StyledSheet.show(
                   context,
                   icon: Icons.logout_rounded,
                   title: 'Log out?',
@@ -194,7 +194,7 @@ class _BodyState extends State<_Body> {
               title: 'Delete account',
               foreground: cs.error,
               onTap: () {
-                ConfirmSheet.show(
+                StyledSheet.show(
                   context,
                   icon: Icons.delete_forever_rounded,
                   title: 'Delete account?',

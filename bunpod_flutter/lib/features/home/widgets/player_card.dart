@@ -189,10 +189,14 @@ class _Cover extends StatelessWidget {
     return SmoothImage(
       url: imageUrl,
       placeholderColor: scheme.primaryContainer,
-      placeholderChild:
-          Icon(Icons.podcasts_rounded, color: scheme.onPrimaryContainer),
-      errorChild:
-          Icon(Icons.podcasts_rounded, color: scheme.onPrimaryContainer),
+      placeholderChild: Icon(
+        Icons.podcasts_rounded,
+        color: scheme.onPrimaryContainer,
+      ),
+      errorChild: Icon(
+        Icons.podcasts_rounded,
+        color: scheme.onPrimaryContainer,
+      ),
     );
   }
 }

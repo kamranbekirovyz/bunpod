@@ -19,6 +19,8 @@ dependencies:
     sdk: flutter
   bunpod_client:
     path: ../bunpod_client
+  expressive_sheet:
+    path: ../packages/expressive_sheet
   expressive_snack:
     path: ../packages/expressive_snack
   material_shapes:

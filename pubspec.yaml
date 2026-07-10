@@ -8,6 +8,7 @@ workspace:
   - bunpod_client
   - bunpod_server
   - bunpod_flutter
+  - packages/expressive_sheet
   - packages/expressive_snack
   - packages/material_shapes
   - packages/material_wavy_progress_indicator
