@@ -11,6 +11,8 @@ late String serverUrl;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  ErrorWidget.builder = (details) => FriendlyErrorView(details: details);
+
   final String serverUrl = await getServerUrl();
 
   client = Client(serverUrl)
