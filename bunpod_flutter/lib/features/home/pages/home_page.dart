@@ -121,29 +121,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 pinned: true,
                 delegate: _PinnedTabsDelegate(
                   height: 64,
-                  child: ColoredBox(
-                    color: cs.surface,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: FilterTabs(
-                        tabs: tabs,
-                        selected: _channel,
-                        onSelected: (value) {
-                          // Tapping the already-selected channel a second time
-                          // opens its channel page (the "All" tab is exempt).
-                          if (value != null && value == _channel) {
-                            final Channel? channel = channelByName(value);
-                            if (channel != null) {
-                              Navigator.of(
-                                context,
-                              ).push(ChannelPage.route(channel));
-                            }
-                            return;
+                  child: Center(
+                    child: FilterTabs(
+                      tabs: tabs,
+                      selected: _channel,
+                      onSelected: (value) {
+                        // Tapping the already-selected channel a second time
+                        // opens its channel page (the "All" tab is exempt).
+                        if (value != null && value == _channel) {
+                          final Channel? channel = channelByName(value);
+                          if (channel != null) {
+                            Navigator.of(
+                              context,
+                            ).push(ChannelPage.route(channel));
                           }
-                          final int i = _tabValues.indexOf(value);
-                          if (i != -1) _tabController.animateTo(i);
-                        },
-                      ),
+                          return;
+                        }
+                        final int i = _tabValues.indexOf(value);
+                        if (i != -1) _tabController.animateTo(i);
+                      },
                     ),
                   ),
                 ),

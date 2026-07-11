@@ -12,7 +12,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key, this.onStart});
 
-  /// Invoked by the CTA. Defaults to entering the app home.
   final VoidCallback? onStart;
 
   void _start(BuildContext context) {
@@ -20,9 +19,7 @@ class WelcomePage extends StatelessWidget {
       onStart!();
       return;
     }
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const HomePage()),
-    );
+    AuthSheet.show(context);
   }
 
   @override
@@ -73,69 +70,70 @@ class WelcomePage extends StatelessWidget {
 
           // ── Foreground (static, bottom-anchored) ──────────────────────
           //    Only occupies the bottom, so the top mosaic stays tappable.
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  24.gap,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        isDark
+                            ? AssetValues.logoHorizontalDark
+                            : AssetValues.logoHorizontalLight,
+                        height: 40,
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'A world in every voice.',
+                        style: text.headlineMedium?.copyWith(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w700,
+                          height: 1.15,
+                          letterSpacing: -0.4,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'The ideas that quietly shape a life are being '
+                        'spoken now. Begin by listening.',
+                        style: text.bodyLarge?.copyWith(
+                          color: cs.onSurfaceVariant,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+                  FilledButton(
+                    onPressed: () => _start(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: cs.primary,
+                      foregroundColor: cs.onPrimary,
+                      minimumSize: const Size.fromHeight(60),
+                      shape: const StadiumBorder(),
+                      textStyle: text.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        SvgPicture.asset(
-                          isDark
-                              ? AssetValues.logoHorizontalDark
-                              : AssetValues.logoHorizontalLight,
-                          height: 40,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'A world in every voice.',
-                          style: text.headlineMedium?.copyWith(
-                            color: cs.onSurface,
-                            fontWeight: FontWeight.w700,
-                            height: 1.15,
-                            letterSpacing: -0.4,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'The ideas that quietly shape a life are being '
-                          'spoken now. Begin by listening.',
-                          style: text.bodyLarge?.copyWith(
-                            color: cs.onSurfaceVariant,
-                            height: 1.4,
-                          ),
-                        ),
+                        Text('Start Listening'),
+                        SizedBox(width: 8),
+                        Icon(Icons.arrow_forward_rounded, size: 20),
                       ],
                     ),
-                    const SizedBox(height: 28),
-                    FilledButton(
-                      onPressed: () => _start(context),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: cs.primary,
-                        foregroundColor: cs.onPrimary,
-                        minimumSize: const Size.fromHeight(60),
-                        shape: const StadiumBorder(),
-                        textStyle: text.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('Start Listening'),
-                          SizedBox(width: 8),
-                          Icon(Icons.arrow_forward_rounded, size: 20),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  8.gap,
+                  const BottomPadding(),
+                ],
               ),
             ),
           ),
