@@ -23,6 +23,8 @@ dependencies:
     path: ../packages/expressive_sheet
   expressive_snack:
     path: ../packages/expressive_snack
+  expressive_loading_indicator:
+    path: ../packages/expressive_loading_indicator
   material_shapes:
     path: ../packages/material_shapes
   material_wavy_progress_indicator:
@@ -58,4 +60,5 @@ flutter:
   assets:
     - assets/config.json
     - assets/vectors/
+    - assets/images/
 

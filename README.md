@@ -19,12 +19,12 @@ First the UI:
 - [x] Home page UI
 - [x] Player page UI
 - [x] Channel page UI
-- [ ] Auth page
+- [x] Auth page
 - [x] Welcome page
 - [ ] Onboarding?
 - [x] Menu page UI
 - [ ] Explore page UI
-- [ ] Downloads page UI
+- [x] Downloads page UI
 - [ ] Feedback page UI
 - [ ] Home widgets 
 

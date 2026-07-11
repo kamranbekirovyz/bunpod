@@ -10,6 +10,7 @@ workspace:
   - bunpod_flutter
   - packages/expressive_sheet
   - packages/expressive_snack
+  - packages/expressive_loading_indicator
   - packages/material_shapes
   - packages/material_wavy_progress_indicator
 
