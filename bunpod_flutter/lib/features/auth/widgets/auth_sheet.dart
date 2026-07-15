@@ -6,13 +6,6 @@ import 'package:expressive_sheet/expressive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
-/// Sign-in as a floating expressive sheet: a headline and two sign-in
-/// buttons.
-///
-/// UI only. Tapping a provider shows a short loading beat, then closes the
-/// sheet and replaces the page under it with home. Dragging the sheet away
-/// during the beat cancels it.
 class AuthSheet extends StatefulWidget {
   const AuthSheet({super.key, this.onSignedIn});
 
@@ -55,7 +48,7 @@ class _AuthSheetState extends State<AuthSheet> {
       final NavigatorState navigator = Navigator.of(context);
       navigator.pop();
       navigator.pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => const HomePage()),
+        MaterialPageRoute<void>(builder: (_) => const OnboardingPage()),
       );
     });
   }

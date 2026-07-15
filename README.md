@@ -21,9 +21,9 @@ First the UI:
 - [x] Channel page UI
 - [x] Auth page
 - [x] Welcome page
-- [ ] Onboarding?
+- [x] Onboarding?
 - [x] Menu page UI
-- [ ] Explore page UI
+- [x] Explore page UI
 - [x] Downloads page UI
 - [ ] Feedback page UI
 - [ ] Home widgets 

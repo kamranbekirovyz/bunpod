@@ -1,0 +1,6 @@
+- Expressive pull to refresh: https://pub.dev/packages/expressive_refresh
+- Squigly line around the episode when downloading (from Play Store app)
+- CarPlay
+- Desktop
+- Assign random profile picture from material avatars
+- Edit materia page route that we use to be draggable from sides on ios?

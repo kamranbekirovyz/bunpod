@@ -33,7 +33,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(ExplorePage.route());
+                },
                 child: SizedBox(
                   width: 40,
                   height: 40,
