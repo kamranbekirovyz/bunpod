@@ -16,16 +16,20 @@
 
 First the UI:
 
-- [x] Home page UI
-- [x] Player page UI
-- [x] Channel page UI
+- [x] Home page 
+- [x] Player page 
+- [x] Channel page 
 - [x] Auth page
 - [x] Welcome page
-- [x] Onboarding?
-- [x] Menu page UI
-- [x] Explore page UI
-- [x] Downloads page UI
-- [ ] Feedback page UI
+- [x] Onboarding
+- [x] Menu page 
+- [x] Explore page 
+- [x] Downloads page 
+- [ ] Subscriptions page 
+- [ ] Listen history page 
+- [ ] Paywall 
+- [ ] Share to social media
+- [ ] Feedback page
 - [ ] Home widgets 
 
 Then the backend:
