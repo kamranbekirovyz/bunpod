@@ -68,7 +68,7 @@ class _BodyState extends State<_Body> {
               icon: Icons.podcasts_outlined,
               title: 'Subscriptions',
               onTap: () {
-                ComingSoon.show(context);
+                Navigator.of(context).push(SubscriptionsPage.route());
               },
             ),
           ],
