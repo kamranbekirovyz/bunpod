@@ -1,4 +1,5 @@
 import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,6 +27,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void _openPlayer() {
     Navigator.of(context).push(PlayerPage.route(_playing));
+  }
+
+  // Mock-only: holds the expressive indicator for a beat; a real feed fetch
+  // goes here later.
+  Future<void> _refresh() {
+    return Future<void>.delayed(const Duration(milliseconds: 1500));
   }
 
   static List<String?> _buildTabValues() {
@@ -88,72 +95,81 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: HomeAppBar(),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerScrolled) {
-          return [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  24.gap,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: GestureDetector(
-                      onTap: _openPlayer,
-                      child: PlayerCard(
-                        scheme: _playing.scheme(context),
-                        imageUrl: _playing.image,
-                        channel: _playing.channel,
-                        title: _playing.title,
-                        progress: _playing.progress,
-                        timeLeft: _playing.total - _playing.listened,
-                        coverShape: ShapeValues.coverFocused,
-                        onPlayPause: () {},
+      body: ExpressiveRefreshIndicator(
+        onRefresh: _refresh,
+        // Inside NestedScrollView the drag comes from the inner scrollables
+        // (outer -> TabBarView page -> list = depth 2), so the default
+        // depth-0 predicate would never trigger.
+        notificationPredicate: (notification) => notification.depth == 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    24.gap,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: GestureDetector(
+                        onTap: _openPlayer,
+                        child: PlayerCard(
+                          scheme: _playing.scheme(context),
+                          imageUrl: _playing.image,
+                          channel: _playing.channel,
+                          title: _playing.title,
+                          progress: _playing.progress,
+                          timeLeft: _playing.total - _playing.listened,
+                          coverShape: ShapeValues.coverFocused,
+                          onPlayPause: () {},
+                        ),
                       ),
                     ),
-                  ),
-                  32.gap,
-                ],
+                    32.gap,
+                  ],
+                ),
               ),
-            ),
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverPersistentHeader(
-                pinned: true,
-                delegate: _PinnedTabsDelegate(
-                  height: 64,
-                  child: Center(
-                    child: FilterTabs(
-                      tabs: tabs,
-                      selected: _channel,
-                      onSelected: (value) {
-                        // Tapping the already-selected channel a second time
-                        // opens its channel page (the "All" tab is exempt).
-                        if (value != null && value == _channel) {
-                          final Channel? channel = channelByName(value);
-                          if (channel != null) {
-                            Navigator.of(
-                              context,
-                            ).push(ChannelPage.route(channel));
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+                sliver: SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _PinnedTabsDelegate(
+                    height: 64,
+                    child: Center(
+                      child: FilterTabs(
+                        tabs: tabs,
+                        selected: _channel,
+                        onSelected: (value) {
+                          // Tapping the already-selected channel a second time
+                          // opens its channel page (the "All" tab is exempt).
+                          if (value != null && value == _channel) {
+                            final Channel? channel = channelByName(value);
+                            if (channel != null) {
+                              Navigator.of(
+                                context,
+                              ).push(ChannelPage.route(channel));
+                            }
+                            return;
                           }
-                          return;
-                        }
-                        final int i = _tabValues.indexOf(value);
-                        if (i != -1) _tabController.animateTo(i);
-                      },
+                          final int i = _tabValues.indexOf(value);
+                          if (i != -1) _tabController.animateTo(i);
+                        },
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          controller: _tabController,
-          physics: const SpringPagePhysics(),
-          children: [
-            for (final value in _tabValues)
-              Builder(builder: (context) => _buildPage(context, value)),
-          ],
+            ];
+          },
+          body: TabBarView(
+            controller: _tabController,
+            physics: const SpringPagePhysics(),
+            children: [
+              for (final value in _tabValues)
+                Builder(builder: (context) => _buildPage(context, value)),
+            ],
+          ),
         ),
       ),
     );

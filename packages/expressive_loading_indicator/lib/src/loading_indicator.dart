@@ -59,16 +59,63 @@ class LoadingIndicator extends StatefulWidget {
          key: key,
        );
 
+  /// Creates a determinate (non-contained) [LoadingIndicator] whose shape
+  /// morph is driven by [progress] (0.0–1.0) instead of animating on its own.
+  ///
+  /// The shapes morph from the first of [indicatorPolygons] at 0.0 to the last
+  /// at 1.0 (defaulting to [determinateIndicatorPolygons] — circle to
+  /// soft-burst) while counter-rotating up to 180°.
+  LoadingIndicator.determinate({
+    required double progress,
+    List<RoundedPolygon>? indicatorPolygons,
+    Color? activeIndicatorColor,
+    Color? containerColor,
+    String? semanticsLabel,
+    Key? key,
+  }) : this._(
+         isContained: false,
+         progress: progress,
+         indicatorPolygons: indicatorPolygons,
+         activeIndicatorColor: activeIndicatorColor,
+         containerColor: containerColor,
+         semanticsLabel: semanticsLabel,
+         key: key,
+       );
+
+  /// Creates a determinate, contained [LoadingIndicator] whose shape morph is
+  /// driven by [progress] (0.0–1.0). See [LoadingIndicator.determinate].
+  LoadingIndicator.containedDeterminate({
+    required double progress,
+    List<RoundedPolygon>? indicatorPolygons,
+    Color? activeIndicatorColor,
+    Color? containerColor,
+    String? semanticsLabel,
+    Key? key,
+  }) : this._(
+         isContained: true,
+         progress: progress,
+         indicatorPolygons: indicatorPolygons,
+         activeIndicatorColor: activeIndicatorColor,
+         containerColor: containerColor,
+         semanticsLabel: semanticsLabel,
+         key: key,
+       );
+
   LoadingIndicator._({
     required bool isContained,
+    double? progress,
     List<RoundedPolygon>? indicatorPolygons,
     this.activeIndicatorColor,
     this.containerColor,
     this.semanticsLabel,
     super.key,
   }) : _isContained = isContained,
+       progress = progress,
        indicatorPolygons =
-           indicatorPolygons ?? LoadingIndicator.indeterminateIndicatorPolygons,
+           indicatorPolygons ??
+           (progress == null
+               ? LoadingIndicator.indeterminateIndicatorPolygons
+               : LoadingIndicator.determinateIndicatorPolygons),
        assert(
          indicatorPolygons == null || indicatorPolygons.length > 1,
          'indicatorPolygons should have, at least, two RoundedPolygons',
@@ -76,6 +123,10 @@ class LoadingIndicator extends StatefulWidget {
 
   /// Whether this indicator is contained.
   final bool _isContained;
+
+  /// When non-null, the indicator is determinate: its shape morph is driven by
+  /// this value (0.0–1.0) rather than a self-running animation.
+  final double? progress;
 
   /// Color of the active indicator shape.
   ///
@@ -114,26 +165,34 @@ class LoadingIndicator extends StatefulWidget {
   /// This list is used as the default value for the
   /// [LoadingIndicator.indicatorPolygons] parameter when none is explicitly
   /// provided.
-  static final indeterminateIndicatorPolygons = UnmodifiableListView(
-    [
-      MaterialShapes.softBurst,
-      MaterialShapes.cookie9Sided,
-      MaterialShapes.pentagon,
-      MaterialShapes.pill,
-      MaterialShapes.sunny,
-      MaterialShapes.cookie4Sided,
-      MaterialShapes.oval,
-    ],
-  );
+  static final indeterminateIndicatorPolygons = UnmodifiableListView([
+    MaterialShapes.softBurst,
+    MaterialShapes.cookie9Sided,
+    MaterialShapes.pentagon,
+    MaterialShapes.pill,
+    MaterialShapes.sunny,
+    MaterialShapes.cookie4Sided,
+    MaterialShapes.oval,
+  ]);
 
   /// The sequence of [RoundedPolygon]s that the determinate [LoadingIndicator]
   /// will morph between when animating.
-  static final determinateIndicatorPolygons = UnmodifiableListView(
-    [
-      MaterialShapes.circle,
-      MaterialShapes.softBurst,
-    ],
-  );
+  static final determinateIndicatorPolygons = UnmodifiableListView([
+    // Rotating the circle by 360/20° gets a smoother morph into the
+    // soft-burst's spikes, matching AndroidX Compose's
+    // DeterminateIndicatorPolygons. Rotate about the shape's own centre
+    // (0.5, 0.5) so it spins in place rather than orbiting the origin.
+    MaterialShapes.circle.transformed((double x, double y) {
+      const double cx = 0.5;
+      const double cy = 0.5;
+      final double cos = math.cos(math.pi / 10);
+      final double sin = math.sin(math.pi / 10);
+      final double dx = x - cx;
+      final double dy = y - cy;
+      return (cx + dx * cos - dy * sin, cy + dx * sin + dy * cos);
+    }),
+    MaterialShapes.softBurst,
+  ]);
 
   @override
   State<LoadingIndicator> createState() => _LoadingIndicatorState();
@@ -154,18 +213,16 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
   late final _rotation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
   late final _scale =
-      TweenSequence<double>(
-            [
-              TweenSequenceItem(
-                tween: Tween(begin: 1, end: 1.125),
-                weight: 200 / 350,
-              ),
-              TweenSequenceItem(
-                tween: Tween(begin: 1.125, end: 1),
-                weight: 150 / 350,
-              ),
-            ],
-          )
+      TweenSequence<double>([
+            TweenSequenceItem(
+              tween: Tween(begin: 1, end: 1.125),
+              weight: 200 / 350,
+            ),
+            TweenSequenceItem(
+              tween: Tween(begin: 1.125, end: 1),
+              weight: 150 / 350,
+            ),
+          ])
           .chain(CurveTween(curve: const Interval(300 / 650, 650 / 650)))
           .animate(_controller);
 
@@ -183,13 +240,17 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
 
     _initMorphs();
 
-    _controller =
-        AnimationController(
-            vsync: this,
-            duration: const Duration(milliseconds: 650),
-          )
-          ..addStatusListener(_statusListener)
-          ..forward();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 650),
+    );
+    // A determinate indicator is driven by widget.progress from outside, so it
+    // never runs its own animation.
+    if (widget.progress == null) {
+      _controller
+        ..addStatusListener(_statusListener)
+        ..forward();
+    }
   }
 
   @override
@@ -222,13 +283,17 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
     _morphIndex.value = 0;
 
     _morphs.clear();
-    for (var i = 0; i < widget.indicatorPolygons.length; i++) {
-      _morphs.add(
-        Morph(
-          widget.indicatorPolygons[i],
-          widget.indicatorPolygons[(i + 1) % widget.indicatorPolygons.length],
-        ),
-      );
+    final List<RoundedPolygon> polygons = widget.indicatorPolygons;
+    if (widget.progress == null) {
+      // Indeterminate: circular sequence that wraps back to the first shape.
+      for (var i = 0; i < polygons.length; i++) {
+        _morphs.add(Morph(polygons[i], polygons[(i + 1) % polygons.length]));
+      }
+    } else {
+      // Determinate: a linear sequence from the first shape to the last.
+      for (var i = 0; i < polygons.length - 1; i++) {
+        _morphs.add(Morph(polygons[i], polygons[i + 1]));
+      }
     }
 
     // Calculate the shapes scale factor that will be applied to the morphed
@@ -296,16 +361,23 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
             painter: widget._isContained
                 ? _ContainerPainter(containerColor: containerColor)
                 : null,
-            foregroundPainter: _ActiveIndicatorPainter(
-              activeIndicatorColor: activeIndicatorColor,
-              morphScaleFactor: _morphScaleFactor,
-              morphs: _morphs,
-              morphIndex: _morphIndex,
-              globalAngle: _globalAngle,
-              rotation: _rotation,
-              scale: _scale,
-              morphProgress: _morphProgress,
-            ),
+            foregroundPainter: widget.progress == null
+                ? _ActiveIndicatorPainter(
+                    activeIndicatorColor: activeIndicatorColor,
+                    morphScaleFactor: _morphScaleFactor,
+                    morphs: _morphs,
+                    morphIndex: _morphIndex,
+                    globalAngle: _globalAngle,
+                    rotation: _rotation,
+                    scale: _scale,
+                    morphProgress: _morphProgress,
+                  )
+                : _DeterminateIndicatorPainter(
+                    activeIndicatorColor: activeIndicatorColor,
+                    morphScaleFactor: _morphScaleFactor,
+                    morphs: _morphs,
+                    progress: widget.progress!,
+                  ),
           ),
         ),
       ),
@@ -314,9 +386,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
 }
 
 class _ContainerPainter extends CustomPainter {
-  const _ContainerPainter({
-    required this.containerColor,
-  });
+  const _ContainerPainter({required this.containerColor});
 
   final Color containerColor;
 
@@ -329,6 +399,84 @@ class _ContainerPainter extends CustomPainter {
   @override
   bool shouldRepaint(_ContainerPainter oldDelegate) {
     return oldDelegate.containerColor != containerColor;
+  }
+}
+
+/// Paints the active indicator for a determinate [LoadingIndicator]: the shape
+/// morph is a pure function of [progress], with no self-running animation.
+///
+/// Mirrors the determinate path in AndroidX's Compose Material 3
+/// `LoadingIndicator`: the [morphs] are a linear (non-wrapping) sequence, the
+/// active morph is selected by progress, and the whole shape counter-rotates
+/// up to 180° as progress goes 0 -> 1.
+class _DeterminateIndicatorPainter extends CustomPainter {
+  const _DeterminateIndicatorPainter({
+    required this.activeIndicatorColor,
+    required this.morphScaleFactor,
+    required this.morphs,
+    required this.progress,
+  });
+
+  final Color activeIndicatorColor;
+
+  final double morphScaleFactor;
+
+  final List<Morph> morphs;
+
+  final double progress;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final double p = progress.clamp(0.0, 1.0);
+
+    // Pick the active morph from the linear sequence and the local progress
+    // within it.
+    final int activeMorphIndex = (morphs.length * p).floor().clamp(
+      0,
+      morphs.length - 1,
+    );
+    final double morphProgress =
+        (p == 1.0 && activeMorphIndex == morphs.length - 1)
+        ? 1.0
+        : (p * morphs.length) % 1.0;
+
+    // Counter-clockwise rotation, -180° at full progress.
+    final double angle = -p * math.pi;
+
+    final path = morphs[activeMorphIndex].toPath(progress: morphProgress);
+
+    final scaleFactor = morphScaleFactor * _kActiveIndicatorScale;
+    final remainingScaleFactor = 1 - scaleFactor;
+
+    final halfWidth = rect.width / 2;
+    final halfHeight = rect.height / 2;
+
+    canvas
+      ..save()
+      ..translate(halfWidth, halfHeight)
+      ..rotate(angle)
+      ..translate(-halfWidth, -halfHeight)
+      ..translate(
+        halfWidth * remainingScaleFactor,
+        halfHeight * remainingScaleFactor,
+      )
+      ..scale(rect.width * scaleFactor, rect.height * scaleFactor)
+      ..drawPath(
+        path,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = activeIndicatorColor,
+      )
+      ..restore();
+  }
+
+  @override
+  bool shouldRepaint(_DeterminateIndicatorPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.activeIndicatorColor != activeIndicatorColor ||
+        oldDelegate.morphScaleFactor != morphScaleFactor ||
+        oldDelegate.morphs != morphs;
   }
 }
 

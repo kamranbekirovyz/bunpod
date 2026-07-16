@@ -25,6 +25,8 @@ dependencies:
     path: ../packages/expressive_snack
   expressive_loading_indicator:
     path: ../packages/expressive_loading_indicator
+  expressive_refresh_indicator:
+    path: ../packages/expressive_refresh_indicator
   material_shapes:
     path: ../packages/material_shapes
   material_wavy_progress_indicator:

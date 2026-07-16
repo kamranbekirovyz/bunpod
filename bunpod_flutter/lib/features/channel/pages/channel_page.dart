@@ -1,4 +1,5 @@
 import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
@@ -34,6 +35,12 @@ class _ChannelPageState extends State<ChannelPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) setState(() => _entered = true);
     });
+  }
+
+  // Mock-only: holds the expressive indicator for a beat; a real feed fetch
+  // goes here later.
+  Future<void> _refresh() {
+    return Future<void>.delayed(const Duration(milliseconds: 1500));
   }
 
   @override
@@ -85,71 +92,81 @@ class _ChannelPageState extends State<ChannelPage> {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _ChannelHeaderDelegate(
-              channel: channel,
-              scheme: cs,
-              topPad: topPad,
-              minExtentValue: minExtent,
-              maxExtentValue: maxExtent,
-              entered: _entered,
-              subscribed: _subscribed,
-              onSubscribe: () => setState(() => _subscribed = !_subscribed),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (channel.description.isNotEmpty) ...[
-                    Text(
-                      channel.description,
-                      style: tt.bodyMedium?.copyWith(
-                        color: cs.onSurfaceVariant,
-                        height: 1.5,
-                      ),
-                    ),
-                    28.gap,
-                  ],
-                  Text(
-                    'Episodes',
-                    style: GoogleFonts.unbounded(
-                      textStyle: tt.titleLarge,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.3,
-                      color: cs.onSurface,
-                    ),
-                  ),
-                  12.gap,
-                ],
+      body: ExpressiveRefreshIndicator(
+        onRefresh: _refresh,
+        // Tint to the channel's seed scheme like the rest of the page. Descend
+        // from below the pinned back-button bar (this page's app-bar
+        // equivalent), not from behind the status bar — matching how Compose's
+        // indicator comes from the top of the content below the app bar.
+        color: cs.onPrimaryContainer,
+        backgroundColor: cs.primaryContainer,
+        edgeOffset: topPad + kToolbarHeight,
+        child: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _ChannelHeaderDelegate(
+                channel: channel,
+                scheme: cs,
+                topPad: topPad,
+                minExtentValue: minExtent,
+                maxExtentValue: maxExtent,
+                entered: _entered,
+                subscribed: _subscribed,
+                onSubscribe: () => setState(() => _subscribed = !_subscribed),
               ),
             ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, i) {
-                final Episode ep = episodes[i];
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                  child: EpisodeCard(
-                    episode: ep,
-                    playing: ep.playing,
-                    onTap: () => Navigator.of(
-                      context,
-                    ).push(PlayerPage.route(ep, fromChannel: true)),
-                  ),
-                );
-              },
-              childCount: episodes.length,
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (channel.description.isNotEmpty) ...[
+                      Text(
+                        channel.description,
+                        style: tt.bodyMedium?.copyWith(
+                          color: cs.onSurfaceVariant,
+                          height: 1.5,
+                        ),
+                      ),
+                      28.gap,
+                    ],
+                    Text(
+                      'Episodes',
+                      style: GoogleFonts.unbounded(
+                        textStyle: tt.titleLarge,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.3,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    12.gap,
+                  ],
+                ),
+              ),
             ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 32)),
-        ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, i) {
+                  final Episode ep = episodes[i];
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                    child: EpisodeCard(
+                      episode: ep,
+                      playing: ep.playing,
+                      onTap: () => Navigator.of(
+                        context,
+                      ).push(PlayerPage.route(ep, fromChannel: true)),
+                    ),
+                  );
+                },
+                childCount: episodes.length,
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+          ],
+        ),
       ),
     );
   }

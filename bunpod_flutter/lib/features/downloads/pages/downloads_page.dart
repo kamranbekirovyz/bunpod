@@ -1,4 +1,5 @@
 import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:expressive_snack/expressive_snack.dart';
 import 'package:flutter/material.dart';
 
@@ -87,6 +88,12 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   void dispose() {
     _fakeDownload.dispose();
     super.dispose();
+  }
+
+  // Mock-only: holds the expressive indicator for a beat; a real download
+  // sync goes here later.
+  Future<void> _refresh() {
+    return Future<void>.delayed(const Duration(milliseconds: 1500));
   }
 
   Future<void> _clearPlayed(
@@ -208,65 +215,68 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       );
     }
 
-    return ListView(
-      padding: .fromLTRB(
-        16,
-        16,
-        16,
-        BottomPadding.of(context),
-      ),
-      children: [
-        if (queue.isNotEmpty) ...[
-          DownloadSection(
-            label: 'Downloading',
-            children: [
-              for (final Download download in queue) tile(download),
-            ],
-          ),
-          32.gap,
-        ],
-        DownloadSection(
-          label: 'On device',
-          meta: sizeLabel(onDeviceMB),
-          children: [
-            for (final Download download in onDevice) tile(download),
+    return ExpressiveRefreshIndicator(
+      onRefresh: _refresh,
+      child: ListView(
+        padding: .fromLTRB(
+          16,
+          16,
+          16,
+          BottomPadding.of(context),
+        ),
+        children: [
+          if (queue.isNotEmpty) ...[
+            DownloadSection(
+              label: 'Downloading',
+              children: [
+                for (final Download download in queue) tile(download),
+              ],
+            ),
+            32.gap,
           ],
-        ),
-        if (played.isNotEmpty) ...[
-          32.gap,
           DownloadSection(
-            label: 'Played',
-            action: FilledButton.tonal(
-              onPressed: () {
-                _clearPlayed(context, played, playedMB);
-              },
-              style: FilledButton.styleFrom(
-                visualDensity: .compact,
-                textStyle: tt.labelMedium,
-                padding: const .symmetric(horizontal: 12),
-              ),
-              child: Text('Free up ${sizeLabel(playedMB)}'),
-            ),
+            label: 'On device',
+            meta: sizeLabel(onDeviceMB),
             children: [
-              for (final Download download in played) tile(download),
+              for (final Download download in onDevice) tile(download),
             ],
           ),
-        ],
-        24.gap,
-        Center(
-          child: TextButton.icon(
-            onPressed: () {
-              ComingSoon.show(context);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: cs.onSurfaceVariant,
-              textStyle: tt.labelMedium,
+          if (played.isNotEmpty) ...[
+            32.gap,
+            DownloadSection(
+              label: 'Played',
+              action: FilledButton.tonal(
+                onPressed: () {
+                  _clearPlayed(context, played, playedMB);
+                },
+                style: FilledButton.styleFrom(
+                  visualDensity: .compact,
+                  textStyle: tt.labelMedium,
+                  padding: const .symmetric(horizontal: 12),
+                ),
+                child: Text('Free up ${sizeLabel(playedMB)}'),
+              ),
+              children: [
+                for (final Download download in played) tile(download),
+              ],
             ),
-            icon: const Icon(Icons.auto_delete_outlined, size: 18),
-            label: const Text('Auto-delete played episodes: after 30 days'),
+          ],
+          24.gap,
+          Center(
+            child: TextButton.icon(
+              onPressed: () {
+                ComingSoon.show(context);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: cs.onSurfaceVariant,
+                textStyle: tt.labelMedium,
+              ),
+              icon: const Icon(Icons.auto_delete_outlined, size: 18),
+              label: const Text('Auto-delete played episodes: after 30 days'),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

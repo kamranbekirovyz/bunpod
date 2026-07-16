@@ -1,0 +1,17 @@
+name: expressive_refresh_indicator
+description: "Material 3 Expressive pull-to-refresh — Flutter's RefreshIndicator mechanics with the expressive shape-morphing LoadingIndicator as the spinner."
+version: 1.0.0
+publish_to: "none"
+
+resolution: workspace
+
+environment:
+  sdk: ^3.10.3
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  expressive_loading_indicator:
+    path: ../expressive_loading_indicator
+  motor: ^1.1.0
