@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: GestureDetector(
                         onTap: _openPlayer,
-                        child: PlayerCard(
+                        child: HomePlayerCard(
                           scheme: _playing.scheme(context),
                           imageUrl: _playing.image,
                           channel: _playing.channel,
