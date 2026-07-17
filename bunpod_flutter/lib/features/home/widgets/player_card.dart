@@ -32,10 +32,10 @@ class PlayerCard extends StatelessWidget {
     final double clampedProgress = progress.clamp(0.0, 1.0);
 
     return Container(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: BoxDecoration(
         color: cs.primary,
-        borderRadius: BorderRadius.circular(36),
+        borderRadius: .circular(36),
       ),
       child: Stack(
         children: [
@@ -46,73 +46,76 @@ class PlayerCard extends StatelessWidget {
               opacity: 0.12,
               child: ClipPath(
                 clipper: ShapeBorderClipper(
-                  shape: MaterialShapeBorder(shape: MaterialShapes.sunny),
+                  shape: MaterialShapeBorder(
+                    shape: MaterialShapes.sunny,
+                  ),
                 ),
                 child: SizedBox(
                   width: 180,
                   height: 180,
-                  child: ColoredBox(color: cs.onPrimary),
+                  child: ColoredBox(
+                    color: cs.onPrimary,
+                  ),
                 ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const .all(24),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: .min,
+              crossAxisAlignment: .start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Column(
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
                   children: [
-                    ClipPath(
-                      clipper: ShapeBorderClipper(
-                        shape: MaterialShapeBorder(shape: coverShape),
-                      ),
-                      child: SizedBox(
-                        width: 96,
-                        height: 96,
-                        child: _Cover(imageUrl: imageUrl, scheme: cs),
-                      ),
+                    Row(
+                      children: [
+                        ClipPath(
+                          clipper: ShapeBorderClipper(
+                            shape: MaterialShapeBorder(
+                              shape: coverShape,
+                            ),
+                          ),
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: _Cover(
+                              imageUrl: imageUrl,
+                              scheme: cs,
+                            ),
+                          ),
+                        ),
+                        8.gap,
+                        Text(
+                          channel.toUpperCase(),
+                          style: tt.labelSmall?.copyWith(
+                            color: cs.onPrimary.withValues(alpha: 0.85),
+                            fontWeight: .w700,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            channel.toUpperCase(),
-                            style: tt.labelSmall?.copyWith(
-                              color: cs.onPrimary.withValues(alpha: 0.85),
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.8,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: tt.headlineSmall?.copyWith(
-                              color: cs.onPrimary,
-                              fontWeight: FontWeight.w800,
-                              height: 1.1,
-                              letterSpacing: -0.4,
-                            ),
-                          ),
-                        ],
+                    4.gap,
+                    Text(
+                      title,
+                      maxLines: 2,
+                      overflow: .ellipsis,
+                      style: tt.headlineSmall?.copyWith(
+                        color: cs.onPrimary,
+                        fontWeight: .w800,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 22),
+                16.gap,
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: .center,
                   children: [
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: .start,
                         children: [
                           WavyLinearProgressIndicator(
                             value: clampedProgress,
@@ -120,7 +123,7 @@ class PlayerCard extends StatelessWidget {
                             trackColor: cs.onPrimary.withValues(alpha: 0.25),
                             stopIndicatorColor: cs.onPrimary,
                           ),
-                          const SizedBox(height: 9),
+                          8.gap,
                           Text(
                             _formatLeft(timeLeft),
                             style: tt.labelMedium?.copyWith(
@@ -131,7 +134,7 @@ class PlayerCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    16.gap,
                     Material(
                       color: cs.onPrimary,
                       shape: MaterialShapeBorder(
@@ -141,12 +144,12 @@ class PlayerCard extends StatelessWidget {
                       child: InkWell(
                         onTap: onPlayPause,
                         child: SizedBox(
-                          width: 62,
-                          height: 62,
+                          width: 64,
+                          height: 64,
                           child: Icon(
                             Icons.pause_rounded,
                             color: cs.primary,
-                            size: 28,
+                            size: 32,
                           ),
                         ),
                       ),
@@ -165,6 +168,7 @@ class PlayerCard extends StatelessWidget {
 String _formatLeft(Duration d) {
   final int h = d.inHours;
   final int m = d.inMinutes.remainder(60);
+
   return h > 0 ? '${h}h ${m}m left' : '${m}m left';
 }
 
@@ -180,7 +184,11 @@ final List<RoundedPolygon> _heroButtonShapes = <RoundedPolygon>[
 const int _kHeroButtonShape = 0;
 
 class _Cover extends StatelessWidget {
-  const _Cover({required this.imageUrl, required this.scheme});
+  const _Cover({
+    required this.imageUrl,
+    required this.scheme,
+  });
+
   final String imageUrl;
   final ColorScheme scheme;
 
