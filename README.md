@@ -25,9 +25,10 @@ First the UI:
 - [x] Menu page 
 - [x] Explore page 
 - [x] Downloads page 
-- [ ] Subscriptions page 
+- [x] Subscriptions page 
 - [ ] Listen history page 
 - [ ] Paywall 
+- [ ] Empty states of pages
 - [ ] Share to social media
 - [ ] Feedback page
 - [ ] Home widgets 
