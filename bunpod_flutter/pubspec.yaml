@@ -40,6 +40,7 @@ dependencies:
   get_it: ^9.2.1
   url_launcher: ^6.3.2
   package_info_plus: ^9.0.1
+  logarte: ^1.5.0
 
 dependency_overrides:
   flutter_secure_storage: ^10.0.0

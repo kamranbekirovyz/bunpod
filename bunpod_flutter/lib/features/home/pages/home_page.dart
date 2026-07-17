@@ -1,5 +1,6 @@
 import 'package:bunpod_flutter/bunpod_flutter.dart';
 import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,6 +49,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController.animation!.addListener(_syncChannelToTab);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      logarte.attach(
+        context: context,
+        visible: kDebugMode,
+      );
+    });
   }
 
   void _syncChannelToTab() {
