@@ -14,13 +14,3 @@ extension NumX on num {
     return SliverGap(toDouble());
   }
 }
-
-extension NumXs on num? {
-  String get clearPrice {
-    if (this == null) return 'N/A';
-
-    return this! % 1 == 0
-        ? '${this!.toInt()} AZN'
-        : '${this!.toStringAsFixed(2)} AZN'.replaceAll('.00', '');
-  }
-}
