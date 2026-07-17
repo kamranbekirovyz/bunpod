@@ -125,7 +125,7 @@ class PlayerCard extends StatelessWidget {
                           ),
                           8.gap,
                           Text(
-                            _formatLeft(timeLeft),
+                            '${timeLeft.remainingLabel} left',
                             style: tt.labelMedium?.copyWith(
                               color: cs.onPrimary.withValues(alpha: 0.8),
                               fontWeight: FontWeight.w600,
@@ -163,13 +163,6 @@ class PlayerCard extends StatelessWidget {
       ),
     );
   }
-}
-
-String _formatLeft(Duration d) {
-  final int h = d.inHours;
-  final int m = d.inMinutes.remainder(60);
-
-  return h > 0 ? '${h}h ${m}m left' : '${m}m left';
 }
 
 final List<RoundedPolygon> _heroButtonShapes = <RoundedPolygon>[

@@ -3,6 +3,7 @@ extension DurationX on Duration {
   String get remainingLabel {
     final int h = inHours;
     final int m = inMinutes.remainder(60);
+
     if (h > 0) return m > 0 ? '${h}h ${m}m' : '${h}h';
     if (m > 0) return '${m}m';
 
