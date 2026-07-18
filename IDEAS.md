@@ -1,6 +1,11 @@
-- Expressive pull to refresh: https://pub.dev/packages/expressive_refresh
-- Squigly line around the episode when downloading (from Play Store app)
 - CarPlay
 - Desktop
 - Assign random profile picture from material avatars
 - Edit materia page route that we use to be draggable from sides on ios?
+- cache home page, show loading indicator while refetching on app open
+- animate new episdo when refresh and opened app and refetched
+- Claude.md file specific for this project
+- make packages cloneable directly, or referanceable, show demo code too?
+- add userorient as a sponsor
+- get main color from wallpaper of the phone
+- pick expresive avatars as profile picture

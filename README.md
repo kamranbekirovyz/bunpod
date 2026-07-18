@@ -5,7 +5,7 @@
 <h1 align="center">BunPod</h1>
 
 <p align="center">
-  An open-source podcast player — Flutter, M3 Expressive and Serverpod!
+  An open-source podcast player — Flutter, Material 3 Expressive!
 </p>
 
 ---
@@ -13,8 +13,6 @@
 ## Roadmap
 
 🚧 BunPod is a work in progress. If you want to follow the progress, follow me on X at <a href="https://x.com/kamranbekirovyz" target="_blank" rel="noopener">@kamranbekirovyz</a>. If you notice any issues, please <a href="https://github.com/kamranbekirovyz/bunpod/issues" target="_blank" rel="noopener">open an issue</a>.
-
-First the UI:
 
 - [x] Home page 
 - [x] Player page 
@@ -32,12 +30,8 @@ First the UI:
 - [ ] Share to social media
 - [ ] Feedback page
 - [ ] Home widgets 
-
-Then the backend:
-
-- [ ] Serverpod API & data layer
-- [ ] Force update mechanism
 - [ ] Localization
+- [ ] Force update mechanism
 
 ---
 

@@ -1,17 +1,61 @@
-name: _
-publish_to: none
+name: bunpod_flutter
+description: Open-source podcast player app with Flutter and Material 3 Expressive.
+
+publish_to: 'none'
+
+version: 1.0.0+1
 
 environment:
   sdk: '^3.10.3'
+  flutter: '^3.38.4'
 
-workspace:
-  - bunpod_client
-  - bunpod_server
-  - bunpod_flutter
-  - packages/expressive_sheet
-  - packages/expressive_snack
-  - packages/expressive_loading_indicator
-  - packages/expressive_refresh_indicator
-  - packages/material_shapes
-  - packages/material_wavy_progress_indicator
+dependencies:
+  google_fonts: ^8.1.0
+  flutter_svg: ^2.3.0
+  motor: ^1.1.0
+  flutter:
+    sdk: flutter
+  expressive_sheet:
+    path: packages/expressive_sheet
+  expressive_snack:
+    path: packages/expressive_snack
+  expressive_loading_indicator:
+    path: packages/expressive_loading_indicator
+  expressive_refresh_indicator:
+    path: packages/expressive_refresh_indicator
+  material_shapes:
+    path: packages/material_shapes
+  material_wavy_progress_indicator:
+    path: packages/material_wavy_progress_indicator
+  gap: ^3.0.1
+  image_fade: ^0.6.2
+  extended_image: ^10.0.1
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  url_launcher: ^6.3.2
+  package_info_plus: ^9.0.1
+  logarte: ^1.5.0
+
+dependency_overrides:
+  flutter_secure_storage: ^10.0.0
+
+dev_dependencies:
+  flutter_lints: '>=3.0.0 <7.0.0'
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/app-icon.png
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/config.json
+    - assets/vectors/
+    - assets/images/
 

@@ -3,8 +3,6 @@ description: "Material Shapes — vendored from github.com/ksokolovskyi/material
 version: 1.0.0
 publish_to: "none"
 
-resolution: workspace
-
 environment:
   sdk: ^3.10.3
   flutter: ">=3.22.0"

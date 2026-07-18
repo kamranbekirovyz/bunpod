@@ -3,8 +3,6 @@ description: "Material 3 Wavy Progress Indicator — vendored from github.com/ks
 version: 1.0.0
 publish_to: "none"
 
-resolution: workspace
-
 environment:
   sdk: ^3.10.3
   flutter: ">=3.22.0"
