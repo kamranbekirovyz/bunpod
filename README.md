@@ -5,7 +5,7 @@
 <h1 align="center">BunPod</h1>
 
 <p align="center">
-  An open-source podcast player — Flutter, Material 3 Expressive!
+  An open-source podcast player — Flutter and Material 3 Expressive!
 </p>
 
 ---

@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 
 enum DownloadState { downloading, queued, done }
 

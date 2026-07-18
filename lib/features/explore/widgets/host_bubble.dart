@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';

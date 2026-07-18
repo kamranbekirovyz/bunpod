@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bunpod_flutter/bunpod_flutter.dart';
-import 'package:bunpod_flutter/features/auth/widgets/morph_sign_in_button.dart';
+import 'package:bunpod/bunpod.dart';
+import 'package:bunpod/features/auth/widgets/morph_sign_in_button.dart';
 import 'package:expressive_sheet/expressive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

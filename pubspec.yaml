@@ -1,4 +1,4 @@
-name: bunpod_flutter
+name: bunpod
 description: Open-source podcast player app with Flutter and Material 3 Expressive.
 
 publish_to: 'none'
@@ -10,11 +10,19 @@ environment:
   flutter: '^3.38.4'
 
 dependencies:
+  flutter:
+    sdk: flutter
   google_fonts: ^8.1.0
   flutter_svg: ^2.3.0
   motor: ^1.1.0
-  flutter:
-    sdk: flutter
+  gap: ^3.0.1
+  image_fade: ^0.6.2
+  extended_image: ^10.0.1
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  url_launcher: ^6.3.2
+  package_info_plus: ^9.0.1
+  logarte: ^1.5.0
   expressive_sheet:
     path: packages/expressive_sheet
   expressive_snack:
@@ -27,14 +35,7 @@ dependencies:
     path: packages/material_shapes
   material_wavy_progress_indicator:
     path: packages/material_wavy_progress_indicator
-  gap: ^3.0.1
-  image_fade: ^0.6.2
-  extended_image: ^10.0.1
-  flutter_bloc: ^9.1.1
-  get_it: ^9.2.1
-  url_launcher: ^6.3.2
-  package_info_plus: ^9.0.1
-  logarte: ^1.5.0
+
 
 dependency_overrides:
   flutter_secure_storage: ^10.0.0

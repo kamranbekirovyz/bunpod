@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 
 /// A single row in a grouped settings list. Sized to the M3 list-item spec:

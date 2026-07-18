@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 
 /// A podcast channel. Its identity (name, host, seed, cover) is derived from the

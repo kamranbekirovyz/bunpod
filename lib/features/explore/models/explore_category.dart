@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 
 /// An editorial shelf of the catalog: a name, a seed color that tints its

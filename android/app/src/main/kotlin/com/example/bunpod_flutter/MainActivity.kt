@@ -1,4 +1,4 @@
-package com.example.bunpod_flutter
+package app.bunpod
 
 import io.flutter.embedding.android.FlutterActivity
 

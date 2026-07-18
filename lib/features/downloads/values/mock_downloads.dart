@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 
 Episode _episode(String title) {
   return mockEpisodes.firstWhere((episode) => episode.title == title);

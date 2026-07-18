@@ -1,5 +1,5 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
-import 'package:bunpod_flutter/features/onboarding/widgets/show_pick_tile.dart';
+import 'package:bunpod/bunpod.dart';
+import 'package:bunpod/features/onboarding/widgets/show_pick_tile.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {

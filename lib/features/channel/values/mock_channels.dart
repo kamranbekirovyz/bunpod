@@ -1,4 +1,4 @@
-import 'package:bunpod_flutter/bunpod_flutter.dart';
+import 'package:bunpod/bunpod.dart';
 
 /// Editorial blurbs per channel — the only channel-level data not already on the
 /// episodes. Everything else is derived from [mockEpisodes].
