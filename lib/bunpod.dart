@@ -8,6 +8,7 @@ export 'features/channel/channel.dart';
 export 'features/downloads/downloads.dart';
 export 'features/subscriptions/subscriptions.dart';
 export 'features/menu/menu.dart';
+export 'common/models/models.dart';
 export 'common/values/values.dart';
 export 'common/widgets/widgets.dart';
 export 'common/theme/theme.dart';
