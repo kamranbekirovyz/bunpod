@@ -80,7 +80,7 @@ class _PlayButtonState extends State<PlayButton> {
                         ? Icons.pause_rounded
                         : Icons.play_arrow_rounded,
                     color: widget.foreground,
-                    size: 48,
+                    size: 56,
                   ),
                 ),
               ),

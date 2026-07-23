@@ -71,6 +71,7 @@ class _FavButtonState extends State<FavButton> {
                   ? Icons.favorite_rounded
                   : Icons.favorite_border_rounded,
               color: effective ? cs.onTertiary : cs.onSurface,
+              size: 28,
             ),
           ),
         ),

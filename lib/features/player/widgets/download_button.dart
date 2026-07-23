@@ -142,6 +142,7 @@ class _DownloadButtonState extends State<DownloadButton>
                           child: Icon(
                             icon,
                             color: cs.onPrimary,
+                            size: 28,
                           ),
                         ),
                       ),

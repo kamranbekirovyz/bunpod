@@ -75,6 +75,7 @@ class _SeekButtonState extends State<SeekButton> {
                         ? Icons.forward_10_rounded
                         : Icons.replay_10_rounded,
                     color: widget.iconColor,
+                    size: 28,
                   ),
                 ),
               ),
