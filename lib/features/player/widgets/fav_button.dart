@@ -34,23 +34,30 @@ class _FavButtonState extends State<FavButton> {
     final bool effective = _down && !reduce ? !widget.fav : widget.fav;
 
     return SingleMotionBuilder(
+      // Colour follows the committed state (only changes on release).
       motion: const MaterialSpringMotion.expressiveSpatialFast(),
-      value: effective ? 1.0 : 0.0,
-      builder: (context, t, child) {
+      value: widget.fav ? 1.0 : 0.0,
+      builder: (context, colorT, child) {
         final Color bg = Color.lerp(
           cs.surfaceContainerHighest,
           cs.tertiary,
-          t.clamp(0.0, 1.0),
+          colorT.clamp(0.0, 1.0),
         )!;
 
-        return ClipPath(
-          clipper: ShapeBorderClipper(
-            shape: _shapeAt(t),
+        return SingleMotionBuilder(
+          // Shape previews the toggle while pressed.
+          motion: const MaterialSpringMotion.expressiveSpatialFast(),
+          value: effective ? 1.0 : 0.0,
+          builder: (context, shapeT, inner) => ClipPath(
+            clipper: ShapeBorderClipper(
+              shape: _shapeAt(shapeT),
+            ),
+            child: Material(
+              color: bg,
+              child: inner,
+            ),
           ),
-          child: Material(
-            color: bg,
-            child: child,
-          ),
+          child: child,
         );
       },
       child: InkWell(
@@ -67,10 +74,10 @@ class _FavButtonState extends State<FavButton> {
         child: SizedBox.expand(
           child: Center(
             child: Icon(
-              effective
+              widget.fav
                   ? Icons.favorite_rounded
                   : Icons.favorite_border_rounded,
-              color: effective ? cs.onTertiary : cs.onSurface,
+              color: widget.fav ? cs.onTertiary : cs.onSurface,
               size: 28,
             ),
           ),
