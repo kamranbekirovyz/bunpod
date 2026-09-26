@@ -44,3 +44,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+
+# Private build config. Without these the app runs entirely on mocks.
+# `flutter run --dart-define-from-file=local.json`
+local.json
+ios/Flutter/Secrets.xcconfig
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+firebase.json
