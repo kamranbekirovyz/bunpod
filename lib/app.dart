@@ -14,6 +14,7 @@ class App extends StatelessWidget {
 
         return MaterialApp(
           title: AppValues.title,
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           themeMode: themeMode,
           theme: MaterialThemes.light,
@@ -27,7 +28,11 @@ class App extends StatelessWidget {
                   maxScaleFactor: 1.1,
                 ),
               ),
-              child: child!,
+              // Above the Navigator, so the update notice and the two blocking
+              // screens sit over every route without any of them knowing.
+              child: VersionarteWrapper(
+                child: child!,
+              ),
             );
           },
           home: const WelcomePage(),
