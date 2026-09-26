@@ -19,7 +19,6 @@ void setupLocator() {
   locator.registerSingleton<AuthRemoteData>(
     useMocks ? const MockAuthRemoteData() : const AuthRemoteData(),
   );
-  locator.registerSingleton<AuthRepository>(const AuthRepository());
   locator.registerSingleton<VersionarteProvider>(
     useMocks
         ? const MockVersionarteProvider()

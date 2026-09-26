@@ -12,11 +12,27 @@ class SocialSignInCubit extends Cubit<ViewState> {
 
     emit(const ViewBusy());
 
-    // TODO: swap the placeholder beat for the provider SDK + backend exchange.
-    await Future<void>.delayed(const Duration(seconds: 3));
+    try {
+      final SocialSignInResult result = await locator<SocialSignInService>()
+          .signIn(provider);
 
-    if (isClosed) return;
+      final Tokens tokens = await locator<AuthRemoteData>().socialSignIn(
+        provider: result.provider,
+        idToken: result.idToken,
+      );
 
-    emit(const ViewReady());
+      await locator<SecureStorageLocalData>().cacheTokens(tokens);
+
+      if (isClosed) return;
+
+      emit(const ViewReady());
+    } on SocialSignInCancelled {
+      if (!isClosed) emit(const ViewIdle());
+    } catch (error, stackTrace) {
+      logarte.log('sign in failed: $error');
+      logarte.log('stack trace: $stackTrace');
+
+      if (!isClosed) emit(const ViewFailed());
+    }
   }
 }
