@@ -266,7 +266,10 @@ class _PinnedTabsDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return SizedBox.expand(child: child);
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surface,
+      child: SizedBox.expand(child: child),
+    );
   }
 
   @override
