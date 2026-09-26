@@ -2,7 +2,7 @@ import 'package:bunpod/bunpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:versionarte/versionarte.dart';
 
-/// The four answers a real backend can give.
+/// Which version check result the mock returns.
 enum MockVersionarteScenario {
   /// Nothing on screen.
   upToDate,
@@ -17,22 +17,15 @@ enum MockVersionarteScenario {
   unavailable,
 }
 
-// ---------------------------------------------------------------------------
-// Pick a scenario by moving the `//` — exactly one line stays uncommented.
-// Hot restart (not hot reload) to see it, since the check runs at startup.
-// ---------------------------------------------------------------------------
+// Uncomment one, then hot restart.
 
 const MockVersionarteScenario _scenario = .upToDate;
 // const MockVersionarteScenario _scenario = .optionalUpdate;
 // const MockVersionarteScenario _scenario = .forcedUpdate;
 // const MockVersionarteScenario _scenario = .unavailable;
 
-/// Answers version checks without a backend, so a fresh clone can see all four
-/// screens.
-///
-/// The manifest is built *relative to the running build's version* rather than
-/// with fixed numbers, so bumping `version:` in pubspec.yaml never quietly
-/// turns one scenario into another.
+/// Builds the manifest relative to the running version, so pubspec bumps
+/// don't change the scenario.
 class MockVersionarteProvider extends VersionarteProvider {
   const MockVersionarteProvider();
 
@@ -48,14 +41,11 @@ class MockVersionarteProvider extends VersionarteProvider {
     final (String minimum, String latest, bool active) = switch (_scenario) {
       MockVersionarteScenario.upToDate => (current, current, true),
       MockVersionarteScenario.optionalUpdate => (current, next, true),
-      // Below the minimum is what makes an update forced.
       MockVersionarteScenario.forcedUpdate => (next, next, true),
       MockVersionarteScenario.unavailable => (current, current, false),
     };
 
     final PlatformDistributionInfo distribution = PlatformDistributionInfo(
-      // A real manifest owns these. Hard-coding a store URL in the app is how
-      // you strand users when the listing moves to another developer account.
       downloadUrl: _mockStoreUrl,
       version: VersionDetails(minimum: minimum, latest: latest),
       status: StatusDetails(
@@ -66,21 +56,15 @@ class MockVersionarteProvider extends VersionarteProvider {
       ),
     );
 
-    // Same answer on every platform: the mock has no reason to differ, and a
-    // real manifest is where per-platform minimums belong.
     return DistributionManifest(
       android: distribution,
       iOS: distribution,
-      macOS: distribution,
-      windows: distribution,
-      linux: distribution,
     );
   }
 
   static const String _mockStoreUrl = 'https://bunpod.app';
 
-  /// `1.4.2` -> `1.5.0`. Falls back to the input when it is not a plain
-  /// three-part version, which only costs the mock its scenario.
+  /// `1.4.2` -> `1.5.0`.
   static String _bumpMinor(String version) {
     final List<String> parts = version.split('.');
 
