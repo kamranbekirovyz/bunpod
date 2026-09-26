@@ -12,14 +12,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^8.1.0
+  google_fonts: ^8.2.1
   flutter_svg: ^2.3.0
   motor: ^1.1.0
   gap: ^3.0.1
   image_fade: ^0.6.2
   extended_image: ^10.0.1
   flutter_bloc: ^9.1.1
-  get_it: ^9.2.1
+  get_it: ^9.3.0
+  dio: ^5.11.1
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  google_sign_in: ^7.2.0
+  sign_in_with_apple: ^8.2.0
+  flutter_secure_storage: ^11.2.0
+  crypto: ^3.0.6
   url_launcher: ^6.3.2
   package_info_plus: ^10.2.1
   logarte: ^1.5.0
@@ -35,6 +42,7 @@ dependencies:
     path: packages/material_shapes
   material_wavy_progress_indicator:
     path: packages/material_wavy_progress_indicator
+  versionarte: ^2.1.2
 
 
 dependency_overrides:
