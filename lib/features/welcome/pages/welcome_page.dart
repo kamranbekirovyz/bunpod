@@ -59,7 +59,14 @@ class WelcomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 28),
                   _Button(),
-                  8.gap,
+                  // Android signs in straight from this button, so this is the
+                  // last screen before an account exists and the small print
+                  // has to be here. iOS opens [AuthSheet] instead, which
+                  // carries its own copy right above the buttons that matter.
+                  if (defaultTargetPlatform == .android) ...[
+                    12.gap,
+                    const LegalNote(),
+                  ],
                   const BottomPadding(),
                 ],
               ),
