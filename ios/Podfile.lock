@@ -26,7 +26,7 @@ PODS:
   - firebase_core (4.15.0):
     - Firebase/CoreOnly (= 12.19.0)
     - Flutter
-  - firebase_remote_config (6.5.6):
+  - firebase_remote_config (6.7.0):
     - Firebase/RemoteConfig (= 12.19.0)
     - firebase_core
     - Flutter
@@ -185,7 +185,7 @@ SPEC CHECKSUMS:
   Firebase: 7ca191e43724142f79fae653547b3382c45413cc
   firebase_auth: 36fa0bc88f7ea4c0ad5c543d117674d05be29799
   firebase_core: 7ed66bd750bf2b7a29268b21d63eec7bc6799ee8
-  firebase_remote_config: 3f1c717429f8468e61c5e62f81a07363e8120691
+  firebase_remote_config: a683c89aa52739f7808a61ad8ee40b5677348ae3
   FirebaseABTesting: 3f0f330ed5e19323fe512006d62a38399a7de7c1
   FirebaseAppCheckInterop: bd4b791ffaed7ae719304af6369d243ddee5e4a0
   FirebaseAuth: 8c38236f67e5e3dd6aacf3e0c46b3eed31e9c820
