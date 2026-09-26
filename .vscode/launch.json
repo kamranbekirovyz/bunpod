@@ -1,0 +1,145 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "app (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "expressive_loading_indicator",
+            "cwd": "packages/expressive_loading_indicator",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "expressive_loading_indicator (profile mode)",
+            "cwd": "packages/expressive_loading_indicator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "expressive_loading_indicator (release mode)",
+            "cwd": "packages/expressive_loading_indicator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "expressive_refresh_indicator",
+            "cwd": "packages/expressive_refresh_indicator",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "expressive_refresh_indicator (profile mode)",
+            "cwd": "packages/expressive_refresh_indicator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "expressive_refresh_indicator (release mode)",
+            "cwd": "packages/expressive_refresh_indicator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "expressive_sheet",
+            "cwd": "packages/expressive_sheet",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "expressive_sheet (profile mode)",
+            "cwd": "packages/expressive_sheet",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "expressive_sheet (release mode)",
+            "cwd": "packages/expressive_sheet",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "expressive_snack",
+            "cwd": "packages/expressive_snack",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "expressive_snack (profile mode)",
+            "cwd": "packages/expressive_snack",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "expressive_snack (release mode)",
+            "cwd": "packages/expressive_snack",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "material_shapes",
+            "cwd": "packages/material_shapes",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "material_shapes (profile mode)",
+            "cwd": "packages/material_shapes",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "material_shapes (release mode)",
+            "cwd": "packages/material_shapes",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "material_wavy_progress_indicator",
+            "cwd": "packages/material_wavy_progress_indicator",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "material_wavy_progress_indicator (profile mode)",
+            "cwd": "packages/material_wavy_progress_indicator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "material_wavy_progress_indicator (release mode)",
+            "cwd": "packages/material_wavy_progress_indicator",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
