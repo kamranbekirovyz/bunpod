@@ -36,7 +36,9 @@ class _PlayerPageState extends State<PlayerPage> {
       Navigator.of(context).pop();
       return;
     }
-    final Channel? channel = channelByName(widget.episode.channel);
+    final MockChannel? channel = channelByName(
+      widget.episode.channel?.title ?? '',
+    );
     if (channel != null) {
       Navigator.of(context).push(ChannelPage.route(channel));
     }
@@ -75,7 +77,7 @@ class _PlayerPageState extends State<PlayerPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    episode.channel.toUpperCase(),
+                    (episode.channel?.title ?? '').toUpperCase(),
                     style: tt.labelMedium?.copyWith(
                       color: cs.onSurfaceVariant,
                       fontWeight: FontWeight.w700,

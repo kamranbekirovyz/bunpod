@@ -10,7 +10,7 @@ class HostBubble extends StatefulWidget {
     required this.onTap,
   });
 
-  final Channel channel;
+  final MockChannel channel;
   final VoidCallback onTap;
 
   @override

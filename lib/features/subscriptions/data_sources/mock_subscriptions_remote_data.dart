@@ -4,12 +4,12 @@ class MockSubscriptionsRemoteData implements SubscriptionsRemoteData {
   const MockSubscriptionsRemoteData();
 
   @override
-  Future<List<Podcast>> subscriptions() async {
+  Future<List<Channel>> subscriptions() async {
     await Future<void>.delayed(AppValues.mockDelay);
 
     return [
-      for (final (int index, Channel channel) in mockChannels.indexed)
-        Podcast(
+      for (final (int index, MockChannel channel) in mockChannels.indexed)
+        Channel(
           id: index,
           title: channel.name,
           author: channel.host,

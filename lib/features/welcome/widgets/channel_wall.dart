@@ -21,7 +21,7 @@ import 'package:motor/motor.dart';
 class ChannelWall extends StatelessWidget {
   const ChannelWall({super.key, required this.channels});
 
-  final List<Channel> channels;
+  final List<MockChannel> channels;
 
   /// Target on-screen tile size; the column count is chosen to land near it.
   static const double _targetTile = 118;
@@ -109,7 +109,7 @@ class _FloatingTile extends StatefulWidget {
     required this.spec,
   });
 
-  final Channel channel;
+  final MockChannel channel;
   final _TileSpec spec;
 
   // The expressive shape each square settles into.

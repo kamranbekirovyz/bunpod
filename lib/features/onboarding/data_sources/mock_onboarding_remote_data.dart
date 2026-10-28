@@ -8,7 +8,7 @@ class MockOnboardingRemoteData implements OnboardingRemoteData {
     await Future<void>.delayed(AppValues.mockDelay);
 
     return [
-      for (final (int index, Channel channel) in mockChannels.indexed)
+      for (final (int index, MockChannel channel) in mockChannels.indexed)
         TrendingPodcast(
           appleId: index + 1,
           title: channel.name,

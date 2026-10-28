@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class FeedCubit extends Cubit<List<Episode>?> {
   FeedCubit() : super(null);
 
-  Future<void> load({int? podcastId}) async {
+  Future<void> load({int? channelId}) async {
     emit(null);
 
-    emit(await locator<FeedRemoteData>().feed(podcastId: podcastId));
+    emit(await locator<FeedRemoteData>().feed(channelId: channelId));
   }
 }

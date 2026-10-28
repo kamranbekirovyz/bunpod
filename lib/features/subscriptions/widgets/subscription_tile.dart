@@ -15,7 +15,7 @@ class SubscriptionTile extends StatelessWidget {
     required this.onToggle,
   });
 
-  final Channel channel;
+  final MockChannel channel;
   final BorderRadius borderRadius;
   final bool subscribed;
   final VoidCallback onTap;

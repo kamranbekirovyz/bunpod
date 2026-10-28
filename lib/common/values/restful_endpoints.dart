@@ -29,11 +29,11 @@ class RestfulEndpoints {
     );
   }
 
-  static Endpoint feed({int? podcastId, int? limit}) {
+  static Endpoint feed({int? channelId, int? limit}) {
     return Endpoint.get(
       url: '${AppConfig.baseUrl}/feed',
       query: {
-        'podcast_id': ?podcastId,
+        'podcast_id': ?channelId,
         'limit': ?limit,
       },
     );

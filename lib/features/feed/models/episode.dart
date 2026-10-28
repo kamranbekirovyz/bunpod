@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class Episode {
   const Episode({
     this.id,
-    this.podcastId,
-    this.podcast,
+    this.channelId,
+    this.channel,
     this.title,
     this.description,
     this.image,
@@ -18,8 +18,8 @@ class Episode {
   });
 
   final int? id;
-  final int? podcastId;
-  final Podcast? podcast;
+  final int? channelId;
+  final Channel? channel;
   final String? title;
   final String? description;
   final String? image;
@@ -33,10 +33,10 @@ class Episode {
   factory Episode.fromJson(Map<String, dynamic> json) {
     return Episode(
       id: json['id'],
-      podcastId: json['podcast_id'],
-      podcast: json['podcast'] == null
+      channelId: json['podcast_id'],
+      channel: json['podcast'] == null
           ? null
-          : Podcast.fromJson(json['podcast']),
+          : Channel.fromJson(json['podcast']),
       title: json['title'],
       description: json['description'],
       image: json['image'],
@@ -49,11 +49,7 @@ class Episode {
     );
   }
 
-  String get channel => podcast?.title ?? '';
-
-  String get host => podcast?.author ?? '';
-
-  String get cover => podcast?.image ?? image ?? '';
+  String get cover => channel?.image ?? image ?? '';
 
   Duration get total => Duration(seconds: duration ?? 0);
 
@@ -63,7 +59,7 @@ class Episode {
   double get progress =>
       total.inSeconds == 0 ? 0 : listened.inSeconds / total.inSeconds;
 
-  Color get seed => Podcast.seedOf(podcastId);
+  Color get seed => Channel.seedOf(channelId);
 
   Bucket get bucket {
     final DateTime date = publishedAt ?? DateTime.now();

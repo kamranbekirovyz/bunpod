@@ -79,7 +79,7 @@ class DownloadTile extends StatelessWidget {
                     mainAxisSize: .min,
                     children: [
                       Text(
-                        episode.channel.toUpperCase(),
+                        (episode.channel?.title ?? '').toUpperCase(),
                         maxLines: 1,
                         overflow: .ellipsis,
                         style: tt.labelSmall?.copyWith(

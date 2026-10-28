@@ -54,14 +54,14 @@ class _ExplorePageState extends State<ExplorePage> {
     setState(() {});
   }
 
-  void _openChannel(Channel channel) {
+  void _openChannel(MockChannel channel) {
     Navigator.of(context).push(ChannelPage.route(channel));
   }
 
   /// Channels matching the active shelf and/or query. A query matches a
   /// channel's name or host directly, and matches whole shelves by name.
-  List<Channel> get _results {
-    final List<Channel> pool = _category?.channels ?? mockChannels;
+  List<MockChannel> get _results {
+    final List<MockChannel> pool = _category?.channels ?? mockChannels;
     final String q = _query.toLowerCase();
     if (q.isEmpty) return pool;
 
@@ -70,8 +70,8 @@ class _ExplorePageState extends State<ExplorePage> {
         if (c.name.toLowerCase().contains(q)) ...c.channelNames,
     };
 
-    return <Channel>[
-      for (final Channel channel in pool)
+    return <MockChannel>[
+      for (final MockChannel channel in pool)
         if (channel.name.toLowerCase().contains(q) ||
             channel.host.toLowerCase().contains(q) ||
             viaCategory.contains(channel.name))
@@ -133,12 +133,12 @@ class _Body extends StatelessWidget {
   final FocusNode searchFocus;
   final ExploreCategory? category;
   final bool browsing;
-  final List<Channel> results;
+  final List<MockChannel> results;
   final ValueChanged<String> onQueryChanged;
   final VoidCallback onClearSearch;
   final ValueChanged<ExploreCategory> onPickCategory;
   final VoidCallback onClearCategory;
-  final ValueChanged<Channel> onOpenChannel;
+  final ValueChanged<MockChannel> onOpenChannel;
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class _Body extends StatelessWidget {
             ),
             itemCount: mockChannels.length,
             itemBuilder: (BuildContext context, int index) {
-              final Channel channel = mockChannels[index];
+              final MockChannel channel = mockChannels[index];
 
               return HostBubble(
                 channel: channel,
@@ -287,7 +287,7 @@ class _Body extends StatelessWidget {
           ),
           itemCount: results.length,
           itemBuilder: (BuildContext context, int index) {
-            final Channel channel = results[index];
+            final MockChannel channel = results[index];
 
             return ResultTile(
               channel: channel,

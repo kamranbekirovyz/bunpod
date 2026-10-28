@@ -33,7 +33,7 @@ class _CategoryCardState extends State<CategoryCard> {
     final TextTheme tt = Theme.of(context).textTheme;
     final bool reduceMotion =
         MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final List<Channel> channels = widget.category.channels;
+    final List<MockChannel> channels = widget.category.channels;
 
     final BorderRadius radius = BorderRadius.vertical(
       top: Radius.circular(widget.first ? 28 : 10),
@@ -107,7 +107,7 @@ class _CategoryCardState extends State<CategoryCard> {
 class _CoverFan extends StatelessWidget {
   const _CoverFan({required this.channels, required this.border});
 
-  final List<Channel> channels;
+  final List<MockChannel> channels;
   final Color border;
 
   static const double _size = 48;

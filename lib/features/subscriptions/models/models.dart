@@ -1,1 +1,1 @@
-export 'podcast.dart';
+export 'channel.dart';

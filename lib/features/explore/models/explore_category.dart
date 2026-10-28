@@ -25,8 +25,8 @@ class ExploreCategory {
 
   /// The catalog channels filed under this category, skipping any name that
   /// no longer resolves.
-  List<Channel> get channels => <Channel>[
+  List<MockChannel> get channels => <MockChannel>[
     for (final String name in channelNames)
-      if (channelByName(name) case final Channel channel) channel,
+      if (channelByName(name) case final MockChannel channel) channel,
   ];
 }

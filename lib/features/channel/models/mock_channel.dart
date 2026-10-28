@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 /// A podcast channel. Its identity (name, host, seed, cover) is derived from the
 /// episodes that belong to it — see [mockChannels] — so there is a single source
 /// of truth. Only the editorial [description] is channel-level data.
-class Channel {
-  const Channel({
+class MockChannel {
+  const MockChannel({
     required this.name,
     required this.host,
     required this.seed,
@@ -29,5 +29,5 @@ class Channel {
 
   /// Episodes that belong to this channel, in feed order.
   List<Episode> get episodes =>
-      mockEpisodes.where((Episode e) => e.channel == name).toList();
+      mockEpisodes.where((Episode e) => e.channel?.title == name).toList();
 }

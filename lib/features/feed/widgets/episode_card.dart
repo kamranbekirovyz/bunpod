@@ -179,7 +179,7 @@ class _EpisodeCardState extends State<EpisodeCard>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  episode.channel.toUpperCase(),
+                  (episode.channel?.title ?? '').toUpperCase(),
                   style: tt.labelSmall?.copyWith(
                     color: fg,
                     fontWeight: FontWeight.w700,

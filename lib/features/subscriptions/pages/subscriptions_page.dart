@@ -21,11 +21,11 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     return Future<void>.delayed(const Duration(seconds: 3));
   }
 
-  void _openChannel(Channel channel) {
+  void _openChannel(MockChannel channel) {
     Navigator.of(context).push(ChannelPage.route(channel));
   }
 
-  void _toggle(Channel channel) {
+  void _toggle(MockChannel channel) {
     final bool nowUnsubscribed = !_unsubscribed.contains(channel.name);
     setState(() {
       if (nowUnsubscribed) {
@@ -46,7 +46,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Channel> channels = mockSubscriptions;
+    final List<MockChannel> channels = mockSubscriptions;
 
     return Scaffold(
       appBar: const _AppBar(),
@@ -61,7 +61,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
           ),
           itemCount: channels.length,
           itemBuilder: (BuildContext context, int index) {
-            final Channel channel = channels[index];
+            final MockChannel channel = channels[index];
 
             return SubscriptionTile(
               channel: channel,

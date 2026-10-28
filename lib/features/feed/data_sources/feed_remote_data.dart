@@ -5,10 +5,10 @@ class FeedRemoteData {
   const FeedRemoteData();
 
   Future<List<Episode>> feed({
-    int? podcastId,
+    int? channelId,
   }) async {
     final Response<Map<String, dynamic>> response = await RestfulEndpoints.feed(
-      podcastId: podcastId,
+      channelId: channelId,
     ).send<Map<String, dynamic>>();
 
     final List<dynamic> items = response.data?['items'] ?? [];
