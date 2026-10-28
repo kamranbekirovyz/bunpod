@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
 
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const ExplorePage());
+  static Future<void> show(BuildContext context) {
+    return Navigator.of(context).push(
+      const ExplorePage().asAdaptiveSheetRoute<void>(),
+    );
   }
 
   @override
@@ -22,6 +24,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Category? _category;
 
+  bool _scrolled = false;
+
   bool get _browsing => _search.text.trim().isEmpty;
 
   @override
@@ -30,7 +34,6 @@ class _ExplorePageState extends State<ExplorePage> {
     _trendingCubit = ExploreTrendingCubit()..load();
     _searchCubit = ExploreSearchCubit();
     locator<ExploreCategoriesCubit>().load();
-    _searchFocus.addListener(() => setState(() {}));
   }
 
   @override
@@ -57,36 +60,33 @@ class _ExplorePageState extends State<ExplorePage> {
     _trendingCubit.load(categoryId: category?.id);
   }
 
-  void _openChannel(ChannelPreview show) {
-    Navigator.of(
-      context,
-    ).push(ChannelPage.route(appleId: show.appleId, preview: show));
+  bool _onScroll(ScrollUpdateNotification notification) {
+    final bool scrolled = notification.metrics.pixels > 0;
+
+    if (scrolled != _scrolled) setState(() => _scrolled = scrolled);
+
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        leading: const StyledBackButton(),
-        title: const Text('Explore'),
-      ),
-      body: CustomScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        slivers: [
-          SliverPadding(
-            padding: const .fromLTRB(16, 8, 16, 16),
-            sliver: SliverToBoxAdapter(
-              child: ExploreSearchField(
-                controller: _search,
-                focusNode: _searchFocus,
-                onChanged: _onQueryChanged,
-                onClear: _clearSearch,
-              ),
+      body: Column(
+        children: [
+          Padding(
+            padding: .fromLTRB(16, TopPadding.of(context) + 16, 16, 16),
+            child: ExploreSearchField(
+              controller: _search,
+              focusNode: _searchFocus,
+              scrolled: _scrolled,
+              onChanged: _onQueryChanged,
+              onClear: _clearSearch,
             ),
           ),
-          if (_browsing) ...[
-            SliverToBoxAdapter(
+          if (_browsing)
+            Padding(
+              padding: const .only(bottom: 8),
               child: BlocBuilder<ExploreCategoriesCubit, List<Category>?>(
                 bloc: locator<ExploreCategoriesCubit>(),
                 builder: (context, categories) {
@@ -98,25 +98,39 @@ class _ExplorePageState extends State<ExplorePage> {
                 },
               ),
             ),
-            BlocBuilder<ExploreTrendingCubit, List<ChannelPreview>?>(
-              bloc: _trendingCubit,
-              builder: (context, shows) {
-                return ExploreShowGrid(shows: shows, onTap: _openChannel);
-              },
-            ),
-          ] else
-            BlocBuilder<ExploreSearchCubit, List<ChannelPreview>?>(
-              bloc: _searchCubit,
-              builder: (context, results) {
-                if (results != null && results.isEmpty) {
-                  return const SliverToBoxAdapter(child: ExploreNoResults());
-                }
+          Expanded(
+            child: NotificationListener<ScrollUpdateNotification>(
+              onNotification: _onScroll,
+              child: CustomScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                slivers: [
+                  if (_browsing)
+                    BlocBuilder<ExploreTrendingCubit, List<ChannelPreview>?>(
+                      bloc: _trendingCubit,
+                      builder: (context, shows) {
+                        return ExploreShowGrid(shows: shows);
+                      },
+                    )
+                  else
+                    BlocBuilder<ExploreSearchCubit, List<ChannelPreview>?>(
+                      bloc: _searchCubit,
+                      builder: (context, results) {
+                        if (results != null && results.isEmpty) {
+                          return const SliverToBoxAdapter(
+                            child: ExploreNoResults(),
+                          );
+                        }
 
-                return ExploreShowGrid(shows: results, onTap: _openChannel);
-              },
+                        return ExploreShowGrid(shows: results);
+                      },
+                    ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: 24 + BottomPadding.of(context)),
+                  ),
+                ],
+              ),
             ),
-          SliverToBoxAdapter(
-            child: SizedBox(height: 24 + BottomPadding.of(context)),
           ),
         ],
       ),

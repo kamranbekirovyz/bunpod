@@ -34,7 +34,7 @@ class FeedAppBar extends StatelessWidget implements PreferredSizeWidget {
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(ExplorePage.route());
+                  ExplorePage.show(context);
                 },
                 child: SizedBox(
                   width: 40,

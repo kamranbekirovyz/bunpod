@@ -6,11 +6,9 @@ class ExploreShowGrid extends StatelessWidget {
   const ExploreShowGrid({
     super.key,
     required this.shows,
-    required this.onTap,
   });
 
   final List<ChannelPreview>? shows;
-  final ValueChanged<ChannelPreview> onTap;
 
   static const SliverGridDelegate _gridDelegate =
       SliverGridDelegateWithFixedCrossAxisCount(
@@ -54,7 +52,7 @@ class ExploreShowGrid extends StatelessWidget {
               ),
               child: show == null
                   ? const SizedBox.shrink()
-                  : ExploreShowTile(show: show, onTap: () => onTap(show)),
+                  : ExploreChannelItem(channel: show),
             );
           },
         ),
