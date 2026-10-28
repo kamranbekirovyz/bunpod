@@ -73,8 +73,8 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    final List<FilterTab> tabs = <FilterTab>[
-      FilterTab(
+    final List<FeedFilterTab> tabs = <FeedFilterTab>[
+      FeedFilterTab(
         value: null,
         label: 'All',
         accent: cs.primary,
@@ -89,7 +89,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
       final ColorScheme scheme = e.scheme(context);
 
       tabs.add(
-        FilterTab(
+        FeedFilterTab(
           value: e.channel,
           label: e.channel,
           accent: scheme.primary,
@@ -102,7 +102,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      appBar: HomeAppBar(),
+      appBar: FeedAppBar(),
       body: ExpressiveRefreshIndicator(
         onRefresh: _refresh,
         // Inside NestedScrollView the drag comes from the inner scrollables
@@ -120,7 +120,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: GestureDetector(
                         onTap: _openPlayer,
-                        child: HomePlayerCard(
+                        child: FeedNowPlayingCard(
                           scheme: _playing.scheme(context),
                           imageUrl: _playing.image,
                           channel: _playing.channel,
@@ -145,7 +145,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
                   delegate: _PinnedTabsDelegate(
                     height: 64,
                     child: Center(
-                      child: FilterTabs(
+                      child: FeedFilterTabs(
                         tabs: tabs,
                         selected: _channel,
                         onSelected: (value) {
@@ -196,7 +196,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
           .toList();
       if (eps.isEmpty) continue;
       children.add(
-        SectionHeader(
+        FeedSectionHeader(
           label: _bucketLabels[bucket]!,
           count: eps.length,
           topPadding: first ? 16 : 32,
@@ -207,7 +207,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
         children.add(
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: EpisodeCard(
+            child: FeedEpisodeCard(
               episode: ep,
               playing: identical(ep, _playing),
               onTap: () {

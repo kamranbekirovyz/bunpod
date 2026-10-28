@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';
 
-class EpisodeCard extends StatefulWidget {
-  const EpisodeCard({
+class FeedEpisodeCard extends StatefulWidget {
+  const FeedEpisodeCard({
     super.key,
     required this.episode,
     required this.playing,
@@ -18,10 +18,10 @@ class EpisodeCard extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<EpisodeCard> createState() => _EpisodeCardState();
+  State<FeedEpisodeCard> createState() => _FeedEpisodeCardState();
 }
 
-class _EpisodeCardState extends State<EpisodeCard>
+class _FeedEpisodeCardState extends State<FeedEpisodeCard>
     with SingleTickerProviderStateMixin {
   static const Duration _marqueeCycle = Duration(seconds: 20);
 
@@ -37,7 +37,7 @@ class _EpisodeCardState extends State<EpisodeCard>
   }
 
   @override
-  void didUpdateWidget(EpisodeCard old) {
+  void didUpdateWidget(FeedEpisodeCard old) {
     super.didUpdateWidget(old);
     if (widget.playing && !_marquee.isAnimating) {
       _marquee.repeat();

@@ -152,7 +152,7 @@ class _ChannelPageState extends State<ChannelPage> {
                   final Episode ep = episodes[i];
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                    child: EpisodeCard(
+                    child: FeedEpisodeCard(
                       episode: ep,
                       playing: false,
                       onTap: () => Navigator.of(

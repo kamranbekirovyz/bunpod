@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
 
-class SectionHeader extends StatelessWidget {
-  const SectionHeader({
+class FeedSectionHeader extends StatelessWidget {
+  const FeedSectionHeader({
     super.key,
     required this.label,
     required this.count,

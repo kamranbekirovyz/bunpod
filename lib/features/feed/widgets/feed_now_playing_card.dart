@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
 
-class HomePlayerCard extends StatelessWidget {
-  const HomePlayerCard({
+class FeedNowPlayingCard extends StatelessWidget {
+  const FeedNowPlayingCard({
     super.key,
     required this.scheme,
     required this.imageUrl,
