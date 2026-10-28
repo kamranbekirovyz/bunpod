@@ -15,13 +15,13 @@ class MenuSection extends StatelessWidget {
   final String? label;
   final List<MenuTile> children;
 
-  BorderRadius _radiusFor(int index) {
+  static BorderRadius radiusFor(int index, int length) {
     const Radius outer = .circular(outerRadius);
     const Radius inner = .circular(innerRadius);
 
     return .vertical(
       top: index == 0 ? outer : inner,
-      bottom: index == children.length - 1 ? outer : inner,
+      bottom: index == length - 1 ? outer : inner,
     );
   }
 
@@ -35,7 +35,7 @@ class MenuSection extends StatelessWidget {
       onTap: tile.onTap,
       background: tile.background,
       foreground: tile.foreground,
-      borderRadius: _radiusFor(index),
+      borderRadius: radiusFor(index, children.length),
     );
   }
 

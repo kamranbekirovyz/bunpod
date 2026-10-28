@@ -1,7 +1,9 @@
 import 'package:bunpod/bunpod.dart';
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:expressive_snack/expressive_snack.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   const SubscriptionsPage({super.key});
@@ -15,105 +17,95 @@ class SubscriptionsPage extends StatefulWidget {
 }
 
 class _SubscriptionsPageState extends State<SubscriptionsPage> {
-  final Set<String> _unsubscribed = <String>{};
+  late final UnsubscribedCubit _unsubscribedCubit;
 
-  Future<void> _refresh() {
-    return Future<void>.delayed(const Duration(seconds: 3));
+  @override
+  void initState() {
+    super.initState();
+    _unsubscribedCubit = UnsubscribedCubit();
   }
 
-  void _openChannel(MockChannel channel) {
+  @override
+  void dispose() {
+    if (_unsubscribedCubit.state.isNotEmpty) {
+      locator<SubscriptionsCubit>().load();
+    }
+    _unsubscribedCubit.close();
+    super.dispose();
+  }
+
+  void _openChannel(Channel channel) {
     Navigator.of(context).push(
       ChannelPage.route(
-        id: mockChannels.indexOf(channel),
-        preview: ChannelPreview(
-          title: channel.name,
-          author: channel.host,
-          image: channel.image,
-        ),
+        id: channel.id,
+        preview: ChannelPreview.fromChannel(channel),
       ),
     );
   }
 
-  void _toggle(MockChannel channel) {
-    final bool nowUnsubscribed = !_unsubscribed.contains(channel.name);
-    setState(() {
-      if (nowUnsubscribed) {
-        _unsubscribed.add(channel.name);
-      } else {
-        _unsubscribed.remove(channel.name);
-      }
-    });
+  void _toggle(Channel channel) {
+    final int? id = channel.id;
+    if (id == null) return;
+
+    final bool unsubscribing = !_unsubscribedCubit.state.contains(id);
+    _unsubscribedCubit.toggle(id);
 
     showExpressiveSnack(
       context: context,
-      message: nowUnsubscribed
-          ? 'Unsubscribed from ${channel.name}'
-          : 'Resubscribed to ${channel.name}',
-      icon: nowUnsubscribed ? Icons.close_rounded : Icons.add_rounded,
+      message: unsubscribing
+          ? 'Unsubscribed from ${channel.title}'
+          : 'Resubscribed to ${channel.title}',
+      icon: unsubscribing ? Icons.close_rounded : Icons.add_rounded,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<MockChannel> channels = mockSubscriptions;
-
     return Scaffold(
-      appBar: const _AppBar(),
-      body: ExpressiveRefreshIndicator(
-        onRefresh: _refresh,
-        child: ListView.separated(
-          padding: .fromLTRB(
-            16,
-            8,
-            16,
-            32 + BottomPadding.of(context),
-          ),
-          itemCount: channels.length,
-          itemBuilder: (BuildContext context, int index) {
-            final MockChannel channel = channels[index];
-
-            return SubscriptionTile(
-              channel: channel,
-              borderRadius: _radiusFor(index, channels.length),
-              subscribed: !_unsubscribed.contains(channel.name),
-              onTap: () {
-                _openChannel(channel);
-              },
-              onToggle: () {
-                _toggle(channel);
-              },
-            );
-          },
-          separatorBuilder: (_, _) {
-            return MenuSection.tileGap.gap;
-          },
-        ),
+      appBar: AppBar(
+        leading: const StyledBackButton(),
+        title: const Text('Subscriptions'),
       ),
-    );
-  }
+      body: BlocBuilder<SubscriptionsCubit, List<Channel>?>(
+        bloc: locator<SubscriptionsCubit>(),
+        builder: (context, channels) {
+          if (channels == null) {
+            return Center(child: LoadingIndicator());
+          }
 
-  BorderRadius _radiusFor(int index, int length) {
-    const Radius outer = .circular(MenuSection.outerRadius);
-    const Radius inner = .circular(MenuSection.innerRadius);
+          if (channels.isEmpty) {
+            return const Center(child: Text('No subscriptions yet'));
+          }
 
-    return .vertical(
-      top: index == 0 ? outer : inner,
-      bottom: index == length - 1 ? outer : inner,
-    );
-  }
-}
+          return BlocBuilder<UnsubscribedCubit, Set<int>>(
+            bloc: _unsubscribedCubit,
+            builder: (context, unsubscribed) {
+              return ExpressiveRefreshIndicator(
+                onRefresh: locator<SubscriptionsCubit>().load,
+                child: ListView.separated(
+                  padding: .fromLTRB(16, 8, 16, 32 + BottomPadding.of(context)),
+                  itemCount: channels.length,
+                  separatorBuilder: (_, _) => MenuSection.tileGap.gap,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Channel channel = channels[index];
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: const StyledBackButton(),
-      title: const Text('Subscriptions'),
+                    return SubscriptionTile(
+                      channel: channel,
+                      borderRadius: MenuSection.radiusFor(
+                        index,
+                        channels.length,
+                      ),
+                      subscribed: !unsubscribed.contains(channel.id),
+                      onTap: () => _openChannel(channel),
+                      onToggle: () => _toggle(channel),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

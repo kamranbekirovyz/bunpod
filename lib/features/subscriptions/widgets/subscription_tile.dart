@@ -15,7 +15,7 @@ class SubscriptionTile extends StatelessWidget {
     required this.onToggle,
   });
 
-  final MockChannel channel;
+  final Channel channel;
   final BorderRadius borderRadius;
   final bool subscribed;
   final VoidCallback onTap;
@@ -48,7 +48,7 @@ class SubscriptionTile extends StatelessWidget {
                   width: 56,
                   height: 56,
                   child: SmoothImage(
-                    url: channel.image,
+                    url: channel.image ?? '',
                     placeholderColor: channel.seed,
                     placeholderChild: Icon(
                       Icons.podcasts_rounded,
@@ -64,7 +64,7 @@ class SubscriptionTile extends StatelessWidget {
                   mainAxisSize: .min,
                   children: [
                     Text(
-                      channel.host.toUpperCase(),
+                      (channel.author ?? '').toUpperCase(),
                       maxLines: 1,
                       overflow: .ellipsis,
                       style: tt.labelSmall?.copyWith(
@@ -74,7 +74,7 @@ class SubscriptionTile extends StatelessWidget {
                     ),
                     2.gap,
                     Text(
-                      channel.name,
+                      channel.title ?? '',
                       maxLines: 1,
                       overflow: .ellipsis,
                       style: tt.bodyLarge,
