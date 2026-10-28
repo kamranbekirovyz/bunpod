@@ -4,18 +4,9 @@ import 'package:dio/dio.dart';
 class SubscriptionsRemoteData {
   const SubscriptionsRemoteData();
 
-  Dio get _dio => locator<Dio>();
-
   Future<List<Podcast>> subscriptions() async {
-    final Endpoint endpoint = RestfulEndpoints.subscriptions();
-
-    final Response<Map<String, dynamic>> response = await _dio
-        .request<Map<String, dynamic>>(
-          endpoint.url,
-          options: Options(
-            method: endpoint.method,
-          ),
-        );
+    final Response<Map<String, dynamic>> response =
+        await RestfulEndpoints.subscriptions().send<Map<String, dynamic>>();
 
     final List<dynamic> items = response.data?['items'] ?? [];
 

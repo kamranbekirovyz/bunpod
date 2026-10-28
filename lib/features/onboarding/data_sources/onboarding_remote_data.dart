@@ -6,21 +6,12 @@ import 'package:dio/dio.dart';
 class OnboardingRemoteData {
   const OnboardingRemoteData();
 
-  Dio get _dio => locator<Dio>();
-
   Future<List<TrendingPodcast>> trending() async {
-    final Endpoint endpoint = RestfulEndpoints.trending(
-      country: PlatformDispatcher.instance.locale.countryCode?.toLowerCase(),
-    );
-
-    final Response<Map<String, dynamic>> response = await _dio
-        .request<Map<String, dynamic>>(
-          endpoint.url,
-          queryParameters: endpoint.query,
-          options: Options(
-            method: endpoint.method,
-          ),
-        );
+    final Response<Map<String, dynamic>> response =
+        await RestfulEndpoints.trending(
+          country: PlatformDispatcher.instance.locale.countryCode
+              ?.toLowerCase(),
+        ).send<Map<String, dynamic>>();
 
     final List<dynamic> items = response.data?['items'] ?? [];
 
@@ -28,14 +19,6 @@ class OnboardingRemoteData {
   }
 
   Future<void> subscribeMany(List<int> appleIds) async {
-    final Endpoint endpoint = RestfulEndpoints.subscribeMany(
-      appleIds: appleIds,
-    );
-
-    await _dio.request<void>(
-      endpoint.url,
-      data: endpoint.body,
-      options: Options(method: endpoint.method),
-    );
+    await RestfulEndpoints.subscribeMany(appleIds: appleIds).send<void>();
   }
 }

@@ -4,23 +4,12 @@ import 'package:dio/dio.dart';
 class FeedRemoteData {
   const FeedRemoteData();
 
-  Dio get _dio => locator<Dio>();
-
   Future<List<Episode>> feed({
     int? podcastId,
   }) async {
-    final Endpoint endpoint = RestfulEndpoints.feed(
+    final Response<Map<String, dynamic>> response = await RestfulEndpoints.feed(
       podcastId: podcastId,
-    );
-
-    final Response<Map<String, dynamic>> response = await _dio
-        .request<Map<String, dynamic>>(
-          endpoint.url,
-          queryParameters: endpoint.query,
-          options: Options(
-            method: endpoint.method,
-          ),
-        );
+    ).send<Map<String, dynamic>>();
 
     final List<dynamic> items = response.data?['items'] ?? [];
 
