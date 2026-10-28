@@ -38,7 +38,7 @@ class App extends StatelessWidget {
               ),
             );
           },
-          home: signedIn ? const HomePage() : const WelcomePage(),
+          home: signedIn ? const FeedPage() : const WelcomePage(),
         );
       },
     );

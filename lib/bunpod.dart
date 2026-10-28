@@ -1,7 +1,7 @@
 export 'features/auth/auth.dart';
 export 'features/welcome/welcome.dart';
 export 'features/onboarding/onboarding.dart';
-export 'features/home/home.dart';
+export 'features/feed/feed.dart';
 export 'features/history/history.dart';
 export 'features/explore/explore.dart';
 export 'features/player/player.dart';

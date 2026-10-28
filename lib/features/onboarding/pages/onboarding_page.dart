@@ -29,7 +29,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       return;
     }
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const HomePage()),
+      MaterialPageRoute<void>(builder: (_) => const FeedPage()),
     );
   }
 

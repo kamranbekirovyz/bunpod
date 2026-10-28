@@ -3,14 +3,14 @@ import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class FeedPage extends StatefulWidget {
+  const FeedPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FeedPage> createState() => _FeedPageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
   late final List<String?> _tabValues = _buildTabValues();
 
   late final TabController _tabController = TabController(

@@ -1,5 +1,5 @@
 export 'models/models.dart';
-export 'pages/home_page.dart';
+export 'pages/feed_page.dart';
 export 'values/mock_values.dart';
 export 'widgets/episode_card.dart';
 export 'widgets/filter_tabs.dart';
