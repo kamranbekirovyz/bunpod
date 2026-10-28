@@ -188,7 +188,7 @@ class _EpisodeCardState extends State<EpisodeCard>
                 ),
                 const SizedBox(height: 2),
                 _Title(
-                  text: episode.title,
+                  text: episode.title ?? '',
                   style: tt.titleMedium?.copyWith(
                     color: fg,
                     fontWeight: FontWeight.w700,
@@ -354,7 +354,7 @@ class _Cover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SmoothImage(
-      url: episode.image,
+      url: episode.cover,
       placeholderColor: scheme.primaryContainer,
       placeholderChild: Icon(
         Icons.podcasts_rounded,

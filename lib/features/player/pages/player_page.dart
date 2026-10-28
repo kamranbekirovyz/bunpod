@@ -28,7 +28,7 @@ class PlayerPage extends StatefulWidget {
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  late bool _playing = widget.episode.playing;
+  bool _playing = false;
   bool _fav = false;
 
   void _openChannel() {
@@ -94,7 +94,7 @@ class _PlayerPageState extends State<PlayerPage> {
             Padding(
               padding: const EdgeInsets.only(right: 56),
               child: Text(
-                episode.title,
+                episode.title ?? '',
                 style: tt.displaySmall?.copyWith(
                   color: cs.primary,
                   fontWeight: FontWeight.w800,

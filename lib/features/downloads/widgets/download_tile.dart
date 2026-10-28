@@ -64,7 +64,7 @@ class DownloadTile extends StatelessWidget {
                     width: 52,
                     height: 52,
                     child: SmoothImage(
-                      url: episode.image,
+                      url: episode.cover,
                       placeholderChild: Icon(
                         Icons.podcasts_rounded,
                         color: cs.onSurfaceVariant,
@@ -90,7 +90,7 @@ class DownloadTile extends StatelessWidget {
                       ),
                       2.gap,
                       Text(
-                        episode.title,
+                        episode.title ?? '',
                         maxLines: 1,
                         overflow: .ellipsis,
                         style: tt.bodyLarge,
