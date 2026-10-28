@@ -30,3 +30,4 @@ Things to build and subtle things to improve.
 - [ ] Make packages directly cloneable or referenceable, with demo code
 - [ ] Add UserOrient as a sponsor
 - [ ] CLAUDE.md for this project
+- [ ] swipe right tabs to open all subscriptions page
