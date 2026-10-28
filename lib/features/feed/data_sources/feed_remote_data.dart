@@ -16,6 +16,7 @@ class FeedRemoteData {
     final Response<Map<String, dynamic>> response = await _dio
         .request<Map<String, dynamic>>(
           endpoint.url,
+          queryParameters: endpoint.query,
           options: Options(
             method: endpoint.method,
           ),
