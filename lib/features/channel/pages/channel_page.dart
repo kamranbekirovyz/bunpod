@@ -17,13 +17,6 @@ class ChannelPage extends StatefulWidget {
   final int? appleId;
   final ChannelPreview? preview;
 
-  static Route<void> route({int? id, int? appleId, ChannelPreview? preview}) {
-    return MaterialPageRoute<void>(
-      builder: (context) =>
-          ChannelPage(id: id, appleId: appleId, preview: preview),
-    );
-  }
-
   @override
   State<ChannelPage> createState() => _ChannelPageState();
 }

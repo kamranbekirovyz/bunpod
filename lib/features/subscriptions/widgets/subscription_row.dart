@@ -34,9 +34,11 @@ class _SubscriptionRowState extends State<SubscriptionRow> {
 
   void _openChannel() {
     Navigator.of(context).push(
-      ChannelPage.route(
-        id: widget.channel.id,
-        preview: ChannelPreview.fromChannel(widget.channel),
+      MaterialPageRoute<void>(
+        builder: (_) => ChannelPage(
+          id: widget.channel.id,
+          preview: ChannelPreview.fromChannel(widget.channel),
+        ),
       ),
     );
   }

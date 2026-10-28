@@ -201,9 +201,11 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
                           // opens its channel page (the "All" tab is exempt).
                           if (channel != null && channel == _selected) {
                             Navigator.of(context).push(
-                              ChannelPage.route(
-                                id: channel.id,
-                                preview: ChannelPreview.fromChannel(channel),
+                              MaterialPageRoute<void>(
+                                builder: (_) => ChannelPage(
+                                  id: channel.id,
+                                  preview: ChannelPreview.fromChannel(channel),
+                                ),
                               ),
                             );
                             return;

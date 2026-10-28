@@ -37,9 +37,11 @@ class _PlayerPageState extends State<PlayerPage> {
       return;
     }
     Navigator.of(context).push(
-      ChannelPage.route(
-        id: widget.episode.channelId,
-        preview: ChannelPreview.fromChannel(widget.episode.channel),
+      MaterialPageRoute<void>(
+        builder: (_) => ChannelPage(
+          id: widget.episode.channelId,
+          preview: ChannelPreview.fromChannel(widget.episode.channel),
+        ),
       ),
     );
   }
