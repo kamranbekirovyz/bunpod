@@ -7,6 +7,12 @@
         {
             "name": "app",
             "request": "launch",
+            "type": "dart",
+            "toolArgs": ["--dart-define-from-file=local.json"]
+        },
+        {
+            "name": "app (mocks)",
+            "request": "launch",
             "type": "dart"
         },
         {
