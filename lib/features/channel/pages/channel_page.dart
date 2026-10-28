@@ -69,7 +69,7 @@ class _ChannelPageState extends State<ChannelPage> {
   void _toggleFollow() {
     final int? id = _channelCubit.state?.id;
 
-    if (id != null && _followCubit.state != null) _followCubit.toggle(id: id);
+    if (id != null) _followCubit.toggle(id: id);
   }
 
   @override
@@ -77,14 +77,16 @@ class _ChannelPageState extends State<ChannelPage> {
     return BlocBuilder<ChannelCubit, Channel?>(
       bloc: _channelCubit,
       builder: (context, channel) {
-        return BlocBuilder<ChannelFollowCubit, bool?>(
+        return BlocConsumer<ChannelFollowCubit, Follow?>(
           bloc: _followCubit,
-          builder: (context, subscribed) {
+          listenWhen: ChannelFollowCubit.succeeded,
+          listener: (context, _) => locator<SubscriptionsCubit>().load(),
+          builder: (context, follow) {
             return _ChannelView(
               channel: channel,
               preview: widget.preview,
               fallbackId: widget.id,
-              subscribed: subscribed,
+              subscribed: follow?.subscribed,
               entered: _entered,
               episodesCubit: _episodesCubit,
               onRefresh: _load,

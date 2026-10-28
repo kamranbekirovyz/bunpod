@@ -27,12 +27,7 @@ class _FeedPageState extends State<FeedPage> {
     });
   }
 
-  Future<void> _load() async {
-    await Future.wait([
-      locator<FeedCubit>().load(),
-      locator<SubscriptionsCubit>().load(),
-    ]);
-  }
+  Future<void> _load() => locator<SubscriptionsCubit>().load();
 
   Future<void> _showOnboarding() async {
     _onboardingShown = true;
@@ -110,6 +105,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController.animation!.addListener(_syncTab);
+    locator<FeedCubit>().load();
     _playing = _firstPlaying(locator<FeedCubit>().state);
   }
 

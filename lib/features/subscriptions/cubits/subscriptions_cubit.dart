@@ -5,8 +5,6 @@ class SubscriptionsCubit extends Cubit<List<Channel>?> {
   SubscriptionsCubit() : super(null);
 
   Future<void> load() async {
-    emit(null);
-
     emit(
       await locator<SubscriptionsRemoteData>().subscriptions(),
     );
