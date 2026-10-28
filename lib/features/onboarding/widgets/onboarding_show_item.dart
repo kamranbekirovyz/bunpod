@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';
 
-class ShowPickTile extends StatelessWidget {
-  const ShowPickTile({
+class OnboardingShowItem extends StatelessWidget {
+  const OnboardingShowItem({
     super.key,
     required this.title,
     required this.author,
@@ -43,7 +43,7 @@ class ShowPickTile extends StatelessWidget {
       selected: selected,
       label: '$title by $author',
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+        behavior: .opaque,
         onTap: onTap,
         child: Column(
           crossAxisAlignment: .stretch,
@@ -61,7 +61,9 @@ class ShowPickTile extends StatelessWidget {
                     fit: StackFit.expand,
                     children: [
                       ClipPath(
-                        clipper: ShapeBorderClipper(shape: _morphBorder(tc)),
+                        clipper: ShapeBorderClipper(
+                          shape: _morphBorder(tc),
+                        ),
                         child: child,
                       ),
                       Positioned(
@@ -72,11 +74,14 @@ class ShowPickTile extends StatelessWidget {
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               color: cs.primary,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: cs.surface, width: 2),
+                              shape: .circle,
+                              border: .all(
+                                color: cs.surface,
+                                width: 2,
+                              ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(4),
+                              padding: const .all(4),
                               child: Icon(
                                 Icons.check_rounded,
                                 size: 16,
@@ -100,12 +105,12 @@ class ShowPickTile extends StatelessWidget {
               duration: kThemeAnimationDuration,
               style: tt.labelLarge!.copyWith(
                 color: selected ? cs.primary : cs.onSurface,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: selected ? .w700 : .w500,
                 height: 1.2,
               ),
-              textAlign: TextAlign.center,
+              textAlign: .center,
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               child: Text(title),
             ),
           ],
