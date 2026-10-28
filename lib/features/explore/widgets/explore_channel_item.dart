@@ -2,15 +2,13 @@ import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 import 'package:material_shapes/material_shapes.dart';
 
-class ExploreShowTile extends StatelessWidget {
-  const ExploreShowTile({
+class ExploreChannelItem extends StatelessWidget {
+  const ExploreChannelItem({
     super.key,
-    required this.show,
-    required this.onTap,
+    required this.channel,
   });
 
-  final ChannelPreview show;
-  final VoidCallback onTap;
+  final ChannelPreview channel;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +17,21 @@ class ExploreShowTile extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: '${show.title} by ${show.author}',
+      label: '${channel.title} by ${channel.author}',
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
+        behavior: .opaque,
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) {
+                return ChannelPage(
+                  appleId: channel.appleId,
+                  preview: channel,
+                );
+              },
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -35,22 +44,22 @@ class ExploreShowTile extends StatelessWidget {
                   ),
                 ),
                 child: SmoothImage(
-                  url: show.image ?? '',
+                  url: channel.image ?? '',
                   placeholderColor: cs.surfaceContainerHigh,
                 ),
               ),
             ),
             8.gap,
             Text(
-              show.title ?? '',
+              channel.title ?? '',
+              textAlign: .center,
+              maxLines: 2,
+              overflow: .ellipsis,
               style: tt.labelLarge?.copyWith(
                 color: cs.onSurface,
-                fontWeight: FontWeight.w500,
+                fontWeight: .w500,
                 height: 1.2,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
