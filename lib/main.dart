@@ -21,5 +21,8 @@ void main() async {
 
   setupLocator();
 
-  runApp(const App());
+  final bool signedIn =
+      await locator<SecureStorageLocalData>().accessToken != null;
+
+  runApp(App(signedIn: signedIn));
 }
