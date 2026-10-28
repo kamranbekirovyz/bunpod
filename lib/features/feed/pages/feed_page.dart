@@ -73,8 +73,8 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    final List<FeedFilterTab> tabs = <FeedFilterTab>[
-      FeedFilterTab(
+    final List<FeedChannelTab> tabs = <FeedChannelTab>[
+      FeedChannelTab(
         value: null,
         label: 'All',
         accent: cs.primary,
@@ -89,7 +89,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
       final ColorScheme scheme = e.scheme(context);
 
       tabs.add(
-        FeedFilterTab(
+        FeedChannelTab(
           value: e.channel,
           label: e.channel,
           accent: scheme.primary,
@@ -145,7 +145,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
                   delegate: _PinnedTabsDelegate(
                     height: 64,
                     child: Center(
-                      child: FeedFilterTabs(
+                      child: FeedChannelTabs(
                         tabs: tabs,
                         selected: _channel,
                         onSelected: (value) {
