@@ -197,7 +197,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
       if (eps.isEmpty) continue;
       children.add(
         FeedSectionHeader(
-          label: _bucketLabels[bucket]!,
+          label: bucket.label,
           count: eps.length,
           topPadding: first ? 16 : 32,
         ),
@@ -236,14 +236,6 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
     );
   }
 }
-
-const _bucketLabels = <Bucket, String>{
-  Bucket.today: 'Today',
-  Bucket.yesterday: 'Yesterday',
-  Bucket.thisWeek: 'This Week',
-  Bucket.thisMonth: 'This Month',
-  Bucket.earlier: 'Earlier',
-};
 
 class _PinnedTabsDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;
