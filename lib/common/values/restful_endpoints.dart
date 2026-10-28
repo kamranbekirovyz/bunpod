@@ -29,9 +29,13 @@ class RestfulEndpoints {
     );
   }
 
-  static Endpoint feed({int? limit}) {
+  static Endpoint feed({int? podcastId, int? limit}) {
     return Endpoint.get(
-      url: '${AppConfig.baseUrl}/feed${limit == null ? '' : '?limit=$limit'}',
+      url: '${AppConfig.baseUrl}/feed',
+      query: {
+        'podcast_id': ?podcastId,
+        'limit': ?limit,
+      },
     );
   }
 
@@ -56,15 +60,12 @@ class RestfulEndpoints {
     String? country,
     int? limit,
   }) {
-    final Map<String, String> query = {
-      'country': ?country,
-      'limit': ?limit?.toString(),
-    };
-
     return Endpoint.get(
-      url: Uri.parse('${AppConfig.baseUrl}/podcasts/trending')
-          .replace(queryParameters: query.isEmpty ? null : query)
-          .toString(),
+      url: '${AppConfig.baseUrl}/podcasts/trending',
+      query: {
+        'country': ?country,
+        'limit': ?limit,
+      },
     );
   }
 }
