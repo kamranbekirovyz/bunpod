@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Channel {
   const Channel({
     this.id,
+    this.appleId,
     this.title,
     this.author,
     this.description,
@@ -13,6 +14,7 @@ class Channel {
   });
 
   final int? id;
+  final int? appleId;
   final String? title;
   final String? author;
   final String? description;
@@ -24,6 +26,7 @@ class Channel {
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
       id: json['id'],
+      appleId: json['apple_id'],
       title: json['title'],
       author: json['author'],
       description: json['description'],

@@ -11,6 +11,7 @@ class MockSubscriptionsRemoteData implements SubscriptionsRemoteData {
       for (final (int index, MockChannel channel) in mockChannels.indexed)
         Channel(
           id: index,
+          appleId: index + 1,
           title: channel.name,
           author: channel.host,
           description: channel.description,
