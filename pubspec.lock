@@ -778,6 +778,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+  scroll_drag_detector:
+    dependency: transitive
+    description:
+      name: scroll_drag_detector
+      sha256: "287f56dd01c96aeb083b7619cc17eaae9a94df2066f9f4a921d09537dbb2b876"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+2"
   sign_in_with_apple:
     dependency: "direct main"
     description:
@@ -839,6 +847,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  stupid_simple_sheet:
+    dependency: "direct main"
+    description:
+      name: stupid_simple_sheet
+      sha256: "418a2b5531d7f015f8b2161ad296760049516407dbcb08f91ac4b9062a7938f0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.1+1"
   term_glyph:
     dependency: transitive
     description:
