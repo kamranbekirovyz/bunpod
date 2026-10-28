@@ -11,9 +11,9 @@ const double _kSubscribeHeight = 58;
 class ChannelPage extends StatefulWidget {
   const ChannelPage({super.key, required this.channel});
 
-  final Channel channel;
+  final MockChannel channel;
 
-  static Route<void> route(Channel channel) {
+  static Route<void> route(MockChannel channel) {
     return MaterialPageRoute<void>(
       builder: (context) => ChannelPage(channel: channel),
     );
@@ -45,7 +45,7 @@ class _ChannelPageState extends State<ChannelPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Channel channel = widget.channel;
+    final MockChannel channel = widget.channel;
     final ColorScheme cs = channel.scheme(context);
     final TextTheme tt = Theme.of(context).textTheme;
 
@@ -154,7 +154,7 @@ class _ChannelPageState extends State<ChannelPage> {
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
                     child: EpisodeCard(
                       episode: ep,
-                      playing: ep.playing,
+                      playing: false,
                       onTap: () => Navigator.of(
                         context,
                       ).push(PlayerPage.route(ep, fromChannel: true)),
@@ -187,7 +187,7 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.onSubscribe,
   });
 
-  final Channel channel;
+  final MockChannel channel;
   final ColorScheme scheme;
   final double topPad;
   final double minExtentValue;
@@ -354,7 +354,7 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
 class _Cover extends StatelessWidget {
   const _Cover({required this.channel, required this.scheme});
 
-  final Channel channel;
+  final MockChannel channel;
   final ColorScheme scheme;
 
   @override

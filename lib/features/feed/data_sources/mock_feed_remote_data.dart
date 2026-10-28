@@ -7,33 +7,14 @@ class MockFeedRemoteData implements FeedRemoteData {
   const MockFeedRemoteData();
 
   @override
-  Future<List<FeedEpisode>> feed() async {
+  Future<List<Episode>> feed({int? channelId}) async {
     await Future<void>.delayed(AppValues.mockDelay);
 
     if (_emptyFeed) return const [];
 
-    final List<String> channels = mockChannels.map((c) => c.name).toList();
-
     return [
-      for (final (int index, Episode episode) in mockEpisodes.indexed)
-        FeedEpisode(
-          id: index,
-          podcastId: channels.indexOf(episode.channel),
-          title: episode.title,
-          image: episode.image,
-          publishedAt: DateTime.now().subtract(_ago[episode.bucket]!),
-          duration: episode.total.inSeconds,
-          position: episode.listened.inSeconds,
-          completed: false,
-        ),
+      for (final Episode episode in mockEpisodes)
+        if (channelId == null || episode.channelId == channelId) episode,
     ];
   }
 }
-
-const Map<Bucket, Duration> _ago = {
-  Bucket.today: Duration.zero,
-  Bucket.yesterday: Duration(days: 1),
-  Bucket.thisWeek: Duration(days: 3),
-  Bucket.thisMonth: Duration(days: 10),
-  Bucket.earlier: Duration(days: 60),
-};

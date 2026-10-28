@@ -79,18 +79,19 @@ const Map<String, String> _channelDescriptions = <String, String>{
 
 /// All channels in the catalog, derived from [mockEpisodes] in first-seen order
 /// so identity (host, seed, cover) always matches the episode feed.
-List<Channel> get mockChannels {
+List<MockChannel> get mockChannels {
   final Set<String> seen = <String>{};
-  final List<Channel> channels = <Channel>[];
+  final List<MockChannel> channels = <MockChannel>[];
   for (final Episode e in mockEpisodes) {
-    if (seen.add(e.channel)) {
+    final String name = e.channel?.title ?? '';
+    if (seen.add(name)) {
       channels.add(
-        Channel(
-          name: e.channel,
-          host: e.host,
+        MockChannel(
+          name: name,
+          host: e.channel?.author ?? '',
           seed: e.seed,
-          image: e.image,
-          description: _channelDescriptions[e.channel] ?? '',
+          image: e.cover,
+          description: _channelDescriptions[name] ?? '',
         ),
       );
     }
@@ -99,8 +100,8 @@ List<Channel> get mockChannels {
 }
 
 /// The channel for [name], or `null` if no episodes carry that channel.
-Channel? channelByName(String name) {
-  for (final Channel c in mockChannels) {
+MockChannel? channelByName(String name) {
+  for (final MockChannel c in mockChannels) {
     if (c.name == name) return c;
   }
   return null;
