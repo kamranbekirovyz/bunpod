@@ -1,7 +1,8 @@
 import 'package:bunpod/bunpod.dart';
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -10,58 +11,132 @@ class FeedPage extends StatefulWidget {
   State<FeedPage> createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
-  late final List<String?> _tabValues = _buildTabValues();
+class _FeedPageState extends State<FeedPage> {
+  bool _onboardingShown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      logarte.attach(
+        context: context,
+        visible: false,
+      );
+    });
+  }
+
+  Future<void> _load() async {
+    await Future.wait([
+      locator<FeedCubit>().load(),
+      locator<SubscriptionsCubit>().load(),
+    ]);
+  }
+
+  Future<void> _showOnboarding() async {
+    _onboardingShown = true;
+
+    final bool? followed = await OnboardingPage.show(context);
+
+    if (followed == true) await _load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme cs = Theme.of(context).colorScheme;
+
+    return BlocConsumer<SubscriptionsCubit, List<Channel>?>(
+      bloc: locator<SubscriptionsCubit>(),
+      listener: (context, channels) {
+        if (channels != null && channels.isEmpty && !_onboardingShown) {
+          _showOnboarding();
+        }
+      },
+      builder: (context, channels) {
+        if (channels != null && channels.isNotEmpty) {
+          return _FeedView(
+            key: ValueKey<String>(channels.map((p) => p.id).join('|')),
+            channels: channels,
+          );
+        }
+
+        return Scaffold(
+          backgroundColor: cs.surface,
+          appBar: FeedAppBar(),
+          body: Center(
+            child: channels == null
+                ? LoadingIndicator()
+                : TextButton(
+                    onPressed: _showOnboarding,
+                    child: const Text('Pick some shows'),
+                  ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _FeedView extends StatefulWidget {
+  const _FeedView({super.key, required this.channels});
+
+  final List<Channel> channels;
+
+  @override
+  State<_FeedView> createState() => _FeedViewState();
+}
+
+class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
+  late final List<Channel?> _tabs = [null, ...widget.channels];
 
   late final TabController _tabController = TabController(
-    length: _tabValues.length,
+    length: _tabs.length,
     vsync: this,
     animationDuration: const Duration(milliseconds: 220),
   );
 
-  String? _channel;
+  Channel? _selected;
 
-  late Episode _playing = mockEpisodes.firstWhere(
-    (e) => e.playing,
-    orElse: () => mockEpisodes.first,
-  );
+  Episode? _playing;
 
   void _openPlayer() {
-    Navigator.of(context).push(PlayerPage.route(_playing));
-  }
+    final Episode? playing = _playing;
 
-  // Mock-only: holds the expressive indicator for a beat; a real feed fetch
-  // goes here later.
-  Future<void> _refresh() {
-    return Future<void>.delayed(const Duration(milliseconds: 1500));
-  }
-
-  static List<String?> _buildTabValues() {
-    final Set<String> seen = <String>{};
-    final List<String?> values = <String?>[null];
-    for (final Episode e in mockEpisodes) {
-      if (seen.add(e.channel)) values.add(e.channel);
-    }
-    return values;
+    if (playing != null) Navigator.of(context).push(PlayerPage.route(playing));
   }
 
   @override
   void initState() {
     super.initState();
-    _tabController.animation!.addListener(_syncChannelToTab);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      logarte.attach(
-        context: context,
-        visible: kDebugMode,
-      );
-    });
+    _tabController.animation!.addListener(_syncTab);
+    _playing = _firstPlaying(locator<FeedCubit>().state);
   }
 
-  void _syncChannelToTab() {
-    final String? value = _tabValues[_tabController.animation!.value.round()];
-    if (value != _channel) setState(() => _channel = value);
+  Episode? _firstPlaying(List<Episode>? episodes) {
+    if (episodes == null || episodes.isEmpty) return null;
+
+    return episodes.firstWhere(
+      (e) => e.listened > Duration.zero && e.progress < 1,
+      orElse: () => episodes.first,
+    );
   }
+
+  void _pickPlaying(List<Episode>? episodes) {
+    if (_playing == null) setState(() => _playing = _firstPlaying(episodes));
+  }
+
+  void _syncTab() {
+    final Channel? channel = _tabs[_tabController.animation!.value.round()];
+
+    if (channel == _selected) return;
+
+    setState(() => _selected = channel);
+    locator<FeedCubit>().load(channelId: channel?.id);
+  }
+
+  Future<void> _refresh() =>
+      locator<FeedCubit>().load(channelId: _selected?.id);
 
   @override
   void dispose() {
@@ -73,32 +148,7 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    final List<FeedChannelTab> tabs = <FeedChannelTab>[
-      FeedChannelTab(
-        value: null,
-        label: 'All',
-        accent: cs.primary,
-        onAccent: cs.onPrimary,
-        icon: Icons.grid_view_rounded,
-      ),
-    ];
-
-    for (final String? value in _tabValues) {
-      if (value == null) continue;
-      final Episode e = mockEpisodes.firstWhere((e) => e.channel == value);
-      final ColorScheme scheme = e.scheme(context);
-
-      tabs.add(
-        FeedChannelTab(
-          value: e.channel,
-          label: e.channel,
-          accent: scheme.primary,
-          onAccent: scheme.onPrimary,
-          image: e.image,
-          shape: ShapeValues.coverFocused,
-        ),
-      );
-    }
+    final Episode? playing = _playing;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -115,23 +165,25 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
               SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    24.gap,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: GestureDetector(
-                        onTap: _openPlayer,
-                        child: FeedNowPlayingCard(
-                          scheme: _playing.scheme(context),
-                          imageUrl: _playing.image,
-                          channel: _playing.channel,
-                          title: _playing.title,
-                          progress: _playing.progress,
-                          timeLeft: _playing.total - _playing.listened,
-                          coverShape: ShapeValues.coverFocused,
-                          onPlayPause: () {},
+                    if (playing != null) ...[
+                      24.gap,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: GestureDetector(
+                          onTap: _openPlayer,
+                          child: FeedNowPlayingCard(
+                            scheme: playing.scheme(context),
+                            imageUrl: playing.cover,
+                            channel: playing.channel?.title ?? '',
+                            title: playing.title ?? '',
+                            progress: playing.progress,
+                            timeLeft: playing.total - playing.listened,
+                            coverShape: ShapeValues.coverFocused,
+                            onPlayPause: () {},
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                     32.gap,
                   ],
                 ),
@@ -146,22 +198,22 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
                     height: 64,
                     child: Center(
                       child: FeedChannelTabs(
-                        tabs: tabs,
-                        selected: _channel,
-                        onSelected: (value) {
-                          // Tapping the already-selected channel a second time
+                        channels: widget.channels,
+                        selected: _selected,
+                        onSelected: (channel) {
+                          // Tapping the already-selected show a second time
                           // opens its channel page (the "All" tab is exempt).
-                          if (value != null && value == _channel) {
-                            final Channel? channel = channelByName(value);
-                            if (channel != null) {
-                              Navigator.of(
-                                context,
-                              ).push(ChannelPage.route(channel));
-                            }
+                          if (channel != null && channel == _selected) {
+                            Navigator.of(context).push(
+                              ChannelPage.route(
+                                id: channel.id,
+                                preview: ChannelPreview.fromChannel(channel),
+                              ),
+                            );
                             return;
                           }
-                          final int i = _tabValues.indexOf(value);
-                          if (i != -1) _tabController.animateTo(i);
+
+                          _tabController.animateTo(_tabs.indexOf(channel));
                         },
                       ),
                     ),
@@ -170,69 +222,30 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
               ),
             ];
           },
-          body: TabBarView(
-            controller: _tabController,
-            physics: const SpringPagePhysics(),
-            children: [
-              for (final value in _tabValues)
-                Builder(builder: (context) => _buildPage(context, value)),
-            ],
+          body: BlocConsumer<FeedCubit, List<Episode>?>(
+            bloc: locator<FeedCubit>(),
+            listener: (context, episodes) => _pickPlaying(episodes),
+            builder: (context, episodes) {
+              return TabBarView(
+                controller: _tabController,
+                physics: const SpringPagePhysics(),
+                children: [
+                  for (final Channel? channel in _tabs)
+                    FeedEpisodeList(
+                      key: PageStorageKey('${channel?.id}'),
+                      episodes: channel == _selected ? episodes : null,
+                      playingId: _playing?.id,
+                      onTap: (episode) {
+                        setState(() => _playing = episode);
+                        _openPlayer();
+                      },
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPage(BuildContext context, String? channel) {
-    final List<Episode> visible = channel == null
-        ? mockEpisodes
-        : mockEpisodes.where((e) => e.channel == channel).toList();
-
-    final List<Widget> children = <Widget>[];
-    bool first = true;
-    for (final Bucket bucket in Bucket.values) {
-      final List<Episode> eps = visible
-          .where((e) => e.bucket == bucket)
-          .toList();
-      if (eps.isEmpty) continue;
-      children.add(
-        FeedSectionHeader(
-          label: bucket.label,
-          count: eps.length,
-          topPadding: first ? 16 : 32,
-        ),
-      );
-      first = false;
-      for (final Episode ep in eps) {
-        children.add(
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: FeedEpisodeCard(
-              episode: ep,
-              playing: identical(ep, _playing),
-              onTap: () {
-                setState(() {
-                  _playing = ep;
-                });
-                _openPlayer();
-              },
-            ),
-          ),
-        );
-      }
-    }
-
-    return CustomScrollView(
-      key: PageStorageKey(channel ?? '__all__'),
-      slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.only(bottom: 32),
-          sliver: SliverList(delegate: SliverChildListDelegate(children)),
-        ),
-      ],
     );
   }
 }
