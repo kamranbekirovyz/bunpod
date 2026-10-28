@@ -6,12 +6,16 @@ import 'package:motor/motor.dart';
 class ShowPickTile extends StatelessWidget {
   const ShowPickTile({
     super.key,
-    required this.channel,
+    required this.title,
+    required this.author,
+    required this.image,
     required this.selected,
     required this.onTap,
   });
 
-  final Channel channel;
+  final String title;
+  final String author;
+  final String image;
   final bool selected;
   final VoidCallback onTap;
 
@@ -37,7 +41,7 @@ class ShowPickTile extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: '${channel.name} by ${channel.host}',
+      label: '$title by $author',
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
@@ -86,8 +90,8 @@ class ShowPickTile extends StatelessWidget {
                   );
                 },
                 child: SmoothImage(
-                  url: channel.image,
-                  placeholderColor: channel.seed,
+                  url: image,
+                  placeholderColor: cs.surfaceContainerHighest,
                 ),
               ),
             ),
@@ -102,7 +106,7 @@ class ShowPickTile extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              child: Text(channel.name),
+              child: Text(title),
             ),
           ],
         ),

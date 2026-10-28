@@ -55,7 +55,7 @@ class _SocialSignInButtonState extends State<SocialSignInButton> {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute<void>(
                 builder: (_) {
-                  return const OnboardingPage();
+                  return const FeedPage();
                 },
               ),
               (route) => false,
