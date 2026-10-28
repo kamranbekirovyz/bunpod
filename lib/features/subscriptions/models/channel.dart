@@ -9,6 +9,7 @@ class Channel {
     this.image,
     this.language,
     this.lastEpisodeAt,
+    this.subscribed,
   });
 
   final int? id;
@@ -18,6 +19,7 @@ class Channel {
   final String? image;
   final String? language;
   final DateTime? lastEpisodeAt;
+  final bool? subscribed;
 
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
@@ -30,16 +32,21 @@ class Channel {
       lastEpisodeAt: DateTime.tryParse(
         json['last_episode_at'] ?? '',
       ),
+      subscribed: json['subscribed'],
     );
   }
 
   Color get seed => seedOf(id);
 
-  ColorScheme scheme(BuildContext context) => ColorScheme.fromSeed(
-    seedColor: seed,
-    brightness: Theme.of(context).brightness,
-    dynamicSchemeVariant: DynamicSchemeVariant.content,
-  );
+  ColorScheme scheme(BuildContext context) => schemeOf(context, id);
+
+  static ColorScheme schemeOf(BuildContext context, int? id) {
+    return ColorScheme.fromSeed(
+      seedColor: seedOf(id),
+      brightness: Theme.of(context).brightness,
+      dynamicSchemeVariant: DynamicSchemeVariant.content,
+    );
+  }
 
   static Color seedOf(int? id) => _seeds[(id ?? 0) % _seeds.length];
 }

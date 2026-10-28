@@ -1,6 +1,8 @@
 import 'package:bunpod/bunpod.dart';
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';
@@ -9,13 +11,16 @@ const double _kCoverSize = 168;
 const double _kSubscribeHeight = 58;
 
 class ChannelPage extends StatefulWidget {
-  const ChannelPage({super.key, required this.channel});
+  const ChannelPage({super.key, this.id, this.appleId, this.preview});
 
-  final MockChannel channel;
+  final int? id;
+  final int? appleId;
+  final ChannelPreview? preview;
 
-  static Route<void> route(MockChannel channel) {
+  static Route<void> route({int? id, int? appleId, ChannelPreview? preview}) {
     return MaterialPageRoute<void>(
-      builder: (context) => ChannelPage(channel: channel),
+      builder: (context) =>
+          ChannelPage(id: id, appleId: appleId, preview: preview),
     );
   }
 
@@ -24,32 +29,109 @@ class ChannelPage extends StatefulWidget {
 }
 
 class _ChannelPageState extends State<ChannelPage> {
-  // Drives the hero cover's spring entrance once the first frame is laid out.
+  late final ChannelCubit _channelCubit;
+  late final ChannelEpisodesCubit _episodesCubit;
+  late final ChannelFollowCubit _followCubit;
+
   bool _entered = false;
-  // Subscriptions are mock-only — every catalog channel starts subscribed.
-  bool _subscribed = true;
 
   @override
   void initState() {
     super.initState();
+    _channelCubit = ChannelCubit();
+    _episodesCubit = ChannelEpisodesCubit();
+    _followCubit = ChannelFollowCubit();
+    _load();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) setState(() => _entered = true);
     });
   }
 
-  // Mock-only: holds the expressive indicator for a beat; a real feed fetch
-  // goes here later.
-  Future<void> _refresh() {
-    return Future<void>.delayed(const Duration(milliseconds: 1500));
+  @override
+  void dispose() {
+    _channelCubit.close();
+    _episodesCubit.close();
+    _followCubit.close();
+    super.dispose();
+  }
+
+  Future<void> _load() async {
+    await _channelCubit.load(id: widget.id, appleId: widget.appleId);
+
+    final Channel? channel = _channelCubit.state;
+    final int? id = channel?.id;
+
+    _followCubit.set(channel?.subscribed);
+    if (id != null) await _episodesCubit.load(id: id);
+  }
+
+  void _toggleFollow() {
+    final int? id = _channelCubit.state?.id;
+
+    if (id != null && _followCubit.state != null) _followCubit.toggle(id: id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final MockChannel channel = widget.channel;
-    final ColorScheme cs = channel.scheme(context);
+    return BlocBuilder<ChannelCubit, Channel?>(
+      bloc: _channelCubit,
+      builder: (context, channel) {
+        return BlocBuilder<ChannelFollowCubit, bool?>(
+          bloc: _followCubit,
+          builder: (context, subscribed) {
+            return _ChannelView(
+              channel: channel,
+              preview: widget.preview,
+              fallbackId: widget.id,
+              subscribed: subscribed,
+              entered: _entered,
+              episodesCubit: _episodesCubit,
+              onRefresh: _load,
+              onSubscribe: _toggleFollow,
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ChannelView extends StatelessWidget {
+  const _ChannelView({
+    required this.channel,
+    required this.preview,
+    required this.fallbackId,
+    required this.subscribed,
+    required this.entered,
+    required this.episodesCubit,
+    required this.onRefresh,
+    required this.onSubscribe,
+  });
+
+  final Channel? channel;
+  final ChannelPreview? preview;
+  final int? fallbackId;
+  final bool? subscribed;
+  final bool entered;
+  final ChannelEpisodesCubit episodesCubit;
+  final Future<void> Function() onRefresh;
+  final VoidCallback onSubscribe;
+
+  @override
+  Widget build(BuildContext context) {
+    final int? id = channel?.id ?? fallbackId;
+    final ColorScheme cs = id == null
+        ? Theme.of(context).colorScheme
+        : Channel.schemeOf(context, id);
     final TextTheme tt = Theme.of(context).textTheme;
 
-    final List<Episode> episodes = channel.episodes;
+    final String title = channel?.title ?? preview?.title ?? '';
+    final String author = channel?.author ?? preview?.author ?? '';
+    final String image = channel?.image ?? preview?.image ?? '';
+    final String description = (channel?.description ?? '')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .trim();
 
     // The header collapses from a full hero down to a plain back-button bar, so
     // measure the channel name to know exactly how tall the expanded state is.
@@ -60,7 +142,7 @@ class _ChannelPageState extends State<ChannelPage> {
       letterSpacing: 0.8,
     );
     final TextPainter hostPainter = TextPainter(
-      text: TextSpan(text: channel.host.toUpperCase(), style: hostStyle),
+      text: TextSpan(text: author.toUpperCase(), style: hostStyle),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
       maxLines: 1,
@@ -71,33 +153,27 @@ class _ChannelPageState extends State<ChannelPage> {
       height: 1.05,
     );
     final TextPainter namePainter = TextPainter(
-      text: TextSpan(text: channel.name, style: nameStyle),
+      text: TextSpan(text: title, style: nameStyle),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: maxW);
 
     final double minExtent = topPad + kToolbarHeight;
-    // Exact expanded height: the hero column sized to its content, so the header
-    // bottom lands flush under the subscribe button (the list adds its own gap).
     final double maxExtent =
         minExtent +
-        8 + // back bar -> cover
+        8 +
         _kCoverSize +
-        20 + // cover -> host
+        20 +
         hostPainter.height +
-        8 + // host -> name
+        8 +
         namePainter.height +
-        24 + // name -> subscribe
+        24 +
         _kSubscribeHeight;
 
     return Scaffold(
       backgroundColor: cs.surface,
       body: ExpressiveRefreshIndicator(
-        onRefresh: _refresh,
-        // Tint to the channel's seed scheme like the rest of the page. Descend
-        // from below the pinned back-button bar (this page's app-bar
-        // equivalent), not from behind the status bar — matching how Compose's
-        // indicator comes from the top of the content below the app bar.
+        onRefresh: onRefresh,
         color: cs.onPrimaryContainer,
         backgroundColor: cs.primaryContainer,
         edgeOffset: topPad + kToolbarHeight,
@@ -106,14 +182,16 @@ class _ChannelPageState extends State<ChannelPage> {
             SliverPersistentHeader(
               pinned: true,
               delegate: _ChannelHeaderDelegate(
-                channel: channel,
+                title: title,
+                author: author,
+                image: image,
                 scheme: cs,
                 topPad: topPad,
                 minExtentValue: minExtent,
                 maxExtentValue: maxExtent,
-                entered: _entered,
-                subscribed: _subscribed,
-                onSubscribe: () => setState(() => _subscribed = !_subscribed),
+                entered: entered,
+                subscribed: subscribed,
+                onSubscribe: onSubscribe,
               ),
             ),
             SliverToBoxAdapter(
@@ -122,9 +200,9 @@ class _ChannelPageState extends State<ChannelPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (channel.description.isNotEmpty) ...[
+                    if (description.isNotEmpty) ...[
                       Text(
-                        channel.description,
+                        description,
                         style: tt.bodyMedium?.copyWith(
                           color: cs.onSurfaceVariant,
                           height: 1.5,
@@ -146,23 +224,36 @@ class _ChannelPageState extends State<ChannelPage> {
                 ),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, i) {
-                  final Episode ep = episodes[i];
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                    child: FeedEpisodeCard(
-                      episode: ep,
-                      playing: false,
-                      onTap: () => Navigator.of(
-                        context,
-                      ).push(PlayerPage.route(ep, fromChannel: true)),
+            BlocBuilder<ChannelEpisodesCubit, List<Episode>?>(
+              bloc: episodesCubit,
+              builder: (context, episodes) {
+                if (episodes == null) {
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 48),
+                      child: Center(child: LoadingIndicator()),
                     ),
                   );
-                },
-                childCount: episodes.length,
-              ),
+                }
+
+                return SliverList.builder(
+                  itemCount: episodes.length,
+                  itemBuilder: (context, i) {
+                    final Episode episode = episodes[i];
+
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                      child: FeedEpisodeCard(
+                        episode: episode,
+                        playing: false,
+                        onTap: () => Navigator.of(
+                          context,
+                        ).push(PlayerPage.route(episode, fromChannel: true)),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
           ],
@@ -177,7 +268,9 @@ class _ChannelPageState extends State<ChannelPage> {
 /// the user scrolls, while a compact channel name crossfades into the bar.
 class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
   _ChannelHeaderDelegate({
-    required this.channel,
+    required this.title,
+    required this.author,
+    required this.image,
     required this.scheme,
     required this.topPad,
     required this.minExtentValue,
@@ -187,13 +280,15 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.onSubscribe,
   });
 
-  final MockChannel channel;
+  final String title;
+  final String author;
+  final String image;
   final ColorScheme scheme;
   final double topPad;
   final double minExtentValue;
   final double maxExtentValue;
   final bool entered;
-  final bool subscribed;
+  final bool? subscribed;
   final VoidCallback onSubscribe;
 
   @override
@@ -249,7 +344,7 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
                       child: Opacity(
                         opacity: barTitleOpacity,
                         child: Text(
-                          channel.name,
+                          title,
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -294,7 +389,7 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
             child: SizedBox(
               width: _kCoverSize,
               height: _kCoverSize,
-              child: _Cover(channel: channel, scheme: cs),
+              child: _Cover(image: image, scheme: cs),
             ),
           ),
         ),
@@ -302,7 +397,7 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Text(
-            channel.host.toUpperCase(),
+            author.toUpperCase(),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -317,7 +412,7 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Text(
-            channel.name,
+            title,
             textAlign: TextAlign.center,
             style: tt.displaySmall?.copyWith(
               color: cs.primary,
@@ -341,7 +436,9 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(covariant _ChannelHeaderDelegate old) {
-    return old.channel != channel ||
+    return old.title != title ||
+        old.author != author ||
+        old.image != image ||
         old.scheme != scheme ||
         old.topPad != topPad ||
         old.minExtentValue != minExtentValue ||
@@ -352,9 +449,9 @@ class _ChannelHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class _Cover extends StatelessWidget {
-  const _Cover({required this.channel, required this.scheme});
+  const _Cover({required this.image, required this.scheme});
 
-  final MockChannel channel;
+  final String image;
   final ColorScheme scheme;
 
   @override
@@ -365,7 +462,7 @@ class _Cover extends StatelessWidget {
       size: 48,
     );
     return SmoothImage(
-      url: channel.image,
+      url: image,
       placeholderColor: scheme.primaryContainer,
       placeholderChild: glyph,
       errorChild: glyph,
@@ -384,7 +481,7 @@ class _SubscribeButton extends StatefulWidget {
     required this.onTap,
   });
 
-  final bool subscribed;
+  final bool? subscribed;
   final ColorScheme scheme;
   final VoidCallback onTap;
 
@@ -413,7 +510,7 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
         curve: Curves.easeOut,
         child: SingleMotionBuilder(
           motion: const MaterialSpringMotion.expressiveSpatialFast(),
-          value: widget.subscribed ? 1.0 : 0.0,
+          value: widget.subscribed == true ? 1.0 : 0.0,
           builder: (context, t, _) {
             final double tc = t.clamp(0.0, 1.0);
             final Color bg = Color.lerp(
@@ -434,13 +531,15 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    widget.subscribed ? Icons.check_rounded : Icons.add_rounded,
+                    widget.subscribed == true
+                        ? Icons.check_rounded
+                        : Icons.add_rounded,
                     size: 22,
                     color: fg,
                   ),
                   10.gap,
                   Text(
-                    widget.subscribed ? 'Subscribed' : 'Subscribe',
+                    widget.subscribed == true ? 'Subscribed' : 'Subscribe',
                     style: tt.titleMedium?.copyWith(
                       color: fg,
                       fontWeight: FontWeight.w700,

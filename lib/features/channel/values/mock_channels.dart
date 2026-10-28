@@ -98,11 +98,3 @@ List<MockChannel> get mockChannels {
   }
   return channels;
 }
-
-/// The channel for [name], or `null` if no episodes carry that channel.
-MockChannel? channelByName(String name) {
-  for (final MockChannel c in mockChannels) {
-    if (c.name == name) return c;
-  }
-  return null;
-}

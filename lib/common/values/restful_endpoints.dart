@@ -1,7 +1,12 @@
+import 'dart:ui';
+
 import 'package:bunpod/bunpod.dart';
 
 class RestfulEndpoints {
   const RestfulEndpoints._();
+
+  static String? get _country =>
+      PlatformDispatcher.instance.locale.countryCode?.toLowerCase();
 
   static Endpoint socialSignIn({
     required AuthProvider provider,
@@ -57,15 +62,69 @@ class RestfulEndpoints {
   }
 
   static Endpoint trending({
-    String? country,
+    int? categoryId,
     int? limit,
   }) {
     return Endpoint.get(
       url: '${AppConfig.baseUrl}/podcasts/trending',
       query: {
-        'country': ?country,
+        'country': ?_country,
+        'category': ?categoryId,
         'limit': ?limit,
       },
+    );
+  }
+
+  static Endpoint search({
+    required String query,
+    int? limit,
+  }) {
+    return Endpoint.get(
+      url: '${AppConfig.baseUrl}/podcasts/search',
+      query: {
+        'q': query,
+        'country': ?_country,
+        'limit': ?limit,
+      },
+    );
+  }
+
+  static Endpoint categories() {
+    return Endpoint.get(
+      url: '${AppConfig.baseUrl}/podcasts/categories',
+    );
+  }
+
+  static Endpoint channel({required int id}) {
+    return Endpoint.get(
+      url: '${AppConfig.baseUrl}/podcasts/$id',
+    );
+  }
+
+  static Endpoint channelByAppleId({required int appleId}) {
+    return Endpoint.get(
+      url: '${AppConfig.baseUrl}/podcasts/apple/$appleId',
+    );
+  }
+
+  static Endpoint channelEpisodes({required int id, int? limit}) {
+    return Endpoint.get(
+      url: '${AppConfig.baseUrl}/podcasts/$id/episodes',
+      query: {
+        'limit': ?limit,
+      },
+    );
+  }
+
+  static Endpoint subscribe({required int id}) {
+    return Endpoint.put(
+      url: '${AppConfig.baseUrl}/subscriptions/$id',
+    );
+  }
+
+  static Endpoint unsubscribe({required int id}) {
+    return Endpoint.delete(
+      url: '${AppConfig.baseUrl}/subscriptions/$id',
     );
   }
 }

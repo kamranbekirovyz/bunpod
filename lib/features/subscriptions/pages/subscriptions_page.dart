@@ -22,7 +22,16 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   }
 
   void _openChannel(MockChannel channel) {
-    Navigator.of(context).push(ChannelPage.route(channel));
+    Navigator.of(context).push(
+      ChannelPage.route(
+        id: mockChannels.indexOf(channel),
+        preview: ChannelPreview(
+          title: channel.name,
+          author: channel.host,
+          image: channel.image,
+        ),
+      ),
+    );
   }
 
   void _toggle(MockChannel channel) {

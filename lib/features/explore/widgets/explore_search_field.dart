@@ -64,7 +64,7 @@ class ExploreSearchField extends StatelessWidget {
                 decoration: InputDecoration(
                   isCollapsed: true,
                   border: InputBorder.none,
-                  hintText: 'Shows, hosts, shelves…',
+                  hintText: 'Shows and hosts',
                   hintStyle: tt.bodyLarge?.copyWith(
                     color: cs.onSurfaceVariant,
                   ),

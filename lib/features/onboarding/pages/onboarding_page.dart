@@ -64,7 +64,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     ),
                   ),
                 ),
-                BlocBuilder<TrendingCubit, List<TrendingPodcast>?>(
+                BlocBuilder<TrendingCubit, List<ChannelPreview>?>(
                   bloc: _trendingCubit,
                   builder: (context, trending) {
                     return OnboardingShowGrid(

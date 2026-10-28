@@ -30,6 +30,12 @@ void setupLocator() {
   locator.registerSingleton<OnboardingRemoteData>(
     useMocks ? const MockOnboardingRemoteData() : const OnboardingRemoteData(),
   );
+  locator.registerSingleton<ExploreRemoteData>(
+    useMocks ? const MockExploreRemoteData() : const ExploreRemoteData(),
+  );
+  locator.registerSingleton<ChannelRemoteData>(
+    useMocks ? const MockChannelRemoteData() : const ChannelRemoteData(),
+  );
   locator.registerSingleton<VersionarteProvider>(
     useMocks
         ? const MockVersionarteProvider()
@@ -38,6 +44,7 @@ void setupLocator() {
   locator.registerSingleton<VersionarteCubit>(VersionarteCubit());
   locator.registerSingleton<FeedCubit>(FeedCubit());
   locator.registerSingleton<SubscriptionsCubit>(SubscriptionsCubit());
+  locator.registerSingleton<ExploreCategoriesCubit>(ExploreCategoriesCubit());
   // Last, since the interceptor reads tokens from the locator.
   locator.registerSingleton<Dio>(buildDio());
 }

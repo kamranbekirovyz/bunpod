@@ -1,5 +1,5 @@
-export 'category_card.dart';
-export 'category_pill.dart';
+export 'explore_category_chips.dart';
+export 'explore_no_results.dart';
 export 'explore_search_field.dart';
-export 'host_bubble.dart';
-export 'result_tile.dart';
+export 'explore_show_grid.dart';
+export 'explore_show_tile.dart';

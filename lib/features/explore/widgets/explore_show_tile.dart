@@ -2,14 +2,14 @@ import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 import 'package:material_shapes/material_shapes.dart';
 
-class ResultTile extends StatelessWidget {
-  const ResultTile({
+class ExploreShowTile extends StatelessWidget {
+  const ExploreShowTile({
     super.key,
-    required this.channel,
+    required this.show,
     required this.onTap,
   });
 
-  final MockChannel channel;
+  final ChannelPreview show;
   final VoidCallback onTap;
 
   @override
@@ -19,7 +19,7 @@ class ResultTile extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: '${channel.name} by ${channel.host}',
+      label: '${show.title} by ${show.author}',
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
@@ -35,14 +35,14 @@ class ResultTile extends StatelessWidget {
                   ),
                 ),
                 child: SmoothImage(
-                  url: channel.image,
-                  placeholderColor: channel.seed,
+                  url: show.image ?? '',
+                  placeholderColor: cs.surfaceContainerHigh,
                 ),
               ),
             ),
             8.gap,
             Text(
-              channel.name,
+              show.title ?? '',
               style: tt.labelLarge?.copyWith(
                 color: cs.onSurface,
                 fontWeight: FontWeight.w500,

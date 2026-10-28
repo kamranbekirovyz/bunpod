@@ -1,1 +1,1 @@
-export 'explore_category.dart';
+export 'category.dart';

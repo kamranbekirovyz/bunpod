@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -15,11 +16,20 @@ class ExplorePage extends StatefulWidget {
 class _ExplorePageState extends State<ExplorePage> {
   final TextEditingController _search = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
-  ExploreCategory? _category;
+
+  late final ExploreTrendingCubit _trendingCubit;
+  late final ExploreSearchCubit _searchCubit;
+
+  Category? _category;
+
+  bool get _browsing => _search.text.trim().isEmpty;
 
   @override
   void initState() {
     super.initState();
+    _trendingCubit = ExploreTrendingCubit()..load();
+    _searchCubit = ExploreSearchCubit();
+    locator<ExploreCategoriesCubit>().load();
     _searchFocus.addListener(() => setState(() {}));
   }
 
@@ -27,272 +37,89 @@ class _ExplorePageState extends State<ExplorePage> {
   void dispose() {
     _search.dispose();
     _searchFocus.dispose();
+    _trendingCubit.close();
+    _searchCubit.close();
     super.dispose();
   }
 
-  String get _query => _search.text.trim();
-
-  bool get _browsing => _query.isEmpty && _category == null;
-
-  void _pickCategory(ExploreCategory category) {
-    setState(
-      () => _category = identical(_category, category) ? null : category,
-    );
-  }
-
-  void _clearCategory() {
-    setState(() => _category = null);
+  void _onQueryChanged(String query) {
+    setState(() {});
+    _searchCubit.search(query);
   }
 
   void _clearSearch() {
     _search.clear();
-    setState(() {});
+    _onQueryChanged('');
   }
 
-  void _openChannel(MockChannel channel) {
-    Navigator.of(context).push(ChannelPage.route(channel));
+  void _pickCategory(Category? category) {
+    setState(() => _category = category);
+    _trendingCubit.load(categoryId: category?.id);
   }
 
-  /// Channels matching the active shelf and/or query. A query matches a
-  /// channel's name or host directly, and matches whole shelves by name.
-  List<MockChannel> get _results {
-    final List<MockChannel> pool = _category?.channels ?? mockChannels;
-    final String q = _query.toLowerCase();
-    if (q.isEmpty) return pool;
-
-    final Set<String> viaCategory = <String>{
-      for (final ExploreCategory c in mockCategories)
-        if (c.name.toLowerCase().contains(q)) ...c.channelNames,
-    };
-
-    return <MockChannel>[
-      for (final MockChannel channel in pool)
-        if (channel.name.toLowerCase().contains(q) ||
-            channel.host.toLowerCase().contains(q) ||
-            viaCategory.contains(channel.name))
-          channel,
-    ];
+  void _openChannel(ChannelPreview show) {
+    Navigator.of(
+      context,
+    ).push(ChannelPage.route(appleId: show.appleId, preview: show));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: const _AppBar(),
-      body: _Body(
-        search: _search,
-        searchFocus: _searchFocus,
-        category: _category,
-        browsing: _browsing,
-        results: _results,
-        onQueryChanged: (_) => setState(() {}),
-        onClearSearch: _clearSearch,
-        onPickCategory: _pickCategory,
-        onClearCategory: _clearCategory,
-        onOpenChannel: _openChannel,
+      appBar: AppBar(
+        leading: const StyledBackButton(),
+        title: const Text('Explore'),
       ),
-    );
-  }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: const StyledBackButton(),
-      title: const Text('Explore'),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
-  const _Body({
-    required this.search,
-    required this.searchFocus,
-    required this.category,
-    required this.browsing,
-    required this.results,
-    required this.onQueryChanged,
-    required this.onClearSearch,
-    required this.onPickCategory,
-    required this.onClearCategory,
-    required this.onOpenChannel,
-  });
-
-  final TextEditingController search;
-  final FocusNode searchFocus;
-  final ExploreCategory? category;
-  final bool browsing;
-  final List<MockChannel> results;
-  final ValueChanged<String> onQueryChanged;
-  final VoidCallback onClearSearch;
-  final ValueChanged<ExploreCategory> onPickCategory;
-  final VoidCallback onClearCategory;
-  final ValueChanged<MockChannel> onOpenChannel;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                ExploreSearchField(
-                  controller: search,
-                  focusNode: searchFocus,
-                  onChanged: onQueryChanged,
-                  onClear: onClearSearch,
-                ),
-                if (category != null) ...[
-                  12.gap,
-                  CategoryPill(
-                    category: category!,
-                    onClear: onClearCategory,
-                  ),
-                ],
-              ],
+      body: CustomScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        slivers: [
+          SliverPadding(
+            padding: const .fromLTRB(16, 8, 16, 16),
+            sliver: SliverToBoxAdapter(
+              child: ExploreSearchField(
+                controller: _search,
+                focusNode: _searchFocus,
+                onChanged: _onQueryChanged,
+                onClear: _clearSearch,
+              ),
             ),
           ),
-        ),
-        if (browsing)
-          ..._browseSlivers(context)
-        else
-          ..._resultSlivers(context),
-        SliverToBoxAdapter(
-          child: SizedBox(height: 24 + BottomPadding.of(context)),
-        ),
-      ],
-    );
-  }
-
-  Widget _sectionLabel(BuildContext context, String label) {
-    final ColorScheme cs = Theme.of(context).colorScheme;
-    final TextTheme tt = Theme.of(context).textTheme;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 12),
-      child: Text(
-        label,
-        style: tt.labelMedium?.copyWith(
-          color: cs.onSurfaceVariant,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _browseSlivers(BuildContext context) {
-    return [
-      SliverToBoxAdapter(child: _sectionLabel(context, 'HOSTS ON AIR')),
-      SliverToBoxAdapter(
-        child: SizedBox(
-          height: 252,
-          child: GridView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.32,
+          if (_browsing) ...[
+            SliverToBoxAdapter(
+              child: BlocBuilder<ExploreCategoriesCubit, List<Category>?>(
+                bloc: locator<ExploreCategoriesCubit>(),
+                builder: (context, categories) {
+                  return ExploreCategoryChips(
+                    categories: categories ?? [],
+                    selected: _category,
+                    onSelected: _pickCategory,
+                  );
+                },
+              ),
             ),
-            itemCount: mockChannels.length,
-            itemBuilder: (BuildContext context, int index) {
-              final MockChannel channel = mockChannels[index];
-
-              return HostBubble(
-                channel: channel,
-                onTap: () => onOpenChannel(channel),
-              );
-            },
-          ),
-        ),
-      ),
-      SliverToBoxAdapter(child: _sectionLabel(context, 'THE SHELVES')),
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        sliver: SliverList.separated(
-          itemCount: mockCategories.length,
-          separatorBuilder: (_, _) => 4.gap,
-          itemBuilder: (BuildContext context, int index) {
-            final ExploreCategory category = mockCategories[index];
-
-            return CategoryCard(
-              category: category,
-              first: index == 0,
-              last: index == mockCategories.length - 1,
-              onTap: () => onPickCategory(category),
-            );
-          },
-        ),
-      ),
-    ];
-  }
-
-  List<Widget> _resultSlivers(BuildContext context) {
-    final ColorScheme cs = Theme.of(context).colorScheme;
-    final TextTheme tt = Theme.of(context).textTheme;
-
-    if (results.isEmpty) {
-      return [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 64, 24, 0),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.search_off_rounded,
-                  size: 40,
-                  color: cs.outline,
-                ),
-                12.gap,
-                Text(
-                  'No shows match that — yet.',
-                  style: tt.bodyLarge?.copyWith(
-                    color: cs.onSurfaceVariant,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ];
-    }
-
-    return [
-      SliverPadding(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-        sliver: SliverGrid.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.72,
-          ),
-          itemCount: results.length,
-          itemBuilder: (BuildContext context, int index) {
-            final MockChannel channel = results[index];
-
-            return ResultTile(
-              channel: channel,
-              onTap: () {
-                onOpenChannel(channel);
+            BlocBuilder<ExploreTrendingCubit, List<ChannelPreview>?>(
+              bloc: _trendingCubit,
+              builder: (context, shows) {
+                return ExploreShowGrid(shows: shows, onTap: _openChannel);
               },
-            );
-          },
-        ),
+            ),
+          ] else
+            BlocBuilder<ExploreSearchCubit, List<ChannelPreview>?>(
+              bloc: _searchCubit,
+              builder: (context, results) {
+                if (results != null && results.isEmpty) {
+                  return const SliverToBoxAdapter(child: ExploreNoResults());
+                }
+
+                return ExploreShowGrid(shows: results, onTap: _openChannel);
+              },
+            ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 24 + BottomPadding.of(context)),
+          ),
+        ],
       ),
-    ];
+    );
   }
 }

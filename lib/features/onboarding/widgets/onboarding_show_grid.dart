@@ -9,7 +9,7 @@ class OnboardingShowGrid extends StatelessWidget {
     required this.followPicksCubit,
   });
 
-  final List<TrendingPodcast>? shows;
+  final List<ChannelPreview>? shows;
   final FollowPicksCubit followPicksCubit;
 
   static const SliverGridDelegate _gridDelegate =
@@ -22,7 +22,7 @@ class OnboardingShowGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TrendingPodcast>? shows = this.shows;
+    final List<ChannelPreview>? shows = this.shows;
     final bool loading = shows == null;
 
     return ShimmerScope(
@@ -33,7 +33,7 @@ class OnboardingShowGrid extends StatelessWidget {
           gridDelegate: _gridDelegate,
           itemCount: shows?.length ?? 12,
           itemBuilder: (BuildContext context, int index) {
-            final TrendingPodcast? podcast = shows?[index];
+            final ChannelPreview? podcast = shows?[index];
 
             return ShimmerReveal(
               loading: loading,
