@@ -44,6 +44,7 @@ dependencies:
     path: packages/material_wavy_progress_indicator
   versionarte: ^2.1.2
   stupid_simple_sheet: ^0.9.1+1
+  rxdart: ^0.28.0
 
 
 dependency_overrides:
