@@ -1,10 +1,6 @@
 export 'cubits/cubits.dart';
 export 'data_sources/data_sources.dart';
 export 'models/models.dart';
-export 'pages/feed_page.dart';
-export 'values/mock_values.dart';
-export 'widgets/episode_card.dart';
-export 'widgets/filter_tabs.dart';
-export 'widgets/home_app_bar.dart';
-export 'widgets/home_player_card.dart';
-export 'widgets/section_header.dart';
+export 'pages/pages.dart';
+export 'values/values.dart';
+export 'widgets/widgets.dart';

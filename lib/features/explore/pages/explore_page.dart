@@ -1,9 +1,4 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:bunpod/features/explore/widgets/category_card.dart';
-import 'package:bunpod/features/explore/widgets/category_pill.dart';
-import 'package:bunpod/features/explore/widgets/explore_search_field.dart';
-import 'package:bunpod/features/explore/widgets/host_bubble.dart';
-import 'package:bunpod/features/explore/widgets/result_tile.dart';
 import 'package:flutter/material.dart';
 
 class ExplorePage extends StatefulWidget {
