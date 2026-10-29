@@ -113,16 +113,24 @@ class _ExplorePageState extends State<ExplorePage> {
                       },
                     )
                   else
-                    BlocBuilder<ExploreSearchCubit, List<ChannelPreview>?>(
+                    BlocBuilder<ExploreSearchCubit, ExploreSearch>(
                       bloc: _searchCubit,
-                      builder: (context, results) {
-                        if (results != null && results.isEmpty) {
+                      builder: (context, search) {
+                        if (search.loading) {
+                          return const ExploreShowGrid(shows: null);
+                        }
+
+                        if (search.query.isEmpty) {
+                          return const SliverToBoxAdapter();
+                        }
+
+                        if (search.results.isEmpty) {
                           return const SliverToBoxAdapter(
                             child: ExploreNoResults(),
                           );
                         }
 
-                        return ExploreShowGrid(shows: results);
+                        return ExploreShowGrid(shows: search.results);
                       },
                     ),
                   SliverToBoxAdapter(

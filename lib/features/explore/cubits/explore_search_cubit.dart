@@ -1,27 +1,62 @@
+import 'dart:async';
+
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
-class ExploreSearchCubit extends Cubit<List<ChannelPreview>?> {
-  ExploreSearchCubit() : super(null);
+typedef ExploreSearch = ({
+  String query,
+  List<ChannelPreview> results,
+  bool loading,
+});
 
-  static const Duration _debounce = Duration(milliseconds: 300);
+class ExploreSearchCubit extends Cubit<ExploreSearch> {
+  ExploreSearchCubit() : super(_idle) {
+    _subscription = _queries
+        .map((text) => text.trim())
+        .debounce(_wait)
+        .distinct()
+        .switchMap(_search)
+        .listen(emit, onError: (_) => emit(_failed));
+  }
 
-  String _query = '';
+  static const ExploreSearch _idle = (query: '', results: [], loading: false);
+  static const Duration _delay = Duration(milliseconds: 400);
+  static const int _minLength = 2;
 
-  Future<void> search(String query) async {
-    _query = query.trim();
-    emit(null);
+  final PublishSubject<String> _queries = PublishSubject<String>();
+  late final StreamSubscription<ExploreSearch> _subscription;
 
-    if (_query.isEmpty) return;
+  ExploreSearch get _failed {
+    return (query: state.query, results: state.results, loading: false);
+  }
 
-    final String current = _query;
+  void search(String text) => _queries.add(text);
 
-    await Future<void>.delayed(_debounce);
-    if (current != _query) return;
+  Stream<void> _wait(String query) {
+    if (query.length < _minLength) return Stream<void>.value(null);
+
+    return TimerStream<void>(null, _delay);
+  }
+
+  Stream<ExploreSearch> _search(String query) async* {
+    if (query.length < _minLength) {
+      yield _idle;
+      return;
+    }
+
+    yield (query: query, results: const [], loading: true);
 
     final List<ChannelPreview> results = await locator<ExploreRemoteData>()
-        .search(current);
+        .search(query);
 
-    if (current == _query) emit(results);
+    yield (query: query, results: results, loading: false);
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscription.cancel();
+    await _queries.close();
+    return super.close();
   }
 }
