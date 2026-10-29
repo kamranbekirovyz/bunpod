@@ -75,24 +75,31 @@ class _PlayButtonState extends State<PlayButton> {
               },
               child: SizedBox.expand(
                 child: Center(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: widget.loading
-                        ? SizedBox.square(
-                            key: const ValueKey('loading'),
-                            dimension: 72,
-                            child: LoadingIndicator(
-                              activeIndicatorColor: widget.foreground,
-                            ),
-                          )
-                        : Icon(
-                            widget.playing
-                                ? Icons.pause_rounded
-                                : Icons.play_arrow_rounded,
-                            key: ValueKey(widget.playing),
-                            color: widget.foreground,
-                            size: 56,
+                  child: Stack(
+                    alignment: .center,
+                    children: [
+                      AnimatedOpacity(
+                        opacity: widget.loading ? 1 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: SizedBox.square(
+                          dimension: 72,
+                          child: LoadingIndicator(
+                            activeIndicatorColor: widget.foreground,
                           ),
+                        ),
+                      ),
+                      AnimatedOpacity(
+                        opacity: widget.loading ? 0 : 1,
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          widget.playing
+                              ? Icons.pause_rounded
+                              : Icons.play_arrow_rounded,
+                          color: widget.foreground,
+                          size: 56,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
