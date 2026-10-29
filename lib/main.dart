@@ -1,6 +1,7 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:userorient_flutter/userorient_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,12 @@ void main() async {
       details: details,
     );
   };
+
+  UserOrient.configure(
+    apiKey: AppConfig.userOrientApiKey,
+    accentColor: MaterialThemes.light.colorScheme.primary,
+    darkAccentColor: MaterialThemes.dark.colorScheme.primary,
+  );
 
   await setupLocator();
 

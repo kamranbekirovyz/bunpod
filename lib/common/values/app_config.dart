@@ -14,4 +14,8 @@ abstract final class AppConfig {
   static const String googleIosClientId = String.fromEnvironment(
     'GOOGLE_IOS_CLIENT_ID',
   );
+
+  static const String userOrientApiKey = String.fromEnvironment(
+    'USERORIENT_API_KEY',
+  );
 }

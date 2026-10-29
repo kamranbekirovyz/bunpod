@@ -49,6 +49,10 @@ dependencies:
   audio_service: ^0.18.19
   audio_session: ^0.2.4
   shared_preferences: ^2.5.6
+  userorient_flutter:
+    git:
+      url: https://github.com/UserOrient/userorient-flutter.git
+      ref: redesign
 
 
 dependency_overrides:

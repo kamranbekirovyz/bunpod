@@ -1,6 +1,7 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_snack/expressive_snack.dart';
 import 'package:flutter/material.dart';
+import 'package:userorient_flutter/userorient_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MenuPage extends StatelessWidget {
@@ -153,7 +154,7 @@ class _BodyState extends State<_Body> {
               icon: Icons.lightbulb_outlined,
               title: 'Suggest a feature',
               onTap: () {
-                ComingSoon.show(context);
+                UserOrient.openBoard(context);
               },
             ),
             MenuTile(

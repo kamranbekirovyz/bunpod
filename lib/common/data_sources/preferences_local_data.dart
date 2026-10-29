@@ -23,4 +23,8 @@ class PreferencesLocalData {
       jsonEncode(episode.toJson()),
     );
   }
+
+  Future<bool> clear() {
+    return sharedPreferences.clear();
+  }
 }

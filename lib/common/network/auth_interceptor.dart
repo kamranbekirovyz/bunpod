@@ -1,7 +1,7 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:dio/dio.dart';
 
-/// Adds the access token and clears tokens on 401.
+/// Adds the access token and signs out on 401.
 class AuthInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
@@ -24,7 +24,7 @@ class AuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     if (err.response?.statusCode == 401) {
-      await locator<SecureStorageLocalData>().clearTokens();
+      await signOut();
     }
 
     handler.next(err);
