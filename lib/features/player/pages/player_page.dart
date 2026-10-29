@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
 
@@ -16,19 +17,11 @@ class PlayerPage extends StatefulWidget {
   /// tapping the channel name pops back instead of pushing a duplicate page.
   final bool fromChannel;
 
-  static Route<void> route(Episode episode, {bool fromChannel = false}) {
-    return MaterialPageRoute<void>(
-      builder: (context) =>
-          PlayerPage(episode: episode, fromChannel: fromChannel),
-    );
-  }
-
   @override
   State<PlayerPage> createState() => _PlayerPageState();
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  bool _playing = false;
   bool _fav = false;
 
   void _openChannel() {
@@ -38,10 +31,12 @@ class _PlayerPageState extends State<PlayerPage> {
     }
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => ChannelPage(
-          id: widget.episode.channelId,
-          preview: ChannelPreview.fromChannel(widget.episode.channel),
-        ),
+        builder: (_) {
+          return ChannelPage(
+            id: widget.episode.channelId,
+            preview: ChannelPreview.fromChannel(widget.episode.channel),
+          );
+        },
       ),
     );
   }
@@ -51,14 +46,6 @@ class _PlayerPageState extends State<PlayerPage> {
     final Episode episode = widget.episode;
     final ColorScheme cs = episode.scheme(context);
     final TextTheme tt = Theme.of(context).textTheme;
-
-    final Duration remaining = episode.total - episode.listened;
-    // Finished episodes have nothing left to count down — show the full
-    // duration again, without the leading minus.
-    final bool ended = remaining <= Duration.zero;
-    final String timeLabel = ended
-        ? episode.total.remainingLabel
-        : '-${remaining.remainingLabel}';
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -99,45 +86,84 @@ class _PlayerPageState extends State<PlayerPage> {
               padding: const EdgeInsets.only(right: 56),
               child: Text(
                 episode.title ?? '',
-                style: tt.displaySmall?.copyWith(
+                style: tt.headlineLarge?.copyWith(
                   color: cs.primary,
                   fontWeight: FontWeight.w800,
                 ),
               ),
             ),
             const Spacer(),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                timeLabel,
-                style: GoogleFonts.unbounded(
-                  color: cs.onSurface,
-                  fontSize: 56,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -2,
-                  fontFeatures: const [
-                    FontFeature.tabularFigures(),
-                  ],
-                ),
-              ),
-            ),
-            8.gap,
-            _ProgressBar(
-              progress: episode.progress,
-              scheme: cs,
+            EpisodeProgressBuilder(
+              episode: episode,
+              builder: (context, episode) {
+                return _Progress(episode: episode, scheme: cs);
+              },
             ),
             24.gap,
-            PlayerControls(
-              scheme: cs,
-              playing: _playing,
-              fav: _fav,
-              onPlayPause: () => setState(() => _playing = !_playing),
-              onFav: () => setState(() => _fav = !_fav),
+            BlocBuilder<PlayerCubit, Playback>(
+              bloc: locator<PlayerCubit>(),
+              builder: (context, playback) {
+                final PlayerCubit player = locator<PlayerCubit>();
+                final bool current = playback.episode?.id == episode.id;
+
+                return PlayerControls(
+                  scheme: cs,
+                  playing: current && playback.playing,
+                  loading: current && playback.loading,
+                  fav: _fav,
+                  onPlayPause: () =>
+                      current ? player.toggle() : player.play(episode),
+                  onRewind: () => current ? player.rewind() : null,
+                  onFastForward: () => current ? player.fastForward() : null,
+                  onFav: () => setState(() => _fav = !_fav),
+                );
+              },
             ),
             const BottomPadding(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Progress extends StatelessWidget {
+  const _Progress({required this.episode, required this.scheme});
+
+  final Episode episode;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final PlayerCubit player = locator<PlayerCubit>();
+    final bool current = player.state.episode?.id == episode.id;
+    final Duration loaded = current ? player.duration : Duration.zero;
+    final Duration total = loaded > Duration.zero ? loaded : episode.total;
+    final Duration position = episode.listened;
+    final Duration remaining = total - position;
+    final double progress = total.inMilliseconds == 0
+        ? 0
+        : position.inMilliseconds / total.inMilliseconds;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          remaining > Duration.zero
+              ? '-${remaining.remainingLabel}'
+              : total.remainingLabel,
+          textAlign: TextAlign.right,
+          style: GoogleFonts.unbounded(
+            color: scheme.onSurface,
+            fontSize: 56,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -2,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
+        8.gap,
+        _ProgressBar(progress: progress, scheme: scheme),
+      ],
     );
   }
 }

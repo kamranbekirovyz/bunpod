@@ -19,7 +19,7 @@ void main() async {
     );
   };
 
-  setupLocator();
+  await setupLocator();
 
   final bool signedIn =
       await locator<SecureStorageLocalData>().accessToken != null;

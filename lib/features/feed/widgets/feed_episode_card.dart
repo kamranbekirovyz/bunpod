@@ -1,13 +1,57 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:motor/motor.dart';
 
-class FeedEpisodeCard extends StatefulWidget {
+class FeedEpisodeCard extends StatelessWidget {
   const FeedEpisodeCard({
     super.key,
+    required this.episode,
+    this.fromChannel = false,
+  });
+
+  final Episode episode;
+  final bool fromChannel;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<PlayerCubit, Playback, bool>(
+      bloc: locator<PlayerCubit>(),
+      selector: (playback) {
+        return playback.playing && playback.episode?.id == episode.id;
+      },
+      builder: (context, playing) {
+        return EpisodeProgressBuilder(
+          episode: episode,
+          builder: (context, episode) {
+            return _EpisodeCard(
+              episode: episode,
+              playing: playing,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) {
+                      return PlayerPage(
+                        episode: episode,
+                        fromChannel: fromChannel,
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _EpisodeCard extends StatefulWidget {
+  const _EpisodeCard({
     required this.episode,
     required this.playing,
     required this.onTap,
@@ -18,10 +62,10 @@ class FeedEpisodeCard extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<FeedEpisodeCard> createState() => _FeedEpisodeCardState();
+  State<_EpisodeCard> createState() => _EpisodeCardState();
 }
 
-class _FeedEpisodeCardState extends State<FeedEpisodeCard>
+class _EpisodeCardState extends State<_EpisodeCard>
     with SingleTickerProviderStateMixin {
   static const Duration _marqueeCycle = Duration(seconds: 20);
 
@@ -37,7 +81,7 @@ class _FeedEpisodeCardState extends State<FeedEpisodeCard>
   }
 
   @override
-  void didUpdateWidget(FeedEpisodeCard old) {
+  void didUpdateWidget(_EpisodeCard old) {
     super.didUpdateWidget(old);
     if (widget.playing && !_marquee.isAnimating) {
       _marquee.repeat();

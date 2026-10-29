@@ -49,6 +49,25 @@ class Episode {
     );
   }
 
+  Episode withPosition(Duration? listened) {
+    if (listened == null) return this;
+
+    return Episode(
+      id: id,
+      channelId: channelId,
+      channel: channel,
+      title: title,
+      description: description,
+      image: image,
+      publishedAt: publishedAt,
+      duration: duration,
+      audioUrl: audioUrl,
+      audioBytes: audioBytes,
+      position: listened.inSeconds,
+      completed: completed,
+    );
+  }
+
   String get cover => channel?.image ?? image ?? '';
 
   Duration get total => Duration(seconds: duration ?? 0);

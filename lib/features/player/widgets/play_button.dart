@@ -1,19 +1,19 @@
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:motor/motor.dart';
 
-/// Hero play/pause. One spring drives a single corner radius toward the shape
-/// the state calls for — pressed (more square), else playing (circle) or paused
-/// (rounded square) — so press and playback changes never fight.
 class PlayButton extends StatefulWidget {
   const PlayButton({
     super.key,
     required this.playing,
+    required this.loading,
     required this.color,
     required this.foreground,
     required this.onTap,
   });
 
   final bool playing;
+  final bool loading;
   final Color color;
   final Color foreground;
   final VoidCallback onTap;
@@ -75,12 +75,24 @@ class _PlayButtonState extends State<PlayButton> {
               },
               child: SizedBox.expand(
                 child: Center(
-                  child: Icon(
-                    widget.playing
-                        ? Icons.pause_rounded
-                        : Icons.play_arrow_rounded,
-                    color: widget.foreground,
-                    size: 56,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: widget.loading
+                        ? SizedBox.square(
+                            key: const ValueKey('loading'),
+                            dimension: 72,
+                            child: LoadingIndicator(
+                              activeIndicatorColor: widget.foreground,
+                            ),
+                          )
+                        : Icon(
+                            widget.playing
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow_rounded,
+                            key: ValueKey(widget.playing),
+                            color: widget.foreground,
+                            size: 56,
+                          ),
                   ),
                 ),
               ),

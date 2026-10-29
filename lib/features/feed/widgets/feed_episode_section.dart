@@ -7,15 +7,11 @@ class FeedEpisodeSection extends StatelessWidget {
     required this.bucket,
     required this.episodes,
     required this.first,
-    required this.playingId,
-    required this.onTap,
   });
 
   final Bucket bucket;
   final List<Episode> episodes;
   final bool first;
-  final int? playingId;
-  final ValueChanged<Episode> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +25,7 @@ class FeedEpisodeSection extends StatelessWidget {
         for (final Episode episode in episodes)
           Padding(
             padding: const .fromLTRB(16, 0, 16, 8),
-            child: FeedEpisodeCard(
-              episode: episode,
-              playing: episode.id == playingId,
-              onTap: () {
-                onTap(episode);
-              },
-            ),
+            child: FeedEpisodeCard(episode: episode),
           ),
       ],
     );

@@ -5,7 +5,7 @@ import 'package:versionarte/versionarte.dart';
 
 final GetIt locator = GetIt.instance;
 
-void setupLocator() {
+Future<void> setupLocator() async {
   locator.registerSingleton<ThemeModeCubit>(ThemeModeCubit());
 
   final bool useMocks = AppConfig.useMocks;
@@ -36,6 +36,10 @@ void setupLocator() {
   locator.registerSingleton<ChannelRemoteData>(
     useMocks ? const MockChannelRemoteData() : const ChannelRemoteData(),
   );
+  locator.registerSingleton<PlaybackRemoteData>(
+    useMocks ? const MockPlaybackRemoteData() : const PlaybackRemoteData(),
+  );
+  locator.registerSingleton<PlayerHandler>(await PlayerHandler.init());
   locator.registerSingleton<VersionarteProvider>(
     useMocks
         ? const MockVersionarteProvider()
@@ -45,6 +49,7 @@ void setupLocator() {
   locator.registerSingleton<FeedCubit>(FeedCubit());
   locator.registerSingleton<SubscriptionsCubit>(SubscriptionsCubit());
   locator.registerSingleton<ExploreCategoriesCubit>(ExploreCategoriesCubit());
+  locator.registerSingleton<PlayerCubit>(PlayerCubit());
   // Last, since the interceptor reads tokens from the locator.
   locator.registerSingleton<Dio>(buildDio());
 }

@@ -237,13 +237,10 @@ class _ChannelView extends StatelessWidget {
                     final Episode episode = episodes[i];
 
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                      padding: const .fromLTRB(20, 0, 20, 8),
                       child: FeedEpisodeCard(
                         episode: episode,
-                        playing: false,
-                        onTap: () => Navigator.of(
-                          context,
-                        ).push(PlayerPage.route(episode, fromChannel: true)),
+                        fromChannel: true,
                       ),
                     );
                   },

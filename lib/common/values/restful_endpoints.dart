@@ -127,4 +127,18 @@ class RestfulEndpoints {
       url: '${AppConfig.baseUrl}/subscriptions/$id',
     );
   }
+
+  static Endpoint saveProgress({
+    required int id,
+    required int position,
+    bool? completed,
+  }) {
+    return Endpoint.put(
+      url: '${AppConfig.baseUrl}/episodes/$id/progress',
+      body: {
+        'position': position,
+        'completed': ?completed,
+      },
+    );
+  }
 }

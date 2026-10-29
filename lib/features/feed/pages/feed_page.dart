@@ -95,12 +95,6 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
 
   Episode? _playing;
 
-  void _openPlayer() {
-    final Episode? playing = _playing;
-
-    if (playing != null) Navigator.of(context).push(PlayerPage.route(playing));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -144,8 +138,6 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    final Episode? playing = _playing;
-
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: FeedAppBar(),
@@ -159,30 +151,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
           headerSliverBuilder: (context, innerScrolled) {
             return [
               SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    if (playing != null) ...[
-                      24.gap,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: GestureDetector(
-                          onTap: _openPlayer,
-                          child: FeedNowPlayingCard(
-                            scheme: playing.scheme(context),
-                            imageUrl: playing.cover,
-                            channel: playing.channel?.title ?? '',
-                            title: playing.title ?? '',
-                            progress: playing.progress,
-                            timeLeft: playing.total - playing.listened,
-                            coverShape: ShapeValues.coverFocused,
-                            onPlayPause: () {},
-                          ),
-                        ),
-                      ),
-                    ],
-                    32.gap,
-                  ],
-                ),
+                child: _NowPlaying(suggested: _playing),
               ),
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
@@ -202,10 +171,14 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
                           if (channel != null && channel == _selected) {
                             Navigator.of(context).push(
                               MaterialPageRoute<void>(
-                                builder: (_) => ChannelPage(
-                                  id: channel.id,
-                                  preview: ChannelPreview.fromChannel(channel),
-                                ),
+                                builder: (_) {
+                                  return ChannelPage(
+                                    id: channel.id,
+                                    preview: ChannelPreview.fromChannel(
+                                      channel,
+                                    ),
+                                  );
+                                },
                               ),
                             );
                             return;
@@ -232,11 +205,6 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
                     FeedEpisodeList(
                       key: PageStorageKey('${channel?.id}'),
                       episodes: channel == _selected ? episodes : null,
-                      playingId: _playing?.id,
-                      onTap: (episode) {
-                        setState(() => _playing = episode);
-                        _openPlayer();
-                      },
                     ),
                 ],
               );
@@ -244,6 +212,61 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _NowPlaying extends StatelessWidget {
+  const _NowPlaying({required this.suggested});
+
+  final Episode? suggested;
+
+  @override
+  Widget build(BuildContext context) {
+    final PlayerCubit player = locator<PlayerCubit>();
+
+    return BlocBuilder<PlayerCubit, Playback>(
+      bloc: player,
+      builder: (context, playback) {
+        final Episode? shown = playback.episode ?? suggested;
+
+        if (shown == null) return 32.gap;
+
+        final bool current = playback.episode?.id == shown.id;
+
+        return Padding(
+          padding: const .fromLTRB(16, 24, 16, 32),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) {
+                    return PlayerPage(episode: shown);
+                  },
+                ),
+              );
+            },
+            child: EpisodeProgressBuilder(
+              episode: shown,
+              builder: (context, episode) {
+                return FeedNowPlayingCard(
+                  scheme: episode.scheme(context),
+                  imageUrl: episode.cover,
+                  channel: episode.channel?.title ?? '',
+                  title: episode.title ?? '',
+                  progress: episode.progress,
+                  timeLeft: episode.total - episode.listened,
+                  coverShape: ShapeValues.coverFocused,
+                  playing: current && playback.playing,
+                  onPlayPause: () {
+                    current ? player.toggle() : player.play(shown);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

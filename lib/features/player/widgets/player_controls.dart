@@ -6,15 +6,21 @@ class PlayerControls extends StatelessWidget {
     super.key,
     required this.scheme,
     required this.playing,
+    required this.loading,
     required this.fav,
     required this.onPlayPause,
+    required this.onRewind,
+    required this.onFastForward,
     required this.onFav,
   });
 
   final ColorScheme scheme;
   final bool playing;
+  final bool loading;
   final bool fav;
   final VoidCallback onPlayPause;
+  final VoidCallback onRewind;
+  final VoidCallback onFastForward;
   final VoidCallback onFav;
 
   static const double _heroGap = 8;
@@ -40,6 +46,7 @@ class PlayerControls extends StatelessWidget {
                 height: heroSide,
                 child: PlayButton(
                   playing: playing,
+                  loading: loading,
                   color: cs.onSurface,
                   foreground: cs.surface,
                   onTap: onPlayPause,
@@ -57,7 +64,7 @@ class PlayerControls extends StatelessWidget {
                               forward: false,
                               color: tonal,
                               iconColor: cs.onSurface,
-                              onTap: () {},
+                              onTap: onRewind,
                             ),
                           ),
                           const SizedBox(width: _innerGap),
@@ -66,7 +73,7 @@ class PlayerControls extends StatelessWidget {
                               forward: true,
                               color: tonal,
                               iconColor: cs.onSurface,
-                              onTap: () {},
+                              onTap: onFastForward,
                             ),
                           ),
                         ],

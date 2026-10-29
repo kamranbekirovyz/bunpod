@@ -205,7 +205,13 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         key: ValueKey(download.episode),
         download: download,
         onTap: () {
-          Navigator.of(context).push(PlayerPage.route(download.episode));
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) {
+                return PlayerPage(episode: download.episode);
+              },
+            ),
+          );
         },
         onDelete: download.state == .done
             ? () => _deleteOne(context, download)

@@ -45,6 +45,9 @@ dependencies:
   versionarte: ^2.1.2
   stupid_simple_sheet: ^0.9.1+1
   rxdart: ^0.28.0
+  just_audio: ^0.10.6
+  audio_service: ^0.18.19
+  audio_session: ^0.2.4
 
 
 dependency_overrides:

@@ -13,6 +13,7 @@ class FeedNowPlayingCard extends StatelessWidget {
     required this.progress,
     required this.timeLeft,
     required this.coverShape,
+    required this.playing,
     this.onPlayPause,
   });
 
@@ -23,6 +24,7 @@ class FeedNowPlayingCard extends StatelessWidget {
   final double progress;
   final Duration timeLeft;
   final RoundedPolygon coverShape;
+  final bool playing;
   final VoidCallback? onPlayPause;
 
   @override
@@ -147,7 +149,9 @@ class FeedNowPlayingCard extends StatelessWidget {
                           width: 64,
                           height: 64,
                           child: Icon(
-                            Icons.pause_rounded,
+                            playing
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow_rounded,
                             color: cs.primary,
                             size: 32,
                           ),

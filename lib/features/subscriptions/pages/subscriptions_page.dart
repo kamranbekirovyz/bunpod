@@ -8,7 +8,11 @@ class SubscriptionsPage extends StatelessWidget {
   const SubscriptionsPage({super.key});
 
   static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const SubscriptionsPage());
+    return MaterialPageRoute<void>(
+      builder: (_) {
+        return const SubscriptionsPage();
+      },
+    );
   }
 
   @override

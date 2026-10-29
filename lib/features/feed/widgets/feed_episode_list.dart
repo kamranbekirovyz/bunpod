@@ -6,13 +6,9 @@ class FeedEpisodeList extends StatelessWidget {
   const FeedEpisodeList({
     super.key,
     required this.episodes,
-    required this.playingId,
-    required this.onTap,
   });
 
   final List<Episode>? episodes;
-  final int? playingId;
-  final ValueChanged<Episode> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +41,6 @@ class FeedEpisodeList extends StatelessWidget {
                     bucket: bucket,
                     episodes: group,
                     first: bucket == groups.keys.first,
-                    playingId: playingId,
-                    onTap: onTap,
                   ),
               ],
             ),
