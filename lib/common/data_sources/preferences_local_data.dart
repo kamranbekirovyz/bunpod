@@ -24,7 +24,7 @@ class PreferencesLocalData {
     );
   }
 
-  Future<bool> clear() {
-    return sharedPreferences.clear();
+  Future<void> clearUser() async {
+    await sharedPreferences.remove(_lastEpisode);
   }
 }

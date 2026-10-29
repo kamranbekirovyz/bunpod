@@ -28,7 +28,7 @@ class SecureStorageLocalData {
     ]);
   }
 
-  Future<void> clearTokens() async {
+  Future<void> clearUser() async {
     await Future.wait([
       _storage.delete(key: _accessTokenKey),
       _storage.delete(key: _refreshTokenKey),
