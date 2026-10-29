@@ -39,6 +39,20 @@ class Channel {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'apple_id': appleId,
+      'title': title,
+      'author': author,
+      'description': description,
+      'image': image,
+      'language': language,
+      'last_episode_at': lastEpisodeAt?.toIso8601String(),
+      'subscribed': subscribed,
+    };
+  }
+
   Color get seed => seedOf(id);
 
   ColorScheme scheme(BuildContext context) => schemeOf(context, id);

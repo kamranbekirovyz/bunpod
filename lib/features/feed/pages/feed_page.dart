@@ -100,7 +100,9 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     super.initState();
     _tabController.animation!.addListener(_syncTab);
     locator<FeedCubit>().load();
-    _playing = _firstPlaying(locator<FeedCubit>().state);
+    _playing =
+        locator<PreferencesLocalData>().lastEpisode ??
+        _firstPlaying(locator<FeedCubit>().state);
   }
 
   Episode? _firstPlaying(List<Episode>? episodes) {
@@ -113,7 +115,11 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
   }
 
   void _pickPlaying(List<Episode>? episodes) {
-    if (_playing == null) setState(() => _playing = _firstPlaying(episodes));
+    final Episode? fresh = episodes
+        ?.where((episode) => episode.id == _playing?.id)
+        .firstOrNull;
+
+    setState(() => _playing = fresh ?? _playing ?? _firstPlaying(episodes));
   }
 
   void _syncTab() {

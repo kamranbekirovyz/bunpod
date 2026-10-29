@@ -1,6 +1,7 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:versionarte/versionarte.dart';
 
 final GetIt locator = GetIt.instance;
@@ -12,6 +13,11 @@ Future<void> setupLocator() async {
 
   locator.registerSingleton<SecureStorageLocalData>(
     const SecureStorageLocalData(),
+  );
+  locator.registerSingleton<PreferencesLocalData>(
+    PreferencesLocalData(
+      sharedPreferences: await SharedPreferences.getInstance(),
+    ),
   );
   locator.registerSingleton<SocialSignInService>(
     useMocks ? const MockSocialSignInService() : const SocialSignInService(),

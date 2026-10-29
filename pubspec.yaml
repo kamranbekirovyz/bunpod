@@ -48,6 +48,7 @@ dependencies:
   just_audio: ^0.10.6
   audio_service: ^0.18.19
   audio_session: ^0.2.4
+  shared_preferences: ^2.5.6
 
 
 dependency_overrides:

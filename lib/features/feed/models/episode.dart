@@ -49,6 +49,23 @@ class Episode {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'podcast_id': channelId,
+      'podcast': channel?.toJson(),
+      'title': title,
+      'description': description,
+      'image': image,
+      'published_at': publishedAt?.toUtc().toIso8601String(),
+      'duration': duration,
+      'audio_url': audioUrl,
+      'audio_bytes': audioBytes,
+      'position': position,
+      'completed': completed,
+    };
+  }
+
   Episode withPosition(Duration? listened) {
     if (listened == null) return this;
 

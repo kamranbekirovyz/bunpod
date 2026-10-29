@@ -76,17 +76,25 @@ class PlayerCubit extends Cubit<Playback> {
   }
 
   Future<void> _save({bool completed = false}) async {
-    final int? id = state.episode?.id;
-    if (id == null) return;
+    final Episode? episode = state.episode;
+    final int? id = episode?.id;
+    if (episode == null || id == null) return;
 
     final Duration position = _handler.position;
 
+    locator<PreferencesLocalData>()
+        .cacheLastEpisode(episode.withPosition(position))
+        .ignore();
+
     emit(
       Playback(
-        episode: state.episode,
+        episode: episode,
         playing: state.playing,
         loading: state.loading,
-        positions: {...state.positions, id: position},
+        positions: {
+          ...state.positions,
+          id: position,
+        },
       ),
     );
 
