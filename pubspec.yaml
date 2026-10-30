@@ -53,6 +53,7 @@ dependencies:
     git:
       url: https://github.com/UserOrient/userorient-flutter.git
       ref: redesign
+  haptic_feedback: ^0.8.0
 
 
 dependency_overrides:
