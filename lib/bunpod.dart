@@ -9,6 +9,7 @@ export 'features/channel/channel.dart';
 export 'features/downloads/downloads.dart';
 export 'features/subscriptions/subscriptions.dart';
 export 'features/menu/menu.dart';
+export 'features/profile/profile.dart';
 export 'features/versionarte/versionarte.dart';
 export 'common/data_sources/data_sources.dart';
 export 'common/models/models.dart';

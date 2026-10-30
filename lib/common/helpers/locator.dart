@@ -45,6 +45,9 @@ Future<void> setupLocator() async {
   locator.registerSingleton<PlaybackRemoteData>(
     useMocks ? const MockPlaybackRemoteData() : const PlaybackRemoteData(),
   );
+  locator.registerSingleton<ProfileRemoteData>(
+    useMocks ? const MockProfileRemoteData() : const ProfileRemoteData(),
+  );
   locator.registerSingleton<PlayerHandler>(await PlayerHandler.init());
   locator.registerSingleton<VersionarteProvider>(
     useMocks
@@ -56,6 +59,7 @@ Future<void> setupLocator() async {
   locator.registerSingleton<SubscriptionsCubit>(SubscriptionsCubit());
   locator.registerSingleton<ExploreCategoriesCubit>(ExploreCategoriesCubit());
   locator.registerSingleton<PlayerCubit>(PlayerCubit());
+  locator.registerSingleton<UserCubit>(UserCubit());
   // Last, since the interceptor reads tokens from the locator.
   locator.registerSingleton<Dio>(buildDio());
 }
