@@ -52,6 +52,11 @@ class _DownloadButtonState extends State<DownloadButton>
   }
 
   void _onTap() {
+    // TODO(kamran): remove once downloads ship.
+    ComingSoon.show(context);
+    return;
+
+    // ignore: dead_code
     switch (_state) {
       case _DownloadState.idle:
         HapticsHelper.light();

@@ -134,6 +134,11 @@ class _PlayerPageState extends State<PlayerPage> {
                     player.fastForward();
                   },
                   onFav: () {
+                    // TODO(kamran): remove once favorites ship.
+                    ComingSoon.show(context);
+                    return;
+
+                    // ignore: dead_code
                     _fav ? HapticsHelper.light() : HapticsHelper.success();
                     setState(() => _fav = !_fav);
                   },
