@@ -76,24 +76,38 @@ class _BodyState extends State<_Body> {
           children: [
             MenuTile(
               icon: Icons.brightness_6_outlined,
-              title: 'Dark theme',
+              title: 'Theme',
               trailing: BlocBuilder<ThemeModeCubit, ThemeMode>(
                 bloc: locator<ThemeModeCubit>(),
-                builder: (context, state) {
-                  final ThemeMode themeMode = state;
+                builder: (context, themeMode) {
+                  return SegmentedButton<ThemeMode>(
+                    showSelectedIcon: false,
+                    style: const ButtonStyle(
+                      visualDensity: .compact,
+                      tapTargetSize: .shrinkWrap,
+                    ),
+                    segments: const [
+                      ButtonSegment(
+                        value: .system,
+                        icon: Icon(Icons.brightness_auto_rounded),
+                        tooltip: 'System',
+                      ),
+                      ButtonSegment(
+                        value: .light,
+                        icon: Icon(Icons.light_mode_rounded),
+                        tooltip: 'Light',
+                      ),
+                      ButtonSegment(
+                        value: .dark,
+                        icon: Icon(Icons.dark_mode_rounded),
+                        tooltip: 'Dark',
+                      ),
+                    ],
+                    selected: {themeMode},
+                    onSelectionChanged: (selection) {
+                      locator<ThemeModeCubit>().set(selection.first);
 
-                  return Switch(
-                    value: themeMode == .dark,
-                    thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
-                      WidgetState.selected: Icon(
-                        Icons.dark_mode_rounded,
-                      ),
-                      WidgetState.any: Icon(
-                        Icons.light_mode_rounded,
-                      ),
-                    }),
-                    onChanged: (_) {
-                      locator<ThemeModeCubit>().toggle();
+                      HapticsHelper.selection();
                     },
                   );
                 },

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:bunpod/bunpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String _lastEpisode = 'last_episode';
+const String _themeMode = 'theme_mode';
 
 class PreferencesLocalData {
   const PreferencesLocalData({required this.sharedPreferences});
@@ -22,6 +24,16 @@ class PreferencesLocalData {
       _lastEpisode,
       jsonEncode(episode.toJson()),
     );
+  }
+
+  ThemeMode get themeMode {
+    final String? name = sharedPreferences.getString(_themeMode);
+
+    return ThemeMode.values.asNameMap()[name] ?? .system;
+  }
+
+  Future<void> cacheThemeMode(ThemeMode mode) {
+    return sharedPreferences.setString(_themeMode, mode.name);
   }
 
   Future<void> clearUser() async {

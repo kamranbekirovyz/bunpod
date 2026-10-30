@@ -7,8 +7,6 @@ import 'package:versionarte/versionarte.dart';
 final GetIt locator = GetIt.instance;
 
 Future<void> setupLocator() async {
-  locator.registerSingleton<ThemeModeCubit>(ThemeModeCubit());
-
   final bool useMocks = AppConfig.useMocks;
 
   locator.registerSingleton<SecureStorageLocalData>(
@@ -19,6 +17,7 @@ Future<void> setupLocator() async {
       sharedPreferences: await SharedPreferences.getInstance(),
     ),
   );
+  locator.registerSingleton<ThemeModeCubit>(ThemeModeCubit());
   locator.registerSingleton<SocialSignInService>(
     useMocks ? const MockSocialSignInService() : const SocialSignInService(),
   );
