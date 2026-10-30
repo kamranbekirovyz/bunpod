@@ -74,6 +74,8 @@ PODS:
   - FirebaseRemoteConfigInterop (12.19.0)
   - FirebaseSharedSwift (12.19.0)
   - Flutter (1.0.0)
+  - flutter_email_sender_method_channel (0.0.1):
+    - Flutter
   - flutter_secure_storage_darwin (10.0.0):
     - Flutter
     - FlutterMacOS
@@ -150,6 +152,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - Flutter (from `Flutter`)
+  - flutter_email_sender_method_channel (from `.symlinks/plugins/flutter_email_sender_method_channel/ios`)
   - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - haptic_feedback (from `.symlinks/plugins/haptic_feedback/ios`)
@@ -199,6 +202,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_remote_config/ios"
   Flutter:
     :path: Flutter
+  flutter_email_sender_method_channel:
+    :path: ".symlinks/plugins/flutter_email_sender_method_channel/ios"
   flutter_secure_storage_darwin:
     :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
   google_sign_in_ios:
@@ -240,6 +245,7 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfigInterop: 90659b3cac8f6de884f2d930fbdbeb711533e142
   FirebaseSharedSwift: c91f36aeaa566e12b682caacc40d34c8303c3124
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  flutter_email_sender_method_channel: 5d3b0c486ee4f4177943c837ada32f2b16cc1aa7
   flutter_secure_storage_darwin: 79a377dfb00a246ccab2c64fe79d4d78c89e0fbc
   google_sign_in_ios: 50537d3f32cf95a660ec27ab92140dda3c3d7c47
   GoogleSignIn: e449a40a92e9f2eea56e98b5214d13725dc5a00a

@@ -15,4 +15,5 @@ abstract final class AppValues {
   static String get makerXUrl => 'https://x.com/kamranbekirovyz';
   static String get makerPortfolioUrl => 'https://kamranbekirov.com';
   static String get makerEmail => 'me@kamranbekirov.com';
+  static String get supportEmail => 'kamran@bunpod.app';
 }

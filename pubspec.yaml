@@ -56,6 +56,7 @@ dependencies:
       url: https://github.com/UserOrient/userorient-flutter.git
       ref: redesign
   haptic_feedback: ^0.8.0
+  flutter_email_sender: ^11.2.0
 
 
 dependency_overrides:

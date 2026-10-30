@@ -5,3 +5,4 @@ export 'logarte.dart';
 export 'precache_logos.dart';
 export 'sign_out.dart';
 export 'haptics_helper.dart';
+export 'contact_support.dart';

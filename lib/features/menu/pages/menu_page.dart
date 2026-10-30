@@ -1,5 +1,4 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:expressive_snack/expressive_snack.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:userorient_flutter/userorient_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -177,13 +176,7 @@ class _BodyState extends State<_Body> {
             MenuTile(
               icon: Icons.alternate_email_outlined,
               title: 'Report an issue',
-              onTap: () {
-                showExpressiveSnack(
-                  context: context,
-                  message: 'Subscribe to premium for support',
-                  icon: Icons.handshake,
-                );
-              },
+              onTap: () => ContactSupport.open(context),
             ),
           ],
         ),

@@ -369,6 +369,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.6"
+  flutter_email_sender:
+    dependency: "direct main"
+    description:
+      name: flutter_email_sender
+      sha256: c3c83f4821922479de8bc92aa042b5dc95f28881cfcb5ebbb031b5a35c82ba02
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.2.0"
+  flutter_email_sender_linux:
+    dependency: transitive
+    description:
+      name: flutter_email_sender_linux
+      sha256: d10724fa5c1a4c597837e3ad77f50b2be1fc161fdd64e8e516228ecdb6357c58
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  flutter_email_sender_method_channel:
+    dependency: transitive
+    description:
+      name: flutter_email_sender_method_channel
+      sha256: ea36ee75f0b3da80b735b18c0fee4665dc858a12309af65cb0fbc69fda7618a0
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  flutter_email_sender_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_email_sender_platform_interface
+      sha256: d6825b9e91b2243619a0d22e41f5ff483b0760521302c18eadb4c150ffdee278
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  flutter_email_sender_web:
+    dependency: transitive
+    description:
+      name: flutter_email_sender_web
+      sha256: "628f38bb73ad5c40fcb68fb1feedb0da3a21850ea21d5005e08548997a6f6106"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_email_sender_windows:
+    dependency: transitive
+    description:
+      name: flutter_email_sender_windows
+      sha256: "6d4dce75946ced5f06f6182cecd52f4d3f875f15623c57436ad8cea1b2e17299"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
