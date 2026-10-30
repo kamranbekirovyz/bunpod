@@ -1,7 +1,7 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
-import 'package:flutter/material.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
 /// Shown when the manifest switches the app off — maintenance, an outage, a

@@ -1,5 +1,5 @@
 import 'package:flutter/painting.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 
 abstract final class ShapeValues {
   static final RoundedPolygon cover = MaterialShapes.clover4Leaf;

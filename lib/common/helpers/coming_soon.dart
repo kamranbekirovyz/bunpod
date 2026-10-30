@@ -1,5 +1,5 @@
 import 'package:expressive_snack/expressive_snack.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Standard "not built yet" feedback for stubbed actions.
 abstract final class ComingSoon {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:motor/motor.dart';
 
 /// Two-beat removal for a row in a list. Beat one: the row implodes in place

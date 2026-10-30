@@ -3,8 +3,8 @@ import 'dart:math' as math;
 
 import 'package:bunpod/bunpod.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/material.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
 /// A full-bleed mosaic of channel cover art that starts as an edge-to-edge grid

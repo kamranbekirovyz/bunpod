@@ -1,10 +1,10 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_sheet/expressive_sheet.dart';
 import 'package:expressive_snack/expressive_snack.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Floating card with the developer's details, opened from the signature at

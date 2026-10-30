@@ -1,8 +1,8 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 
 /// Menu page header: the user's avatar in a pill shape, with their name and
 /// email beside it.

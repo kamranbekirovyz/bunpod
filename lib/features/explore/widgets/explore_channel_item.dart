@@ -1,7 +1,7 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
 class ExploreChannelItem extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// A labelled group of [MenuTile]s in the Android 16 Settings style: 28dp

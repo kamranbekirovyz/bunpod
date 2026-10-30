@@ -1,6 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});

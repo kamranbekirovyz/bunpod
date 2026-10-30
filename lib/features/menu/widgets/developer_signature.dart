@@ -1,7 +1,7 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 
 /// "Crafted by {bun} Kamran Bekirov" footer; opens the [DeveloperSheet].
 class DeveloperSignature extends StatelessWidget {

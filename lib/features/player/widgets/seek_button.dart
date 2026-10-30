@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:motor/motor.dart';
 
 /// Seek back/forward. Round at rest; corners tighten to [_pressedRadius] while

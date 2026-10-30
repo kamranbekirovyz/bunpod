@@ -1,5 +1,5 @@
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:motor/motor.dart';
 
 /// A full-width sign-in button with the M3 expressive press morph: round at

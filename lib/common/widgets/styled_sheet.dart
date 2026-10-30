@@ -1,8 +1,8 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_sheet/expressive_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 
 /// A floating confirmation card that slides up from the bottom edge — the
 /// app's replacement for center dialogs. Fully rounded (28dp) and inset from

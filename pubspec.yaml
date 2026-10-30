@@ -6,13 +6,15 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '^3.10.3'
-  flutter: '^3.38.4'
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^8.2.1
+  material_ui: ^1.9.0
+  cupertino_ui: ^1.1.5
+  google_fonts: ^9.0.0
   flutter_svg: ^2.3.0
   motor: ^1.1.0
   gap: ^3.0.1
@@ -21,8 +23,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   get_it: ^9.3.0
   dio: ^5.11.1
-  firebase_core: ^4.15.0
-  firebase_auth: ^6.7.0
+  firebase_core: ^5.1.0
+  firebase_auth: ^7.0.1
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^8.2.0
   flutter_secure_storage: ^11.2.0
@@ -38,8 +40,8 @@ dependencies:
     path: packages/expressive_loading_indicator
   expressive_refresh_indicator:
     path: packages/expressive_refresh_indicator
-  material_shapes:
-    path: packages/material_shapes
+  expressive_shapes:
+    path: packages/expressive_shapes
   material_wavy_progress_indicator:
     path: packages/material_wavy_progress_indicator
   versionarte: ^2.1.2
@@ -57,7 +59,7 @@ dependencies:
 
 
 dependency_overrides:
-  flutter_secure_storage: ^10.0.0
+  firebase_remote_config: ^7.0.1
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'

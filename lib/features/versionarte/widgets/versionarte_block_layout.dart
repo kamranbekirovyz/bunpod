@@ -1,5 +1,5 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:motor/motor.dart';
 
 /// The skeleton both blocking screens are built on: an opaque full-screen

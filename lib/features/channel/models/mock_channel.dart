@@ -1,5 +1,5 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A podcast channel. Its identity (name, host, seed, cover) is derived from the
 /// episodes that belong to it — see [mockChannels] — so there is a single source

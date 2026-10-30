@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/material.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
 class SubscriptionTile extends StatelessWidget {

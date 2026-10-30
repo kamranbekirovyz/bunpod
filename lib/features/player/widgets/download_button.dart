@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
 enum _DownloadState { idle, downloading, done }

@@ -1,6 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_sheet/expressive_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AuthSheet extends StatelessWidget {
   const AuthSheet({super.key});

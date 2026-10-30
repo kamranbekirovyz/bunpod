@@ -1,6 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FeedEpisodeList extends StatelessWidget {
   const FeedEpisodeList({
