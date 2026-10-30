@@ -66,18 +66,38 @@ class _EpisodeCard extends StatefulWidget {
 }
 
 class _EpisodeCardState extends State<_EpisodeCard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static const Duration _marqueeCycle = Duration(seconds: 20);
+  static const Duration _spinTurn = Duration(seconds: 12);
 
   late final AnimationController _marquee = AnimationController(
     vsync: this,
     duration: _marqueeCycle,
   );
 
+  late final AnimationController _spin = AnimationController(
+    vsync: this,
+    duration: _spinTurn,
+  );
+
   @override
   void initState() {
     super.initState();
-    if (widget.playing) _marquee.repeat();
+    if (widget.playing) {
+      _marquee.repeat();
+      _spin.repeat();
+    }
+  }
+
+  /// Finishes the current turn quickly so a paused cover rests upright.
+  Future<void> _settleSpin() async {
+    _spin.stop();
+    await _spin.animateTo(
+      1,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+    );
+    if (mounted && !widget.playing) _spin.value = 0;
   }
 
   @override
@@ -85,14 +105,17 @@ class _EpisodeCardState extends State<_EpisodeCard>
     super.didUpdateWidget(old);
     if (widget.playing && !_marquee.isAnimating) {
       _marquee.repeat();
+      _spin.repeat();
     } else if (!widget.playing && _marquee.isAnimating) {
       _marquee.stop();
       _marquee.value = 0;
+      _settleSpin();
     }
   }
 
   @override
   void dispose() {
+    _spin.dispose();
     _marquee.dispose();
     super.dispose();
   }
@@ -203,17 +226,22 @@ class _EpisodeCardState extends State<_EpisodeCard>
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          SingleMotionBuilder(
-            motion: const MaterialSpringMotion.standardSpatialFast(),
-            value: widget.playing ? 1.0 : 0.0,
-            builder: (context, t, child) => ClipPath(
-              clipper: ShapeBorderClipper(shape: ShapeValues.coverBorder(t)),
-              child: child,
-            ),
-            child: SizedBox(
-              width: 56,
-              height: 56,
-              child: _Cover(episode: episode, scheme: cs),
+          RotationTransition(
+            turns: _spin,
+            child: SingleMotionBuilder(
+              motion: const MaterialSpringMotion.standardSpatialFast(),
+              value: widget.playing ? 1.0 : 0.0,
+              builder: (context, t, child) => ClipPath(
+                clipper: ShapeBorderClipper(
+                  shape: ShapeValues.coverBorder(t),
+                ),
+                child: child,
+              ),
+              child: SizedBox(
+                width: 56,
+                height: 56,
+                child: _Cover(episode: episode, scheme: cs),
+              ),
             ),
           ),
           const SizedBox(width: 14),
