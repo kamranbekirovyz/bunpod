@@ -19,6 +19,8 @@ class _FeedPageState extends State<FeedPage> {
     super.initState();
     _load();
 
+    locator<UserCubit>().load();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       logarte.attach(
         context: context,

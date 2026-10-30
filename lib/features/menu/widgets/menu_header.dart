@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
 
@@ -26,9 +27,7 @@ class MenuHeader extends StatelessWidget {
                 ),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: SmoothImage(
-                    url: AppValues.makerImageUrl,
-                  ),
+                  child: const UserAvatar(),
                 ),
               ),
               Positioned(
@@ -58,13 +57,30 @@ class MenuHeader extends StatelessWidget {
             ],
           ),
           24.gap,
-          Text(
-            AppValues.makerName,
-            textAlign: TextAlign.center,
-            style: tt.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              height: 1.05,
-            ),
+          BlocBuilder<UserCubit, User?>(
+            bloc: locator<UserCubit>(),
+            builder: (context, user) {
+              final bool loading = user == null;
+
+              return ShimmerScope(
+                active: loading,
+                child: ShimmerReveal(
+                  loading: loading,
+                  placeholder: const ShimmerPlaceholder(
+                    width: 180,
+                    height: 32,
+                  ),
+                  child: Text(
+                    user?.name ?? '',
+                    textAlign: TextAlign.center,
+                    style: tt.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      height: 1.05,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
