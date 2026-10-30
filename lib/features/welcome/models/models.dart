@@ -1,0 +1,1 @@
+export 'farewell.dart';

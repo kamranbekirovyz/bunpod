@@ -47,7 +47,7 @@ class _LogoutTileState extends State<LogoutTile> {
             MaterialPageRoute<void>(
               builder: (_) {
                 return const WelcomePage(
-                  returning: true,
+                  farewell: .logout,
                 );
               },
             ),

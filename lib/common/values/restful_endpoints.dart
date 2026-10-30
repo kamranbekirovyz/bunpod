@@ -34,6 +34,12 @@ class RestfulEndpoints {
     );
   }
 
+  static Endpoint deleteMe() {
+    return Endpoint.delete(
+      url: '${AppConfig.baseUrl}/me',
+    );
+  }
+
   static Endpoint me() {
     return Endpoint.get(
       url: '${AppConfig.baseUrl}/me',

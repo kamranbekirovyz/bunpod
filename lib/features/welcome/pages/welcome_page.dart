@@ -5,11 +5,10 @@ import 'package:material_ui/material_ui.dart';
 class WelcomePage extends StatelessWidget {
   const WelcomePage({
     super.key,
-    this.returning = false,
+    this.farewell = .none,
   });
 
-  /// Someone who just logged out, so the copy welcomes them back.
-  final bool returning;
+  final Farewell farewell;
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +44,7 @@ class WelcomePage extends StatelessWidget {
                       const WelcomeLogo(),
                       const SizedBox(height: 20),
                       Text(
-                        returning
-                            ? 'Paused, not stopped.'
-                            : 'Podcasts, meet expression.',
+                        farewell.title,
                         style: text.headlineMedium?.copyWith(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w700,
@@ -57,9 +54,7 @@ class WelcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        returning
-                            ? 'Pick up right where you left off.'
-                            : 'Pick a few shows and press play.',
+                        farewell.subtitle,
                         style: text.bodyLarge?.copyWith(
                           color: cs.onSurfaceVariant,
                         ),
@@ -68,7 +63,7 @@ class WelcomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 28),
                   _Button(
-                    returning: returning,
+                    farewell: farewell,
                   ),
                   // Android signs in straight from this button, so this is the
                   // last screen before an account exists and the small print
@@ -91,10 +86,10 @@ class WelcomePage extends StatelessWidget {
 
 class _Button extends StatelessWidget {
   const _Button({
-    required this.returning,
+    required this.farewell,
   });
 
-  final bool returning;
+  final Farewell farewell;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +120,7 @@ class _Button extends StatelessWidget {
         mainAxisAlignment: .center,
         children: <Widget>[
           Text(
-            returning ? 'Sign back in' : 'Start listening',
+            farewell.action,
           ),
           8.gap,
           Icon(

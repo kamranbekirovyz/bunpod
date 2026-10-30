@@ -15,4 +15,9 @@ class MockProfileRemoteData implements ProfileRemoteData {
       createdAt: DateTime(2026),
     );
   }
+
+  @override
+  Future<void> deleteMe() async {
+    await Future<void>.delayed(AppValues.mockDelay);
+  }
 }

@@ -25,8 +25,6 @@ class _Body extends StatefulWidget {
 class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
-    final ColorScheme cs = Theme.of(context).colorScheme;
-
     return ListView(
       padding: .fromLTRB(
         16,
@@ -185,23 +183,7 @@ class _BodyState extends State<_Body> {
           label: 'Account',
           children: [
             const LogoutTile(),
-            MenuTile(
-              icon: Icons.delete_forever_outlined,
-              title: 'Delete account',
-              foreground: cs.error,
-              onTap: () {
-                StyledSheet.show(
-                  context,
-                  icon: Icons.delete_forever_rounded,
-                  title: 'Delete account?',
-                  message:
-                      'This permanently erases your account, subscriptions, '
-                      "and listening history. This can't be undone.",
-                  confirmLabel: 'Delete forever',
-                  destructive: true,
-                );
-              },
-            ),
+            const DeleteAccountTile(),
           ],
         ),
         64.gap,

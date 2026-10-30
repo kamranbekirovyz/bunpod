@@ -10,4 +10,8 @@ class ProfileRemoteData {
 
     return User.fromJson(response.data!);
   }
+
+  Future<void> deleteMe() async {
+    await RestfulEndpoints.deleteMe().send<void>();
+  }
 }
