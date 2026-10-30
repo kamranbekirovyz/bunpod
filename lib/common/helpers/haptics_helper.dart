@@ -20,4 +20,6 @@ class HapticsHelper {
   static Future<void> medium() => _vibrate(.medium);
   static Future<void> heavy() => _vibrate(.heavy);
   static Future<void> selection() => _vibrate(.selection);
+  static Future<void> soft() => _vibrate(.soft);
+  static Future<void> rigid() => _vibrate(.rigid);
 }

@@ -3,7 +3,8 @@ import 'dart:math' as math;
 
 import 'package:bunpod/bunpod.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
@@ -199,6 +200,8 @@ class _FloatingTileState extends State<_FloatingTile> {
   /// Easter egg: tap a cover to morph it to a fresh random shape, on the same
   /// expressive spring. Replaces the slot being left so it never repeats.
   void _onTap() {
+    HapticsHelper.soft();
+
     setState(() {
       if (_target == 0) {
         _shapeB = _pickShape(_shapeA);
