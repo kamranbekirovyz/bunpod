@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:expressive_loading_indicator/src/loading_indicator.dart';
 
 /// Defines the visual properties of [LoadingIndicator] widgets.

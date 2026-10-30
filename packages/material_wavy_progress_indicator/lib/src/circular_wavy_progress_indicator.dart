@@ -2,9 +2,9 @@ import 'dart:math' as math;
 import 'dart:ui' show PathMetric;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/semantics.dart';
-import 'package:material_shapes/material_shapes.dart' as shapes;
+import 'package:expressive_shapes/expressive_shapes.dart' as shapes;
 
 // Tokens from the Compose Material 3 CircularProgressIndicatorTokens (v0_7_0).
 const double _kActiveThickness = 4;
