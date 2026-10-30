@@ -9,7 +9,7 @@ class SecureStorageLocalData {
 
   static const FlutterSecureStorage _storage = FlutterSecureStorage(
     iOptions: IOSOptions(
-      accessibility: .first_unlock,
+      accessibility: .first_unlock_this_device,
     ),
   );
 
@@ -26,6 +26,10 @@ class SecureStorageLocalData {
       _storage.write(key: _accessTokenKey, value: tokens.accessToken),
       _storage.write(key: _refreshTokenKey, value: tokens.refreshToken),
     ]);
+  }
+
+  Future<void> clearAll() {
+    return _storage.deleteAll();
   }
 
   Future<void> clearUser() async {

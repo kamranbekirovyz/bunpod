@@ -27,6 +27,7 @@ void main() async {
   );
 
   await setupLocator();
+  await clearStaleSecureStorage();
 
   final bool signedIn =
       await locator<SecureStorageLocalData>().accessToken != null;
