@@ -9,4 +9,8 @@ class UserCubit extends Cubit<User?> {
       await locator<ProfileRemoteData>().me(),
     );
   }
+
+  void clear() {
+    emit(null);
+  }
 }

@@ -40,6 +40,7 @@ class MenuTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius:
             borderRadius ??
+            MenuSection.radiusOf(context) ??
             BorderRadius.circular(
               MenuSection.innerRadius,
             ),

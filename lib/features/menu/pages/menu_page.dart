@@ -184,21 +184,7 @@ class _BodyState extends State<_Body> {
         MenuSection(
           label: 'Account',
           children: [
-            MenuTile(
-              icon: Icons.logout_outlined,
-              title: 'Log out',
-              onTap: () {
-                StyledSheet.show(
-                  context,
-                  icon: Icons.logout_rounded,
-                  title: 'Log out?',
-                  message:
-                      'You can sign back in anytime. Your subscriptions '
-                      'and downloads stay on this device.',
-                  confirmLabel: 'Log out',
-                );
-              },
-            ),
+            const LogoutTile(),
             MenuTile(
               icon: Icons.delete_forever_outlined,
               title: 'Delete account',
