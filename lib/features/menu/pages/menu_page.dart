@@ -41,7 +41,7 @@ class _BodyState extends State<_Body> {
       ),
       children: [
         const MenuHeader(),
-        56.gap,
+        32.gap,
         MenuSection(
           label: 'Library',
           children: [

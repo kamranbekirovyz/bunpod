@@ -71,7 +71,7 @@ class FeedAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: const SizedBox(
                 width: 32,
                 height: 32,
-                child: UserAvatar(),
+                child: UserAvatar(initials: false),
               ),
             ),
           ),

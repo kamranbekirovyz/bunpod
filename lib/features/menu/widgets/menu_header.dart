@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_shapes/material_shapes.dart';
 
-/// Menu page header: big round profile picture with stat badges, name below.
+/// Menu page header: the user's avatar in a pill shape, with their name and
+/// email beside it.
 class MenuHeader extends StatelessWidget {
   const MenuHeader({super.key});
 
@@ -14,131 +15,69 @@ class MenuHeader extends StatelessWidget {
     final TextTheme tt = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
+      padding: const .symmetric(horizontal: 8),
+      child: Row(
         children: [
-          Stack(
-            children: [
-              ClipPath(
-                clipper: ShapeBorderClipper(
-                  shape: MaterialShapeBorder(
-                    shape: MaterialShapes.pill,
-                  ),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: const UserAvatar(),
-                ),
+          ClipPath(
+            clipper: ShapeBorderClipper(
+              shape: MaterialShapeBorder(
+                shape: MaterialShapes.pill,
               ),
-              Positioned(
-                left: 0,
-                top: 0,
-                child: _StatBadge(
-                  value: '128h',
-                  label: 'listened',
-                  shape: MaterialShapes.sunny,
-                  background: cs.tertiaryContainer,
-                  foreground: cs.onTertiaryContainer,
-                  angle: -0.14,
-                ),
-              ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: _StatBadge(
-                  value: '342',
-                  label: 'episodes',
-                  shape: MaterialShapes.cookie9Sided,
-                  background: cs.primaryContainer,
-                  foreground: cs.onPrimaryContainer,
-                  angle: 0.14,
-                ),
-              ),
-            ],
+            ),
+            child: const SizedBox.square(
+              dimension: 64,
+              child: UserAvatar(),
+            ),
           ),
-          24.gap,
-          BlocBuilder<UserCubit, User?>(
-            bloc: locator<UserCubit>(),
-            builder: (context, user) {
-              final bool loading = user == null;
+          16.gap,
+          Expanded(
+            child: BlocBuilder<UserCubit, User?>(
+              bloc: locator<UserCubit>(),
+              builder: (context, user) {
+                final bool loading = user == null;
 
-              return ShimmerScope(
-                active: loading,
-                child: ShimmerReveal(
-                  loading: loading,
-                  placeholder: const ShimmerPlaceholder(
-                    width: 180,
-                    height: 32,
-                  ),
-                  child: Text(
-                    user?.name ?? '',
-                    textAlign: TextAlign.center,
-                    style: tt.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      height: 1.05,
+                return ShimmerScope(
+                  active: loading,
+                  child: ShimmerReveal(
+                    loading: loading,
+                    placeholder: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        const ShimmerPlaceholder(width: 140, height: 18),
+                        8.gap,
+                        const ShimmerPlaceholder(width: 180, height: 12),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        Text(
+                          user?.name ?? '',
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style: GoogleFonts.unbounded(
+                            textStyle: tt.titleMedium,
+                            fontWeight: .w700,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        if (user?.email case final String email)
+                          Text(
+                            email,
+                            maxLines: 1,
+                            overflow: .ellipsis,
+                            style: tt.bodyMedium?.copyWith(
+                              color: cs.onSurfaceVariant,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Tilted shape badge showing one stat: number on top, label under it.
-class _StatBadge extends StatelessWidget {
-  final String value;
-  final String label;
-  final RoundedPolygon shape;
-  final Color background;
-  final Color foreground;
-  final double angle;
-
-  const _StatBadge({
-    required this.value,
-    required this.label,
-    required this.shape,
-    required this.background,
-    required this.foreground,
-    required this.angle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme tt = Theme.of(context).textTheme;
-
-    return Transform.rotate(
-      angle: angle,
-      child: Container(
-        width: 108,
-        height: 108,
-        decoration: ShapeDecoration(
-          color: background,
-          shape: MaterialShapeBorder(
-            shape: shape,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            Text(
-              value,
-              style: GoogleFonts.unbounded(
-                textStyle: tt.titleLarge,
-                fontWeight: .w700,
-                letterSpacing: -0.5,
-                color: foreground,
-              ),
-            ),
-            Text(
-              label,
-              style: tt.labelSmall?.copyWith(color: foreground),
-            ),
-          ],
-        ),
       ),
     );
   }
