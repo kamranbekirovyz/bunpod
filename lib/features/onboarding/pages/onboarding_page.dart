@@ -43,6 +43,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       bloc: _followPicksCubit,
       listener: (context, followed) {
         if (followed == true) {
+          HapticsHelper.success();
           Navigator.of(context).pop(true);
         }
       },
@@ -70,6 +71,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     return OnboardingShowGrid(
                       shows: trending,
                       followPicksCubit: _followPicksCubit,
+                      minPicks: _minPicks,
                     );
                   },
                 ),

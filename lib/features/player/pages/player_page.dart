@@ -111,11 +111,32 @@ class _PlayerPageState extends State<PlayerPage> {
                   playing: current && playback.playing,
                   loading: current && playback.loading,
                   fav: _fav,
-                  onPlayPause: () =>
-                      current ? player.toggle() : player.play(episode),
-                  onRewind: () => current ? player.rewind() : null,
-                  onFastForward: () => current ? player.fastForward() : null,
-                  onFav: () => setState(() => _fav = !_fav),
+                  onPlayPause: () {
+                    if (current && playback.playing) {
+                      HapticsHelper.light();
+                      player.toggle();
+                      return;
+                    }
+
+                    HapticsHelper.medium();
+                    current ? player.toggle() : player.play(episode);
+                  },
+                  onRewind: () {
+                    if (!current) return;
+
+                    HapticsHelper.light();
+                    player.rewind();
+                  },
+                  onFastForward: () {
+                    if (!current) return;
+
+                    HapticsHelper.light();
+                    player.fastForward();
+                  },
+                  onFav: () {
+                    _fav ? HapticsHelper.light() : HapticsHelper.success();
+                    setState(() => _fav = !_fav);
+                  },
                 );
               },
             ),

@@ -129,6 +129,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
 
     if (channel == _selected) return;
 
+    HapticsHelper.selection();
     setState(() => _selected = channel);
     locator<FeedCubit>().load(channelId: channel?.id);
   }

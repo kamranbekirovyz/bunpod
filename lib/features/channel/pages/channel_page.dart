@@ -1,7 +1,8 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
@@ -73,7 +74,12 @@ class _ChannelPageState extends State<ChannelPage> {
         return BlocConsumer<ChannelFollowCubit, Follow?>(
           bloc: _followCubit,
           listenWhen: ChannelFollowCubit.succeeded,
-          listener: (context, _) => locator<SubscriptionsCubit>().load(),
+          listener: (context, follow) {
+            follow?.subscribed == true
+                ? HapticsHelper.success()
+                : HapticsHelper.light();
+            locator<SubscriptionsCubit>().load();
+          },
           builder: (context, follow) {
             return _ChannelView(
               channel: channel,

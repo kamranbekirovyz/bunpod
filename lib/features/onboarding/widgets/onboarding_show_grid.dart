@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:expressive_shapes/expressive_shapes.dart';
 
 class OnboardingShowGrid extends StatelessWidget {
@@ -7,10 +8,12 @@ class OnboardingShowGrid extends StatelessWidget {
     super.key,
     required this.shows,
     required this.followPicksCubit,
+    required this.minPicks,
   });
 
   final List<ChannelPreview>? shows;
   final FollowPicksCubit followPicksCubit;
+  final int minPicks;
 
   static const SliverGridDelegate _gridDelegate =
       SliverGridDelegateWithFixedCrossAxisCount(
@@ -70,9 +73,17 @@ class OnboardingShowGrid extends StatelessWidget {
                           ),
                           onTap: () {
                             final int? appleId = podcast.appleId;
-                            if (appleId != null) {
-                              followPicksCubit.toggle(appleId);
-                            }
+                            if (appleId == null) return;
+
+                            followPicksCubit.toggle(appleId);
+
+                            final bool unlocked =
+                                followPicksCubit.picked.contains(appleId) &&
+                                followPicksCubit.picked.length == minPicks;
+
+                            unlocked
+                                ? HapticsHelper.medium()
+                                : HapticsHelper.selection();
                           },
                         );
                       },

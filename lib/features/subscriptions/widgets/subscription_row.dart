@@ -54,6 +54,8 @@ class _SubscriptionRowState extends State<SubscriptionRow> {
   void _onSucceeded(BuildContext context, Follow? follow) {
     final bool subscribed = follow?.subscribed == true;
 
+    subscribed ? HapticsHelper.success() : HapticsHelper.light();
+
     showExpressiveSnack(
       context: context,
       message: subscribed

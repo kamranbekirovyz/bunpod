@@ -56,6 +56,9 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   void _pickCategory(Category? category) {
+    if (category?.id == _category?.id) return;
+
+    HapticsHelper.selection();
     setState(() => _category = category);
     _trendingCubit.load(categoryId: category?.id);
   }

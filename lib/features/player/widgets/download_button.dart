@@ -1,4 +1,6 @@
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:bunpod/bunpod.dart';
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
@@ -35,6 +37,7 @@ class _DownloadButtonState extends State<DownloadButton>
 
     _animationController.addStatusListener((status) {
       if (status == .completed) {
+        HapticsHelper.success();
         setState(() {
           _state = .done;
         });
@@ -51,6 +54,7 @@ class _DownloadButtonState extends State<DownloadButton>
   void _onTap() {
     switch (_state) {
       case _DownloadState.idle:
+        HapticsHelper.light();
         setState(() {
           _state = _DownloadState.downloading;
         });
@@ -60,6 +64,7 @@ class _DownloadButtonState extends State<DownloadButton>
         break;
 
       case _DownloadState.done:
+        HapticsHelper.light();
         setState(() {
           _state = _DownloadState.idle;
           _animationController.value = 0;
