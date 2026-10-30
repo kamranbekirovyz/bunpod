@@ -46,7 +46,9 @@ class _LogoutTileState extends State<LogoutTile> {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute<void>(
               builder: (_) {
-                return const WelcomePage();
+                return const WelcomePage(
+                  returning: true,
+                );
               },
             ),
             (_) => false,

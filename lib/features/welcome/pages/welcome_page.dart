@@ -3,7 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({
+    super.key,
+    this.returning = false,
+  });
+
+  /// Someone who just logged out, so the copy welcomes them back.
+  final bool returning;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,9 @@ class WelcomePage extends StatelessWidget {
                       const WelcomeLogo(),
                       const SizedBox(height: 20),
                       Text(
-                        'Podcasts, meet expression.',
+                        returning
+                            ? 'Paused, not stopped.'
+                            : 'Podcasts, meet expression.',
                         style: text.headlineMedium?.copyWith(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w700,
@@ -49,7 +57,9 @@ class WelcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Pick a few shows and press play.',
+                        returning
+                            ? 'Pick up right where you left off.'
+                            : 'Pick a few shows and press play.',
                         style: text.bodyLarge?.copyWith(
                           color: cs.onSurfaceVariant,
                         ),
@@ -57,7 +67,9 @@ class WelcomePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 28),
-                  _Button(),
+                  _Button(
+                    returning: returning,
+                  ),
                   // Android signs in straight from this button, so this is the
                   // last screen before an account exists and the small print
                   // has to be here. iOS opens [AuthSheet] instead, which
@@ -78,7 +90,11 @@ class WelcomePage extends StatelessWidget {
 }
 
 class _Button extends StatelessWidget {
-  const _Button();
+  const _Button({
+    required this.returning,
+  });
+
+  final bool returning;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +125,7 @@ class _Button extends StatelessWidget {
         mainAxisAlignment: .center,
         children: <Widget>[
           Text(
-            'Start listening',
+            returning ? 'Sign back in' : 'Start listening',
           ),
           8.gap,
           Icon(
