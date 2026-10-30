@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,7 +7,7 @@ const MaterialColor seedColor = MaterialColor(0xffF5A623, {});
 const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
   builders: {
     .android: FadeForwardsPageTransitionsBuilder(),
-    .iOS: FadeForwardsPageTransitionsBuilder(),
+    .iOS: CupertinoPageTransitionsBuilder(),
   },
 );
 
