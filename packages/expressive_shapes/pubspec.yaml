@@ -1,0 +1,16 @@
+name: expressive_shapes
+description: "Expressive Shapes — vendored from github.com/ksokolovskyi/material_shapes"
+version: 1.0.0
+publish_to: "none"
+
+environment:
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  material_ui: ^1.9.0
+  cupertino_ui: ^1.1.5
+  meta: ^1.15.0
+  vector_math: ^2.1.4

@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
-import 'package:material_shapes/src/shapes/shapes.dart';
+import 'package:expressive_shapes/src/shapes/shapes.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 /// Holds predefined Material Design shapes as [RoundedPolygon]s that can be

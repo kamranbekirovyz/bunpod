@@ -2,7 +2,7 @@ import 'dart:ui' as ui show lerpDouble;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
-import 'package:material_shapes/material_shapes.dart';
+import 'package:expressive_shapes/expressive_shapes.dart';
 
 import 'package:vector_math/vector_math_64.dart' show Matrix4;
 
