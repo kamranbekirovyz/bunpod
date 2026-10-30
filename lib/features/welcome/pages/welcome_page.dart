@@ -39,7 +39,7 @@ class WelcomePage extends StatelessWidget {
                       const WelcomeLogo(),
                       const SizedBox(height: 20),
                       Text(
-                        'A world in every voice.',
+                        'Podcasts, meet expression.',
                         style: text.headlineMedium?.copyWith(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w700,
@@ -49,8 +49,7 @@ class WelcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'The ideas that quietly shape a life are being '
-                        'spoken now. Begin by listening.',
+                        'Pick a few shows and press play.',
                         style: text.bodyLarge?.copyWith(
                           color: cs.onSurfaceVariant,
                         ),
@@ -110,7 +109,7 @@ class _Button extends StatelessWidget {
         mainAxisAlignment: .center,
         children: <Widget>[
           Text(
-            'Start Listening',
+            'Start listening',
           ),
           8.gap,
           Icon(
