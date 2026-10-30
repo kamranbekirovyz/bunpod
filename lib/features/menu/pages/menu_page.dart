@@ -24,10 +24,6 @@ class _Body extends StatefulWidget {
 }
 
 class _BodyState extends State<_Body> {
-  // TODO(kamran): local until real settings storage lands.
-  bool _wifiOnly = true;
-  bool _alerts = false;
-
   @override
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
@@ -45,26 +41,26 @@ class _BodyState extends State<_Body> {
         MenuSection(
           label: 'Library',
           children: [
-            MenuTile(
-              icon: Icons.download_outlined,
-              title: 'Downloads',
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) {
-                      return DownloadsPage();
-                    },
-                  ),
-                );
-              },
-            ),
-            MenuTile(
-              icon: Icons.history_outlined,
-              title: 'Listening history',
-              onTap: () {
-                ComingSoon.show(context);
-              },
-            ),
+            // MenuTile(
+            //   icon: Icons.download_outlined,
+            //   title: 'Downloads',
+            //   onTap: () {
+            //     Navigator.of(context).push(
+            //       MaterialPageRoute(
+            //         builder: (_) {
+            //           return DownloadsPage();
+            //         },
+            //       ),
+            //     );
+            //   },
+            // ),
+            // MenuTile(
+            //   icon: Icons.history_outlined,
+            //   title: 'Listening history',
+            //   onTap: () {
+            //     ComingSoon.show(context);
+            //   },
+            // ),
             MenuTile(
               icon: Icons.podcasts_outlined,
               title: 'Subscriptions',
@@ -103,57 +99,64 @@ class _BodyState extends State<_Body> {
                 },
               ),
             ),
-            MenuTile(
-              icon: Icons.download_outlined,
-              title: 'Download over Wi-Fi only',
-              trailing: Switch(
-                value: _wifiOnly,
-                // Off means "any network", which no single icon says
-                // honestly — the X just negates the label.
-                thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
-                  WidgetState.selected: Icon(Icons.wifi_rounded),
-                  WidgetState.any: Icon(Icons.close_rounded),
-                }),
-                onChanged: (value) {
-                  setState(() => _wifiOnly = value);
-                },
-              ),
-            ),
-            MenuTile(
-              icon: Icons.notifications_outlined,
-              title: 'New episode alerts',
-              trailing: Switch(
-                value: _alerts,
-                // The tile's leading icon already says "notifications";
-                // a bell on the thumb would repeat it.
-                thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
-                  WidgetState.selected: Icon(Icons.check_rounded),
-                  WidgetState.any: Icon(Icons.close_rounded),
-                }),
-                onChanged: (value) {
-                  setState(() => _alerts = value);
-                },
-              ),
-            ),
+            // MenuTile(
+            //   icon: Icons.download_outlined,
+            //   title: 'Download over Wi-Fi only',
+            //   trailing: Switch(
+            //     value: _wifiOnly,
+            //     // Off means "any network", which no single icon says
+            //     // honestly — the X just negates the label.
+            //     thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
+            //       WidgetState.selected: Icon(Icons.wifi_rounded),
+            //       WidgetState.any: Icon(Icons.close_rounded),
+            //     }),
+            //     onChanged: (value) {
+            //       setState(() => _wifiOnly = value);
+            //     },
+            //   ),
+            // ),
+            // MenuTile(
+            //   icon: Icons.notifications_outlined,
+            //   title: 'New episode alerts',
+            //   trailing: Switch(
+            //     value: _alerts,
+            //     // The tile's leading icon already says "notifications";
+            //     // a bell on the thumb would repeat it.
+            //     thumbIcon: const WidgetStateProperty<Icon?>.fromMap({
+            //       WidgetState.selected: Icon(Icons.check_rounded),
+            //       WidgetState.any: Icon(Icons.close_rounded),
+            //     }),
+            //     onChanged: (value) {
+            //       setState(() => _alerts = value);
+            //     },
+            //   ),
+            // ),
           ],
         ),
         32.gap,
         MenuSection(
           label: 'Support',
           children: [
-            MenuTile(
-              icon: Icons.workspace_premium_outlined,
-              title: 'Support the developer',
-              background: cs.secondaryContainer,
-              foreground: cs.onSecondaryContainer,
-              onTap: () {
-                ComingSoon.show(context);
-              },
-            ),
+            // MenuTile(
+            //   icon: Icons.workspace_premium_outlined,
+            //   title: 'Support the developer',
+            //   background: cs.secondaryContainer,
+            //   foreground: cs.onSecondaryContainer,
+            //   onTap: () {
+            //     ComingSoon.show(context);
+            //   },
+            // ),
             MenuTile(
               icon: Icons.lightbulb_outlined,
               title: 'Suggest a feature',
               onTap: () {
+                final User user = locator<UserCubit>().state!;
+                UserOrient.identify(
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                );
+
                 UserOrient.openBoard(context);
               },
             ),
