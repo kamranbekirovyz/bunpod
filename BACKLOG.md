@@ -17,8 +17,6 @@ Things to build and subtle things to improve.
 - [ ] Derive color scheme from the phone wallpaper
 - [ ] Long press to mark completed or download
 - [ ] Use theme extensions for additional values
-- [ ] Add haptics
-- [ ] Haptic on welcome mosaic tap — see `channel_wall.dart` `_onTap`
 - [ ] Springy overshoot on player control buttons when tapped
 - [ ] Add a scrollbar to the home and channel pages
 - [ ] Cache home page, show loading indicator while refetching on app open
@@ -31,3 +29,5 @@ Things to build and subtle things to improve.
 - [ ] Add UserOrient as a sponsor
 - [ ] CLAUDE.md for this project
 - [ ] swipe right tabs to open all subscriptions page
+- [ ] cache audios
+- [ ] ability to drag and seek the duration with main duration indicator turning into minutes that it will be
