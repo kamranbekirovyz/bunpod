@@ -1,3 +1,4 @@
+export 'features/launch/launch.dart';
 export 'features/auth/auth.dart';
 export 'features/welcome/welcome.dart';
 export 'features/onboarding/onboarding.dart';

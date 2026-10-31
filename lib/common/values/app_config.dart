@@ -18,4 +18,13 @@ abstract final class AppConfig {
   static const String userOrientApiKey = String.fromEnvironment(
     'USERORIENT_API_KEY',
   );
+
+  /// Bot that receives launch failure alerts.
+  static const String telegramBotToken = String.fromEnvironment(
+    'TELEGRAM_BOT_TOKEN',
+  );
+
+  static const String telegramChatId = String.fromEnvironment(
+    'TELEGRAM_CHAT_ID',
+  );
 }

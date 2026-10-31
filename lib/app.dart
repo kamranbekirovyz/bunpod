@@ -3,10 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class App extends StatelessWidget {
-  const App({super.key, required this.signedIn});
-
-  /// Tokens were cached by an earlier sign-in.
-  final bool signedIn;
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class App extends StatelessWidget {
               ),
             );
           },
-          home: signedIn ? const FeedPage() : const WelcomePage(),
+          home: const LaunchGate(),
         );
       },
     );
