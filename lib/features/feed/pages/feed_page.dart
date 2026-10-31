@@ -107,7 +107,9 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
         _firstPlaying(locator<FeedCubit>().state);
   }
 
-  Episode? _firstPlaying(List<Episode>? episodes) {
+  Episode? _firstPlaying(Feed? feed) {
+    final List<Episode>? episodes = feed?.episodes;
+
     if (episodes == null || episodes.isEmpty) return null;
 
     return episodes.firstWhere(
@@ -116,12 +118,12 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     );
   }
 
-  void _pickPlaying(List<Episode>? episodes) {
-    final Episode? fresh = episodes
-        ?.where((episode) => episode.id == _playing?.id)
+  void _pickPlaying(Feed? feed) {
+    final Episode? fresh = feed?.episodes
+        .where((episode) => episode.id == _playing?.id)
         .firstOrNull;
 
-    setState(() => _playing = fresh ?? _playing ?? _firstPlaying(episodes));
+    setState(() => _playing = fresh ?? _playing ?? _firstPlaying(feed));
   }
 
   void _syncTab() {
@@ -134,8 +136,9 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     locator<FeedCubit>().load(channelId: channel?.id);
   }
 
-  Future<void> _refresh() =>
-      locator<FeedCubit>().load(channelId: _selected?.id);
+  Future<void> _refresh() {
+    return locator<FeedCubit>().load(channelId: _selected?.id);
+  }
 
   @override
   void dispose() {
@@ -145,10 +148,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
       appBar: FeedAppBar(),
       body: ExpressiveRefreshIndicator(
         onRefresh: _refresh,
@@ -168,7 +168,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
                 ),
                 sliver: SliverPersistentHeader(
                   pinned: true,
-                  delegate: _PinnedTabsDelegate(
+                  delegate: FeedPinnedTabsDelegate(
                     height: 64,
                     child: Center(
                       child: FeedChannelTabs(
@@ -202,10 +202,10 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
               ),
             ];
           },
-          body: BlocConsumer<FeedCubit, List<Episode>?>(
+          body: BlocConsumer<FeedCubit, Feed?>(
             bloc: locator<FeedCubit>(),
-            listener: (context, episodes) => _pickPlaying(episodes),
-            builder: (context, episodes) {
+            listener: (context, feed) => _pickPlaying(feed),
+            builder: (context, feed) {
               return TabBarView(
                 controller: _tabController,
                 physics: const SpringPagePhysics(),
@@ -213,7 +213,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
                   for (final Channel? channel in _tabs)
                     FeedEpisodeList(
                       key: PageStorageKey('${channel?.id}'),
-                      episodes: channel == _selected ? episodes : null,
+                      feed: channel == _selected ? feed : null,
                     ),
                 ],
               );
@@ -232,83 +232,26 @@ class _NowPlaying extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PlayerCubit player = locator<PlayerCubit>();
-
-    return BlocBuilder<PlayerCubit, Playback>(
-      bloc: player,
-      builder: (context, playback) {
-        final Episode? shown = playback.episode ?? suggested;
+    return BlocSelector<PlayerCubit, Playback, Episode?>(
+      bloc: locator<PlayerCubit>(),
+      selector: (playback) => playback.episode,
+      builder: (context, playing) {
+        final Episode? shown = playing ?? suggested;
 
         if (shown == null) return 32.gap;
 
-        final bool current = playback.episode?.id == shown.id;
-
         return Padding(
           padding: const .fromLTRB(16, 24, 16, 32),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) {
-                    return PlayerPage(episode: shown);
-                  },
-                ),
+          child: EpisodeProgressBuilder(
+            episode: shown,
+            builder: (context, episode) {
+              return FeedNowPlayingCard(
+                episode: episode,
               );
             },
-            child: EpisodeProgressBuilder(
-              episode: shown,
-              builder: (context, episode) {
-                return FeedNowPlayingCard(
-                  scheme: episode.scheme(context),
-                  imageUrl: episode.cover,
-                  channel: episode.channel?.title ?? '',
-                  title: episode.title ?? '',
-                  progress: episode.progress,
-                  timeLeft: episode.total - episode.listened,
-                  coverShape: ShapeValues.coverFocused,
-                  playing: current && playback.playing,
-                  onPlayPause: () {
-                    current ? player.toggle() : player.play(shown);
-                  },
-                );
-              },
-            ),
           ),
         );
       },
     );
-  }
-}
-
-class _PinnedTabsDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  final double height;
-
-  _PinnedTabsDelegate({
-    required this.child,
-    required this.height,
-  });
-
-  @override
-  double get minExtent => height;
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
-      child: SizedBox.expand(child: child),
-    );
-  }
-
-  @override
-  bool shouldRebuild(covariant _PinnedTabsDelegate old) {
-    return old.child != child || old.height != height;
   }
 }

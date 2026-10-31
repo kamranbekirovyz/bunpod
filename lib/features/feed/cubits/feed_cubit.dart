@@ -1,12 +1,20 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FeedCubit extends Cubit<List<Episode>?> {
+class FeedCubit extends Cubit<Feed?> {
   FeedCubit() : super(null);
 
-  Future<void> load({int? channelId}) async {
+  Future<void> load({
+    int? channelId,
+  }) async {
     emit(null);
 
-    emit(await locator<FeedRemoteData>().feed(channelId: channelId));
+    emit(
+      Feed(
+        await locator<FeedRemoteData>().feed(
+          channelId: channelId,
+        ),
+      ),
+    );
   }
 }

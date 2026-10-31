@@ -57,14 +57,23 @@ class Channel {
 
   ColorScheme scheme(BuildContext context) => schemeOf(context, id);
 
+  /// Building a scheme from a seed is slow, and there are only a few seeds,
+  /// so each one is built once per brightness and reused.
   static ColorScheme schemeOf(BuildContext context, int? id) {
-    return ColorScheme.fromSeed(
-      seedColor: seedOf(id),
-      brightness: Theme.of(context).brightness,
-      dynamicSchemeVariant: DynamicSchemeVariant.content,
+    final Color seed = seedOf(id);
+    final Brightness brightness = Theme.of(context).brightness;
+
+    return _schemes[(seed, brightness)] ??= ColorScheme.fromSeed(
+      seedColor: seed,
+      brightness: brightness,
+      dynamicSchemeVariant: .content,
     );
   }
 
+  static final Map<(Color, Brightness), ColorScheme> _schemes = {};
+
+  // TODO: Use the cover art's color instead of a fixed list. Work it out on
+  // the server once per channel and send it as a hex field.
   static Color seedOf(int? id) => _seeds[(id ?? 0) % _seeds.length];
 }
 

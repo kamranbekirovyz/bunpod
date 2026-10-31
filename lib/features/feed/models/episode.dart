@@ -121,11 +121,9 @@ class Episode {
     return date.year == DateTime.now().year ? short : '$short, ${date.year}';
   }
 
-  ColorScheme scheme(BuildContext context) => ColorScheme.fromSeed(
-    seedColor: seed,
-    brightness: Theme.of(context).brightness,
-    dynamicSchemeVariant: DynamicSchemeVariant.content,
-  );
+  ColorScheme scheme(BuildContext context) {
+    return Channel.schemeOf(context, channelId);
+  }
 }
 
 const List<String> _months = [
