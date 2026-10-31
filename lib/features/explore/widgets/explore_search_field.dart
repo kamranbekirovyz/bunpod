@@ -9,14 +9,12 @@ class ExploreSearchField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.focusNode,
-    required this.scrolled,
     required this.onChanged,
     required this.onClear,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
-  final bool scrolled;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
 
@@ -24,70 +22,55 @@ class ExploreSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
     final TextTheme tt = Theme.of(context).textTheme;
-    final bool reduceMotion = MediaQuery.disableAnimationsOf(context);
 
-    final Widget content = SizedBox(
-      height: 56,
-      child: Row(
-        children: [
-          16.gap,
-          Icon(
-            Icons.search_rounded,
-            color: cs.onSurface,
-          ),
-          12.gap,
-          Expanded(
-            child: TextField(
-              controller: controller,
-              focusNode: focusNode,
-              onChanged: onChanged,
-              textInputAction: .search,
-              autocorrect: false,
-              enableSuggestions: false,
-              cursorColor: cs.primary,
-              style: tt.bodyLarge?.copyWith(
-                color: cs.onSurface,
-                height: 1,
-              ),
-              decoration: InputDecoration(
-                isCollapsed: true,
-                border: .none,
-                hintText: 'Search shows and hosts',
-                hintStyle: tt.bodyLarge?.copyWith(
-                  color: cs.onSurfaceVariant,
+    return Material(
+      color: cs.surfaceContainerHigh,
+      shape: const StadiumBorder(),
+      clipBehavior: .antiAlias,
+      child: SizedBox(
+        height: 56,
+        child: Row(
+          children: [
+            16.gap,
+            Icon(
+              Icons.search_rounded,
+              color: cs.onSurface,
+            ),
+            12.gap,
+            Expanded(
+              child: TextField(
+                controller: controller,
+                focusNode: focusNode,
+                onChanged: onChanged,
+                textInputAction: .search,
+                autocorrect: false,
+                enableSuggestions: false,
+                cursorColor: cs.primary,
+                style: tt.bodyLarge?.copyWith(
+                  color: cs.onSurface,
                   height: 1,
+                ),
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  border: .none,
+                  hintText: 'Search shows and hosts',
+                  hintStyle: tt.bodyLarge?.copyWith(
+                    color: cs.onSurfaceVariant,
+                    height: 1,
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const .only(right: 4),
-            child: _ClearButton(
-              visible: controller.text.isNotEmpty,
-              onPressed: onClear,
+            Padding(
+              padding: const .only(right: 4),
+              child: _ClearButton(
+                visible: controller.text.isNotEmpty,
+                onPressed: onClear,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    );
-
-    return SingleMotionBuilder(
-      motion: const MaterialSpringMotion.standardEffectsFast(),
-      value: scrolled ? 1.0 : 0.0,
-      active: !reduceMotion,
-      builder: (context, t, content) {
-        return Material(
-          color: Color.lerp(
-            cs.surfaceContainerHigh,
-            cs.surfaceContainerHighest,
-            t.clamp(0.0, 1.0),
-          ),
-          shape: const StadiumBorder(),
-          clipBehavior: .antiAlias,
-          child: content,
-        );
-      },
-      child: content,
     );
   }
 }

@@ -7,7 +7,11 @@ class ExplorePage extends StatefulWidget {
 
   static Future<void> show(BuildContext context) {
     return Navigator.of(context).push(
-      const ExplorePage().asAdaptiveSheetRoute<void>(),
+      MaterialPageRoute<void>(
+        builder: (_) {
+          return const ExplorePage();
+        },
+      ),
     );
   }
 
@@ -23,8 +27,6 @@ class _ExplorePageState extends State<ExplorePage> {
   late final ExploreSearchCubit _searchCubit;
 
   Category? _category;
-
-  bool _scrolled = false;
 
   bool get _browsing => _search.text.trim().isEmpty;
 
@@ -63,33 +65,27 @@ class _ExplorePageState extends State<ExplorePage> {
     _trendingCubit.load(categoryId: category?.id);
   }
 
-  bool _onScroll(ScrollUpdateNotification notification) {
-    final bool scrolled = notification.metrics.pixels > 0;
-
-    if (scrolled != _scrolled) setState(() => _scrolled = scrolled);
-
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        leading: const StyledBackButton(),
+        title: const Text('Explore'),
+      ),
       body: Column(
         children: [
           Padding(
-            padding: .fromLTRB(16, TopPadding.of(context) + 16, 16, 16),
+            padding: const .fromLTRB(16, 16, 16, 16),
             child: ExploreSearchField(
               controller: _search,
               focusNode: _searchFocus,
-              scrolled: _scrolled,
               onChanged: _onQueryChanged,
               onClear: _clearSearch,
             ),
           ),
           if (_browsing)
             Padding(
-              padding: const .only(bottom: 8),
+              padding: const .only(bottom: 16),
               child: BlocBuilder<ExploreCategoriesCubit, List<Category>?>(
                 bloc: locator<ExploreCategoriesCubit>(),
                 builder: (context, categories) {
@@ -102,45 +98,47 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
           Expanded(
-            child: NotificationListener<ScrollUpdateNotification>(
-              onNotification: _onScroll,
-              child: CustomScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                slivers: [
-                  if (_browsing)
-                    BlocBuilder<ExploreTrendingCubit, List<ChannelPreview>?>(
-                      bloc: _trendingCubit,
-                      builder: (context, shows) {
-                        return ExploreShowGrid(shows: shows);
-                      },
-                    )
-                  else
-                    BlocBuilder<ExploreSearchCubit, ExploreSearch>(
-                      bloc: _searchCubit,
-                      builder: (context, search) {
-                        if (search.loading) {
-                          return const ExploreShowGrid(shows: null);
-                        }
+            child: CustomScrollView(
+              keyboardDismissBehavior: .onDrag,
+              slivers: [
+                if (_browsing)
+                  BlocBuilder<ExploreTrendingCubit, List<ChannelPreview>?>(
+                    bloc: _trendingCubit,
+                    builder: (context, shows) {
+                      return ExploreShowGrid(
+                        shows: shows,
+                      );
+                    },
+                  )
+                else
+                  BlocBuilder<ExploreSearchCubit, ExploreSearch>(
+                    bloc: _searchCubit,
+                    builder: (context, search) {
+                      if (search.loading) {
+                        return const ExploreShowGrid(
+                          shows: null,
+                        );
+                      }
 
-                        if (search.query.isEmpty) {
-                          return const SliverToBoxAdapter();
-                        }
+                      if (search.query.isEmpty) {
+                        return const SliverToBoxAdapter();
+                      }
 
-                        if (search.results.isEmpty) {
-                          return const SliverToBoxAdapter(
-                            child: ExploreNoResults(),
-                          );
-                        }
+                      if (search.results.isEmpty) {
+                        return const SliverToBoxAdapter(
+                          child: ExploreNoResults(),
+                        );
+                      }
 
-                        return ExploreShowGrid(shows: search.results);
-                      },
-                    ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: 24 + BottomPadding.of(context)),
+                      return ExploreShowGrid(
+                        shows: search.results,
+                      );
+                    },
                   ),
-                ],
-              ),
+                SliverToBoxAdapter(
+                  child: (24 + BottomPadding.of(context)).gap,
+                ),
+              ],
             ),
           ),
         ],
