@@ -38,6 +38,7 @@ abstract final class Bootstrap {
     };
 
     await precacheLogos();
+    precacheFonts().ignore();
 
     if (!AppConfig.useMocks) {
       await Firebase.initializeApp(
