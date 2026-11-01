@@ -1,8 +1,10 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
+import 'package:motor/motor.dart';
 
 class FeedNowPlayingCard extends StatelessWidget {
   const FeedNowPlayingCard({
@@ -164,31 +166,62 @@ class _PlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final PlayerCubit player = locator<PlayerCubit>();
 
-    return BlocSelector<PlayerCubit, Playback, (bool, bool)>(
+    return BlocSelector<PlayerCubit, Playback, (bool, bool, bool)>(
       bloc: player,
       selector: (playback) {
         final bool current = playback.episode?.id == episode.id;
 
-        return (current, current && playback.playing);
+        return (
+          current,
+          current && playback.playing,
+          current && playback.loading,
+        );
       },
       builder: (context, state) {
-        final (bool current, bool playing) = state;
+        final (bool current, bool playing, bool loading) = state;
 
-        return Material(
-          color: scheme.onPrimary,
-          shape: MaterialShapeBorder(
-            shape: _heroButtonShapes[_kHeroButtonShape],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () => current ? player.toggle() : player.play(episode),
-            child: SizedBox(
-              width: 64,
-              height: 64,
-              child: Icon(
-                playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                color: scheme.primary,
-                size: 32,
+        return SingleMotionBuilder(
+          motion: const MaterialSpringMotion.expressiveSpatialFast(),
+          value: playing ? 1.0 : 0.0,
+          active: !MediaQuery.disableAnimationsOf(context),
+          builder: (context, t, child) {
+            return ClipPath(
+              clipper: ShapeBorderClipper(
+                shape: _paused.lerpTo(_playing, t.clamp(0.0, 1.0))!,
+              ),
+              child: child,
+            );
+          },
+          child: Material(
+            color: scheme.onPrimary,
+            child: InkWell(
+              onTap: () => current ? player.toggle() : player.play(episode),
+              child: SizedBox(
+                width: 64,
+                height: 64,
+                child: Stack(
+                  alignment: .center,
+                  children: [
+                    AnimatedOpacity(
+                      opacity: loading ? 1 : 0,
+                      duration: const Duration(milliseconds: 200),
+                      child: LoadingIndicator(
+                        activeIndicatorColor: scheme.primary,
+                      ),
+                    ),
+                    AnimatedOpacity(
+                      opacity: loading ? 0 : 1,
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(
+                        playing
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                        color: scheme.primary,
+                        size: 32,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -198,16 +231,12 @@ class _PlayButton extends StatelessWidget {
   }
 }
 
-final List<RoundedPolygon> _heroButtonShapes = <RoundedPolygon>[
-  MaterialShapes.cookie7Sided,
-  MaterialShapes.clover4Leaf,
-  MaterialShapes.pentagon,
-  MaterialShapes.gem,
-  MaterialShapes.puffy,
-  MaterialShapes.sunny,
-  MaterialShapes.flower,
-];
-const int _kHeroButtonShape = 0;
+final MaterialShapeBorder _paused = MaterialShapeBorder(
+  shape: MaterialShapes.cookie7Sided,
+);
+final MaterialShapeBorder _playing = MaterialShapeBorder(
+  shape: MaterialShapes.sunny,
+);
 
 class _Cover extends StatelessWidget {
   const _Cover({

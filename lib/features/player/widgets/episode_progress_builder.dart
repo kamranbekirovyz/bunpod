@@ -20,6 +20,7 @@ class EpisodeProgressBuilder extends StatelessWidget {
       bloc: player,
       buildWhen: (previous, current) {
         return previous.episode?.id != current.episode?.id ||
+            previous.loading != current.loading ||
             previous.positions[episode.id] != current.positions[episode.id];
       },
       builder: (context, playback) {
@@ -27,7 +28,11 @@ class EpisodeProgressBuilder extends StatelessWidget {
           playback.positions[episode.id],
         );
 
-        if (playback.episode?.id != episode.id) return builder(context, saved);
+        // While loading, the player reports position 0 before it seeks to
+        // where the user left off, so keep showing the saved position.
+        if (playback.episode?.id != episode.id || playback.loading) {
+          return builder(context, saved);
+        }
 
         return StreamBuilder<Duration>(
           stream: player.position,
