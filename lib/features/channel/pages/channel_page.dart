@@ -202,8 +202,9 @@ class _ChannelView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (description.isNotEmpty) ...[
-                      Text(
-                        description,
+                      ExpandableText(
+                        text: description,
+                        scheme: cs,
                         style: tt.bodyMedium?.copyWith(
                           color: cs.onSurfaceVariant,
                           height: 1.5,
