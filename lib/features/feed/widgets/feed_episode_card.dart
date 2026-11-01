@@ -181,7 +181,7 @@ class _EpisodeCardState extends State<_EpisodeCard>
   Widget _trailing(BuildContext context, ColorScheme cs, Color fg) {
     final Episode episode = widget.episode;
 
-    if (episode.progress >= 1.0) {
+    if (episode.played) {
       return Container(
         width: 30,
         height: 30,
@@ -200,7 +200,7 @@ class _EpisodeCardState extends State<_EpisodeCard>
     }
 
     final bool started = episode.listened > Duration.zero;
-    final Duration remaining = episode.total - episode.listened;
+    final Duration remaining = episode.remaining;
 
     return Text(
       started ? '-${remaining.remainingLabel}' : remaining.remainingLabel,

@@ -69,6 +69,18 @@ class Episode {
   Episode withPosition(Duration? listened) {
     if (listened == null) return this;
 
+    return _copyWith(position: listened.inSeconds);
+  }
+
+  /// Replaces the listed length with the audio's real one, which can differ
+  /// from what the feed reports.
+  Episode withTotal(Duration? total) {
+    if (total == null || total <= Duration.zero) return this;
+
+    return _copyWith(duration: total.inSeconds);
+  }
+
+  Episode _copyWith({int? duration, num? position}) {
     return Episode(
       id: id,
       channelId: channelId,
@@ -77,10 +89,10 @@ class Episode {
       description: description,
       image: image,
       publishedAt: publishedAt,
-      duration: duration,
+      duration: duration ?? this.duration,
       audioUrl: audioUrl,
       audioBytes: audioBytes,
-      position: listened.inSeconds,
+      position: position ?? this.position,
       completed: completed,
     );
   }
@@ -92,9 +104,18 @@ class Episode {
   Duration get listened =>
       completed == true ? total : Duration(seconds: (position ?? 0).round());
 
+  Duration get remaining {
+    final Duration left = total - listened;
+
+    return left > Duration.zero ? left : Duration.zero;
+  }
+
+  bool get played =>
+      completed == true ||
+      (total > Duration.zero && remaining == Duration.zero);
+
   double get progress =>
       total.inSeconds == 0 ? 0 : listened.inSeconds / total.inSeconds;
-
 
   Bucket get bucket {
     final DateTime date = publishedAt ?? DateTime.now();

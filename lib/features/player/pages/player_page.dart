@@ -161,23 +161,16 @@ class _Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PlayerCubit player = locator<PlayerCubit>();
-    final bool current = player.state.episode?.id == episode.id;
-    final Duration loaded = current ? player.duration : Duration.zero;
-    final Duration total = loaded > Duration.zero ? loaded : episode.total;
-    final Duration position = episode.listened;
-    final Duration remaining = total - position;
-    final double progress = total.inMilliseconds == 0
-        ? 0
-        : position.inMilliseconds / total.inMilliseconds;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          remaining > Duration.zero
-              ? '-${remaining.remainingLabel}'
-              : total.remainingLabel,
+          switch (episode) {
+            Episode(played: true) => 'Played',
+            Episode(listened: > Duration.zero) =>
+              '-${episode.remaining.remainingLabel}',
+            _ => episode.total.remainingLabel,
+          },
           textAlign: TextAlign.right,
           style: GoogleFonts.unbounded(
             color: scheme.onSurface,
@@ -188,7 +181,7 @@ class _Progress extends StatelessWidget {
           ),
         ),
         8.gap,
-        _ProgressBar(progress: progress, scheme: scheme),
+        _ProgressBar(progress: episode.progress, scheme: scheme),
       ],
     );
   }

@@ -19,7 +19,6 @@ class FeedNowPlayingCard extends StatelessWidget {
     final ColorScheme cs = episode.scheme(context);
     final TextTheme tt = Theme.of(context).textTheme;
     final double progress = episode.progress.clamp(0.0, 1.0);
-    final Duration timeLeft = episode.total - episode.listened;
 
     return GestureDetector(
       onTap: () => _openPlayer(context),
@@ -118,7 +117,9 @@ class FeedNowPlayingCard extends StatelessWidget {
                             ),
                             8.gap,
                             Text(
-                              '${timeLeft.remainingLabel} left',
+                              episode.played
+                                  ? 'Played'
+                                  : '${episode.remaining.remainingLabel} left',
                               style: tt.labelMedium?.copyWith(
                                 color: cs.onPrimary.withValues(alpha: 0.8),
                                 fontWeight: FontWeight.w600,

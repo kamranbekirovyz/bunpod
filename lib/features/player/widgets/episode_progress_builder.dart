@@ -24,13 +24,12 @@ class EpisodeProgressBuilder extends StatelessWidget {
             previous.positions[episode.id] != current.positions[episode.id];
       },
       builder: (context, playback) {
-        final Episode saved = episode.withPosition(
-          playback.positions[episode.id],
-        );
+        final bool current = playback.episode?.id == episode.id;
+        final Episode saved = episode
+            .withPosition(playback.positions[episode.id])
+            .withTotal(current ? player.duration : null);
 
-        if (playback.episode?.id != episode.id) {
-          return builder(context, saved);
-        }
+        if (!current) return builder(context, saved);
 
         return StreamBuilder<Duration>(
           stream: player.position,
