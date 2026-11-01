@@ -29,17 +29,40 @@ class _LaunchGateState extends State<LaunchGate> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LaunchCubit, LaunchDestination?>(
-      bloc: _launchCubit,
-      builder: (context, destination) {
-        return switch (destination) {
-          null => ColoredBox(
-            color: Theme.of(context).colorScheme.surface,
-          ),
-          .welcome => const WelcomePage(),
-          .feed => const FeedPage(),
-        };
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LaunchCubit, LaunchDestination?>(
+          bloc: _launchCubit,
+          listener: (context, destination) {
+            if (destination == .feed) {
+              locator<ChangelogCubit>().initialize();
+            }
+          },
+        ),
+        BlocListener<ChangelogCubit, Changelog?>(
+          bloc: locator<ChangelogCubit>(),
+          listener: (context, changelog) {
+            if (changelog == null) return;
+
+            ChangelogSheet.show(
+              context: context,
+              changelog: changelog,
+            );
+          },
+        ),
+      ],
+      child: BlocBuilder<LaunchCubit, LaunchDestination?>(
+        bloc: _launchCubit,
+        builder: (context, destination) {
+          return switch (destination) {
+            null => ColoredBox(
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            .welcome => const WelcomePage(),
+            .feed => const FeedPage(),
+          };
+        },
+      ),
     );
   }
 }

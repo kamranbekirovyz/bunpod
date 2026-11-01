@@ -8,6 +8,7 @@ const String _lastEpisode = 'last_episode';
 const String _themeMode = 'theme_mode';
 const String _secureStorageCleared = 'secure_storage_cleared';
 const String _channelSeeds = 'channel_seeds';
+const String _lastSeenVersion = 'last_seen_version';
 
 class PreferencesLocalData {
   const PreferencesLocalData({required this.sharedPreferences});
@@ -66,6 +67,14 @@ class PreferencesLocalData {
           '$key': value.toARGB32(),
       }),
     );
+  }
+
+  /// The app version whose changelog the user last saw. Kept across sign
+  /// outs, since it belongs to the install, not the account.
+  String? get lastSeenVersion => sharedPreferences.getString(_lastSeenVersion);
+
+  Future<void> cacheLastSeenVersion(String version) {
+    return sharedPreferences.setString(_lastSeenVersion, version);
   }
 
   Future<void> clearUser() async {

@@ -12,6 +12,7 @@ export 'features/subscriptions/subscriptions.dart';
 export 'features/menu/menu.dart';
 export 'features/profile/profile.dart';
 export 'features/versionarte/versionarte.dart';
+export 'features/changelog/changelog.dart';
 export 'common/data_sources/data_sources.dart';
 export 'common/models/models.dart';
 export 'common/network/network.dart';

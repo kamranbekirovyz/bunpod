@@ -55,6 +55,7 @@ Future<void> setupLocator() async {
         : const RemoteConfigVersionarteProvider(),
   );
   locator.registerSingleton<VersionarteCubit>(VersionarteCubit());
+  locator.registerSingleton<ChangelogCubit>(ChangelogCubit());
   locator.registerSingleton<FeedCubit>(FeedCubit());
   locator.registerSingleton<SubscriptionsCubit>(SubscriptionsCubit());
   locator.registerSingleton<ExploreCategoriesCubit>(ExploreCategoriesCubit());
