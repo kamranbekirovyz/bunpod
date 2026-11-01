@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter/rendering.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
@@ -77,7 +78,11 @@ class _FeedChannelTabsState extends State<FeedChannelTabs>
   @override
   void didUpdateWidget(FeedChannelTabs oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.selected != widget.selected) _scrollToSelected();
+    if (oldWidget.selected != widget.selected) {
+      _scrollToSelected();
+
+      HapticsHelper.selection();
+    }
   }
 
   @override

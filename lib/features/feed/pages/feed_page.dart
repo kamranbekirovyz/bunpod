@@ -93,15 +93,18 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     animationDuration: const Duration(milliseconds: 220),
   );
 
-  Channel? _selected;
-
   Episode? _playing;
 
   @override
   void initState() {
     super.initState();
-    _tabController.animation!.addListener(_syncTab);
-    locator<FeedCubit>().load();
+    // Fires once the tab settles, never for the tabs a tap animates through.
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      locator<FeedCubit>().setChannelId(_tabs[_tabController.index]?.id);
+    });
+    locator<FeedCubit>().setChannelId(null);
     _playing =
         locator<PreferencesLocalData>().lastEpisode ??
         _firstPlaying(locator<FeedCubit>().state);
@@ -126,20 +129,6 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     setState(() => _playing = fresh ?? _playing ?? _firstPlaying(feed));
   }
 
-  void _syncTab() {
-    final Channel? channel = _tabs[_tabController.animation!.value.round()];
-
-    if (channel == _selected) return;
-
-    HapticsHelper.selection();
-    setState(() => _selected = channel);
-    locator<FeedCubit>().load(channelId: channel?.id);
-  }
-
-  Future<void> _refresh() {
-    return locator<FeedCubit>().load(channelId: _selected?.id);
-  }
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -151,7 +140,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     return Scaffold(
       appBar: FeedAppBar(),
       body: ExpressiveRefreshIndicator(
-        onRefresh: _refresh,
+        onRefresh: locator<FeedCubit>().refresh,
         // Inside NestedScrollView the drag comes from the inner scrollables
         // (outer -> TabBarView page -> list = depth 2), so the default
         // depth-0 predicate would never trigger.
@@ -171,29 +160,46 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
                   delegate: FeedPinnedTabsDelegate(
                     height: 64,
                     child: Center(
-                      child: FeedChannelTabs(
-                        channels: widget.channels,
-                        selected: _selected,
-                        onSelected: (channel) {
-                          // Tapping the already-selected show a second time
-                          // opens its channel page (the "All" tab is exempt).
-                          if (channel != null && channel == _selected) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) {
-                                  return ChannelPage(
-                                    id: channel.id,
-                                    preview: ChannelPreview.fromChannel(
-                                      channel,
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                            return;
-                          }
+                      // The highlight follows the swipe frame by frame.
+                      child: AnimatedBuilder(
+                        animation: _tabController.animation!,
+                        builder: (context, _) {
+                          final int highlighted = _tabController
+                              .animation!
+                              .value
+                              .round();
 
-                          _tabController.animateTo(_tabs.indexOf(channel));
+                          return FeedChannelTabs(
+                            channels: widget.channels,
+                            selected: _tabs[highlighted],
+                            onSelected: (channel) {
+                              final Channel? current =
+                                  _tabs[_tabController.index];
+
+                              // Tapping the already-selected show a second
+                              // time opens its channel page (the "All" tab
+                              // is exempt).
+                              if (channel != null && channel == current) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (_) {
+                                      return ChannelPage(
+                                        id: channel.id,
+                                        preview: ChannelPreview.fromChannel(
+                                          channel,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                                return;
+                              }
+
+                              _tabController.animateTo(
+                                _tabs.indexOf(channel),
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
@@ -202,20 +208,27 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
               ),
             ];
           },
-          body: BlocConsumer<FeedCubit, Feed?>(
-            bloc: locator<FeedCubit>(),
-            listener: (context, feed) => _pickPlaying(feed),
-            builder: (context, feed) {
-              return TabBarView(
-                controller: _tabController,
-                physics: const SpringPagePhysics(),
-                children: [
-                  for (final Channel? channel in _tabs)
-                    FeedEpisodeList(
-                      key: PageStorageKey('${channel?.id}'),
-                      feed: channel == _selected ? feed : null,
-                    ),
-                ],
+          body: StreamBuilder<int?>(
+            stream: locator<FeedCubit>().channelId$,
+            builder: (context, snapshot) {
+              final int? channelId = snapshot.data;
+
+              return BlocConsumer<FeedCubit, Feed?>(
+                bloc: locator<FeedCubit>(),
+                listener: (context, feed) => _pickPlaying(feed),
+                builder: (context, feed) {
+                  return TabBarView(
+                    controller: _tabController,
+                    physics: const SpringPagePhysics(),
+                    children: [
+                      for (final Channel? channel in _tabs)
+                        FeedEpisodeList(
+                          key: PageStorageKey('${channel?.id}'),
+                          feed: channel?.id == channelId ? feed : null,
+                        ),
+                    ],
+                  );
+                },
               );
             },
           ),
