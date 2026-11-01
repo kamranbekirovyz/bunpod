@@ -55,25 +55,32 @@ class PlayerCubit extends Cubit<Playback> {
 
   Future<void> seek(Duration position) => _handler.seek(position);
 
-  /// Seeks [episode] without starting it. One that isn't loaded yet gets
-  /// loaded at [position] and stays paused.
+  /// Seeks [episode] without starting it. One that isn't loaded yet only
+  /// moves its saved position, so play picks up from there.
   Future<void> seekEpisode(Episode episode, Duration position) async {
     final int? id = episode.id;
     if (id == null) return;
 
     if (id == state.episode?.id) return _handler.seek(position);
 
-    await _save();
-
     emit(
       Playback(
-        episode: episode,
-        loading: true,
+        episode: state.episode,
+        playing: state.playing,
+        loading: state.loading,
         positions: {...state.positions, id: position},
       ),
     );
 
-    await _handler.load(episode.withPosition(position));
+    final PreferencesLocalData preferences = locator<PreferencesLocalData>();
+    if (preferences.lastEpisode?.id == id) {
+      preferences.cacheLastEpisode(episode.withPosition(position)).ignore();
+    }
+
+    await locator<PlaybackRemoteData>().saveProgress(
+      id: id,
+      position: position.inSeconds,
+    );
   }
 
   void _onPlaybackState(PlaybackState playback) {
