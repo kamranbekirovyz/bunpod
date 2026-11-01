@@ -62,6 +62,7 @@ class SmoothImage extends StatelessWidget {
       curve: _emphasizedDecelerate,
       duration: const Duration(milliseconds: 320),
       // Already-cached images show immediately, with no fade flash.
+      // TODO(kamran): cached covers pop when the feed rebuilds after a reload.
       syncDuration: Duration.zero,
       placeholder: fill(placeholderChild),
       errorBuilder: (BuildContext context, Object exception) => fill(
