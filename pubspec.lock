@@ -1281,7 +1281,7 @@ packages:
     description:
       path: "."
       ref: redesign
-      resolved-ref: e59b9e32d80cf7bab1a3c4b377f0bb58fe8a3612
+      resolved-ref: efaa6d684f0bc124fd6ad835f4cf34d299a7eb48
       url: "https://github.com/UserOrient/userorient-flutter.git"
     source: git
     version: "3.0.0"

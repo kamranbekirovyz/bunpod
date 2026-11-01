@@ -50,6 +50,7 @@ abstract final class Bootstrap {
       apiKey: AppConfig.userOrientApiKey,
       accentColor: MaterialThemes.light.colorScheme.primary,
       darkAccentColor: MaterialThemes.dark.colorScheme.primary,
+      keepWatermark: true,
     );
 
     await setupLocator();
