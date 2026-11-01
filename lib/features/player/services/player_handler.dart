@@ -12,6 +12,8 @@ class PlayerHandler extends BaseAudioHandler with SeekHandler {
 
   final AudioPlayer _player = AudioPlayer();
 
+  Duration? _seekTarget;
+
   static Future<PlayerHandler> init() async {
     final AudioSession session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.speech());
@@ -22,8 +24,8 @@ class PlayerHandler extends BaseAudioHandler with SeekHandler {
         androidNotificationChannelId: 'app.bunpod.playback',
         androidNotificationChannelName: 'Playback',
         androidNotificationOngoing: true,
-        rewindInterval: Duration(seconds: 15),
-        fastForwardInterval: Duration(seconds: 30),
+        rewindInterval: Duration(seconds: 10),
+        fastForwardInterval: Duration(seconds: 10),
       ),
     );
   }
@@ -61,7 +63,37 @@ class PlayerHandler extends BaseAudioHandler with SeekHandler {
   Future<void> pause() => _player.pause();
 
   @override
-  Future<void> seek(Duration position) => _player.seek(position);
+  Future<void> seek(Duration position) {
+    _seekTarget = null;
+
+    return _player.seek(position);
+  }
+
+  @override
+  Future<void> fastForward() {
+    return _seekBy(AudioService.config.fastForwardInterval);
+  }
+
+  @override
+  Future<void> rewind() {
+    return _seekBy(-AudioService.config.rewindInterval);
+  }
+
+  /// Rapid taps stack on the last requested target rather than on the
+  /// player's reported position, which lags while a seek is still settling.
+  Future<void> _seekBy(Duration offset) async {
+    final Duration base = _seekTarget ?? _player.position;
+    final Duration duration = _player.duration ?? Duration.zero;
+
+    Duration target = base + offset;
+    if (target < Duration.zero) target = Duration.zero;
+    if (duration > Duration.zero && target > duration) target = duration;
+
+    _seekTarget = target;
+    await _player.seek(target);
+
+    if (_seekTarget == target) _seekTarget = null;
+  }
 
   @override
   Future<void> setSpeed(double speed) => _player.setSpeed(speed);

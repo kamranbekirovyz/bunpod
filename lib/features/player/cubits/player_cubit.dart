@@ -29,6 +29,8 @@ class PlayerCubit extends Cubit<Playback> {
 
   Stream<Duration> get position => _handler.positionStream;
 
+  Duration get currentPosition => _handler.position;
+
   Duration get duration => _handler.duration ?? Duration.zero;
 
   Future<void> play(Episode episode) async {
