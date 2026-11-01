@@ -20,6 +20,7 @@ class App extends StatelessWidget {
             themeMode: themeMode,
             theme: MaterialThemes.light,
             darkTheme: MaterialThemes.dark,
+            scrollBehavior: const AlwaysScrollbarBehavior(),
             builder: (context, child) {
               final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
