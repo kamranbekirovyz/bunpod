@@ -1,145 +1,30 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:bunpod/bunpod.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:motor/motor.dart';
 
+/// Shrinks from the full card into a pill as [collapse] goes from 0 to 1.
 class FeedNowPlayingCard extends StatelessWidget {
   const FeedNowPlayingCard({
     super.key,
     required this.episode,
+    this.collapse = 0,
+    this.onExpandedHeight,
   });
 
   final Episode episode;
+  final double collapse;
+  final ValueChanged<double>? onExpandedHeight;
 
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme cs = episode.scheme(context);
-    final TextTheme tt = Theme.of(context).textTheme;
-    final double progress = episode.progress.clamp(0.0, 1.0);
-
-    return GestureDetector(
-      onTap: () => _openPlayer(context),
-      behavior: .translucent,
-      child: Container(
-        clipBehavior: .antiAlias,
-        decoration: BoxDecoration(
-          color: cs.primary,
-          borderRadius: .circular(36),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: -44,
-              right: -44,
-              child: Opacity(
-                opacity: 0.12,
-                child: ClipPath(
-                  clipper: ShapeBorderClipper(
-                    shape: MaterialShapeBorder(
-                      shape: MaterialShapes.sunny,
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: 180,
-                    height: 180,
-                    child: ColoredBox(
-                      color: cs.onPrimary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const .all(24),
-              child: Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .start,
-                children: [
-                  Column(
-                    mainAxisSize: .min,
-                    crossAxisAlignment: .start,
-                    children: [
-                      Row(
-                        children: [
-                          ClipPath(
-                            clipper: ShapeBorderClipper(
-                              shape: MaterialShapeBorder(
-                                shape: ShapeValues.coverFocused,
-                              ),
-                            ),
-                            child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: _Cover(
-                                imageUrl: episode.cover,
-                                scheme: cs,
-                              ),
-                            ),
-                          ),
-                          8.gap,
-                          Text(
-                            (episode.channel?.title ?? '').toUpperCase(),
-                            style: tt.labelSmall?.copyWith(
-                              color: cs.onPrimary.withValues(alpha: 0.85),
-                              fontWeight: .w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      4.gap,
-                      Text(
-                        episode.title ?? '',
-                        maxLines: 2,
-                        overflow: .ellipsis,
-                        style: tt.headlineSmall?.copyWith(
-                          color: cs.onPrimary,
-                          fontWeight: .w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                  16.gap,
-                  Row(
-                    crossAxisAlignment: .center,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: .start,
-                          children: [
-                            WavyLinearProgressIndicator(
-                              value: progress,
-                              color: cs.onPrimary,
-                              trackColor: cs.onPrimary.withValues(alpha: 0.25),
-                              stopIndicatorColor: cs.onPrimary,
-                            ),
-                            8.gap,
-                            Text(
-                              episode.played
-                                  ? 'Played'
-                                  : '${episode.remaining.remainingLabel} left',
-                              style: tt.labelMedium?.copyWith(
-                                color: cs.onPrimary.withValues(alpha: 0.8),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      16.gap,
-                      _PlayButton(episode: episode, scheme: cs),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  static const double _collapsedHeight = 64;
 
   void _openPlayer(BuildContext context) {
     Navigator.of(context).push(
@@ -150,18 +35,333 @@ class FeedNowPlayingCard extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme cs = episode.scheme(context);
+    final double full = (1 - collapse * 2).clamp(0.0, 1.0);
+    final double mini = (collapse * 2 - 1).clamp(0.0, 1.0);
+
+    return GestureDetector(
+      onTap: () => _openPlayer(context),
+      behavior: .translucent,
+      child: Container(
+        clipBehavior: .antiAlias,
+        decoration: BoxDecoration(
+          color: cs.primary,
+          borderRadius: .circular(
+            lerpDouble(36, _collapsedHeight / 2, collapse)!,
+          ),
+        ),
+        child: _ShrinkBox(
+          collapse: collapse,
+          collapsedHeight: _collapsedHeight,
+          onFullHeight: onExpandedHeight,
+          child: Stack(
+            children: [
+              Positioned(
+                top: -44,
+                right: -44,
+                child: Opacity(
+                  opacity: 0.12 * full,
+                  child: _Blob(color: cs.onPrimary),
+                ),
+              ),
+              _FadeIn(
+                opacity: full,
+                child: _FullContent(episode: episode, scheme: cs),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: _collapsedHeight,
+                child: _FadeIn(
+                  opacity: mini,
+                  child: _MiniContent(episode: episode, scheme: cs),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-/// Plays or pauses [episode]. Only this button listens to the player, so a
-/// play/pause change doesn't rebuild the whole card.
+class _FadeIn extends StatelessWidget {
+  const _FadeIn({required this.opacity, required this.child});
+
+  final double opacity;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring: opacity == 0,
+      child: Opacity(
+        opacity: opacity,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _Blob extends StatelessWidget {
+  const _Blob({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipPath(
+      clipper: ShapeBorderClipper(
+        shape: MaterialShapeBorder(shape: MaterialShapes.sunny),
+      ),
+      child: SizedBox(
+        width: 180,
+        height: 180,
+        child: ColoredBox(color: color),
+      ),
+    );
+  }
+}
+
+class _FullContent extends StatelessWidget {
+  const _FullContent({required this.episode, required this.scheme});
+
+  final Episode episode;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme tt = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const .all(24),
+      child: Column(
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
+        children: [
+          Row(
+            children: [
+              _Cover(imageUrl: episode.cover, scheme: scheme, size: 24),
+              8.gap,
+              Expanded(
+                child: Text(
+                  (episode.channel?.title ?? '').toUpperCase(),
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: tt.labelSmall?.copyWith(
+                    color: scheme.onPrimary.withValues(alpha: 0.85),
+                    fontWeight: .w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          4.gap,
+          Text(
+            episode.title ?? '',
+            maxLines: 2,
+            overflow: .ellipsis,
+            style: tt.headlineSmall?.copyWith(
+              color: scheme.onPrimary,
+              fontWeight: .w800,
+            ),
+          ),
+          16.gap,
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    WavyLinearProgressIndicator(
+                      value: episode.progress.clamp(0.0, 1.0),
+                      color: scheme.onPrimary,
+                      trackColor: scheme.onPrimary.withValues(alpha: 0.25),
+                      stopIndicatorColor: scheme.onPrimary,
+                    ),
+                    8.gap,
+                    _TimeLeft(episode: episode, scheme: scheme),
+                  ],
+                ),
+              ),
+              16.gap,
+              _PlayButton(episode: episode, scheme: scheme, size: 64),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MiniContent extends StatelessWidget {
+  const _MiniContent({required this.episode, required this.scheme});
+
+  final Episode episode;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme tt = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const .fromLTRB(12, 8, 8, 8),
+      child: Row(
+        children: [
+          _Cover(imageUrl: episode.cover, scheme: scheme, size: 40),
+          12.gap,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  episode.title ?? '',
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: tt.titleSmall?.copyWith(
+                    color: scheme.onPrimary,
+                    fontWeight: .w700,
+                  ),
+                ),
+                _TimeLeft(episode: episode, scheme: scheme),
+              ],
+            ),
+          ),
+          8.gap,
+          _PlayButton(episode: episode, scheme: scheme, size: 48),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimeLeft extends StatelessWidget {
+  const _TimeLeft({required this.episode, required this.scheme});
+
+  final Episode episode;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme tt = Theme.of(context).textTheme;
+
+    return Text(
+      episode.played ? 'Played' : '${episode.remaining.remainingLabel} left',
+      style: tt.labelMedium?.copyWith(
+        color: scheme.onPrimary.withValues(alpha: 0.8),
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
+
+/// Lays the child out at full height and clips it down toward
+/// [collapsedHeight] as [collapse] grows.
+class _ShrinkBox extends SingleChildRenderObjectWidget {
+  const _ShrinkBox({
+    required this.collapse,
+    required this.collapsedHeight,
+    required this.onFullHeight,
+    required super.child,
+  });
+
+  final double collapse;
+  final double collapsedHeight;
+  final ValueChanged<double>? onFullHeight;
+
+  @override
+  _RenderShrinkBox createRenderObject(BuildContext context) {
+    return _RenderShrinkBox(collapse, collapsedHeight)
+      ..onFullHeight = onFullHeight;
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, _RenderShrinkBox renderObject) {
+    renderObject
+      ..collapse = collapse
+      ..collapsedHeight = collapsedHeight
+      ..onFullHeight = onFullHeight;
+  }
+}
+
+class _RenderShrinkBox extends RenderProxyBox {
+  _RenderShrinkBox(this._collapse, this._collapsedHeight);
+
+  ValueChanged<double>? onFullHeight;
+
+  double? _reportedHeight;
+
+  double _collapse;
+  set collapse(double value) {
+    if (value == _collapse) return;
+    _collapse = value;
+    markNeedsLayout();
+  }
+
+  double _collapsedHeight;
+  set collapsedHeight(double value) {
+    if (value == _collapsedHeight) return;
+    _collapsedHeight = value;
+    markNeedsLayout();
+  }
+
+  @override
+  void performLayout() {
+    final RenderBox? child = this.child;
+    if (child == null) {
+      size = constraints.smallest;
+      return;
+    }
+
+    child.layout(
+      BoxConstraints(
+        minWidth: constraints.minWidth,
+        maxWidth: constraints.maxWidth,
+      ),
+      parentUsesSize: true,
+    );
+
+    final double full = child.size.height;
+
+    if (full != _reportedHeight) {
+      _reportedHeight = full;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        onFullHeight?.call(full);
+      });
+    }
+    final double height = lerpDouble(full, _collapsedHeight, _collapse)!;
+
+    size = constraints.constrain(Size(child.size.width, height));
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (child == null) return;
+
+    context.pushClipRect(
+      needsCompositing,
+      offset,
+      Offset.zero & size,
+      super.paint,
+    );
+  }
+}
+
 class _PlayButton extends StatelessWidget {
   const _PlayButton({
     required this.episode,
     required this.scheme,
+    required this.size,
   });
 
   final Episode episode;
   final ColorScheme scheme;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -198,8 +398,8 @@ class _PlayButton extends StatelessWidget {
             child: InkWell(
               onTap: () => current ? player.toggle() : player.play(episode),
               child: SizedBox(
-                width: 64,
-                height: 64,
+                width: size,
+                height: size,
                 child: Stack(
                   alignment: .center,
                   children: [
@@ -218,7 +418,7 @@ class _PlayButton extends StatelessWidget {
                             ? Icons.pause_rounded
                             : Icons.play_arrow_rounded,
                         color: scheme.primary,
-                        size: 32,
+                        size: size / 2,
                       ),
                     ),
                   ],
@@ -243,23 +443,34 @@ class _Cover extends StatelessWidget {
   const _Cover({
     required this.imageUrl,
     required this.scheme,
+    required this.size,
   });
 
   final String imageUrl;
   final ColorScheme scheme;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
-    return SmoothImage(
-      url: imageUrl,
-      placeholderColor: scheme.primaryContainer,
-      placeholderChild: Icon(
-        Icons.podcasts_rounded,
-        color: scheme.onPrimaryContainer,
+    return ClipPath(
+      clipper: ShapeBorderClipper(
+        shape: MaterialShapeBorder(shape: ShapeValues.coverFocused),
       ),
-      errorChild: Icon(
-        Icons.podcasts_rounded,
-        color: scheme.onPrimaryContainer,
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: SmoothImage(
+          url: imageUrl,
+          placeholderColor: scheme.primaryContainer,
+          placeholderChild: Icon(
+            Icons.podcasts_rounded,
+            color: scheme.onPrimaryContainer,
+          ),
+          errorChild: Icon(
+            Icons.podcasts_rounded,
+            color: scheme.onPrimaryContainer,
+          ),
+        ),
       ),
     );
   }

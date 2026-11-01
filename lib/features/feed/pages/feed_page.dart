@@ -1,6 +1,5 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
-import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -93,21 +92,32 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     animationDuration: const Duration(milliseconds: 220),
   );
 
+  late final FeedHeaderController _header = FeedHeaderController(
+    tabController: _tabController,
+  );
+
   Episode? _playing;
 
   @override
   void initState() {
     super.initState();
-    // Fires once the tab settles, never for the tabs a tap animates through.
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
 
       locator<FeedCubit>().setChannelId(_tabs[_tabController.index]?.id);
+      _header.sync();
     });
     locator<FeedCubit>().setChannelId(null);
     _playing =
         locator<PreferencesLocalData>().lastEpisode ??
         _firstPlaying(locator<FeedCubit>().state);
+  }
+
+  @override
+  void dispose() {
+    _header.dispose();
+    _tabController.dispose();
+    super.dispose();
   }
 
   Episode? _firstPlaying(Feed? feed) {
@@ -130,141 +140,38 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: FeedAppBar(),
-      body: ExpressiveRefreshIndicator(
-        onRefresh: locator<FeedCubit>().refresh,
-        // Inside NestedScrollView the drag comes from the inner scrollables
-        // (outer -> TabBarView page -> list = depth 2), so the default
-        // depth-0 predicate would never trigger.
-        notificationPredicate: (notification) => notification.depth == 2,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerScrolled) {
-            return [
-              SliverToBoxAdapter(
-                child: _NowPlaying(suggested: _playing),
-              ),
-              SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                  context,
-                ),
-                sliver: SliverPersistentHeader(
-                  pinned: true,
-                  delegate: FeedPinnedTabsDelegate(
-                    height: 64,
-                    child: Center(
-                      // The highlight follows the swipe frame by frame.
-                      child: AnimatedBuilder(
-                        animation: _tabController.animation!,
-                        builder: (context, _) {
-                          final int highlighted = _tabController
-                              .animation!
-                              .value
-                              .round();
-
-                          return FeedChannelTabs(
-                            channels: widget.channels,
-                            selected: _tabs[highlighted],
-                            onSelected: (channel) {
-                              final Channel? current =
-                                  _tabs[_tabController.index];
-
-                              // Tapping the already-selected show a second
-                              // time opens its channel page (the "All" tab
-                              // is exempt).
-                              if (channel != null && channel == current) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (_) {
-                                      return ChannelPage(
-                                        id: channel.id,
-                                        preview: ChannelPreview.fromChannel(
-                                          channel,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                                return;
-                              }
-
-                              _tabController.animateTo(
-                                _tabs.indexOf(channel),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ];
-          },
-          body: StreamBuilder<int?>(
-            stream: locator<FeedCubit>().channelId$,
-            builder: (context, snapshot) {
-              final int? channelId = snapshot.data;
-
-              return BlocConsumer<FeedCubit, Feed?>(
-                bloc: locator<FeedCubit>(),
-                listener: (context, feed) => _pickPlaying(feed),
-                builder: (context, feed) {
-                  return TabBarView(
-                    controller: _tabController,
-                    physics: const SpringPagePhysics(),
-                    children: [
-                      for (final Channel? channel in _tabs)
-                        FeedEpisodeList(
-                          key: PageStorageKey('${channel?.id}'),
-                          feed: channel?.id == channelId ? feed : null,
-                        ),
-                    ],
-                  );
-                },
-              );
-            },
+      body: Stack(
+        children: [
+          FeedPages(
+            header: _header,
+            tabs: _tabs,
+            onFeed: _pickPlaying,
           ),
-        ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: FeedHeader(
+              header: _header,
+              tabs: _tabs,
+              channels: widget.channels,
+              suggested: _playing,
+            ),
+          ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: BottomPadding.of(context),
+            child: FeedDockedPlayer(
+              header: _header,
+              suggested: _playing,
+            ),
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class _NowPlaying extends StatelessWidget {
-  const _NowPlaying({required this.suggested});
-
-  final Episode? suggested;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocSelector<PlayerCubit, Playback, Episode?>(
-      bloc: locator<PlayerCubit>(),
-      selector: (playback) => playback.episode,
-      builder: (context, playing) {
-        final Episode? shown = playing ?? suggested;
-
-        if (shown == null) return 32.gap;
-
-        return Padding(
-          padding: const .fromLTRB(16, 24, 16, 32),
-          child: EpisodeProgressBuilder(
-            episode: shown,
-            builder: (context, episode) {
-              return FeedNowPlayingCard(
-                episode: episode,
-              );
-            },
-          ),
-        );
-      },
     );
   }
 }

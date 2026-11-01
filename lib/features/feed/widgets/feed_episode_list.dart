@@ -6,18 +6,24 @@ class FeedEpisodeList extends StatelessWidget {
   const FeedEpisodeList({
     super.key,
     required this.feed,
+    required this.controller,
+    required this.topPadding,
   });
 
   final Feed? feed;
+  final ScrollController controller;
+
+  final double topPadding;
 
   @override
   Widget build(BuildContext context) {
     final Feed? feed = this.feed;
 
     return CustomScrollView(
+      controller: controller,
       slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+        SliverToBoxAdapter(
+          child: SizedBox(height: topPadding),
         ),
         if (feed == null)
           const _FeedLoading()
@@ -29,7 +35,7 @@ class FeedEpisodeList extends StatelessWidget {
               first: i == 0,
             ),
           SliverToBoxAdapter(
-            child: 32.gap,
+            child: 112.gap,
           ),
         ],
       ],
