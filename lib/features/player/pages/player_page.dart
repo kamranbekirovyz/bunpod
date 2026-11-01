@@ -1,8 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
 
 class PlayerPage extends StatefulWidget {
   const PlayerPage({
@@ -96,10 +94,13 @@ class _PlayerPageState extends State<PlayerPage> {
             EpisodeProgressBuilder(
               episode: episode,
               builder: (context, episode) {
-                return _Progress(episode: episode, scheme: cs);
+                return PlayerProgress(
+                  episode: episode,
+                  scheme: cs,
+                );
               },
             ),
-            24.gap,
+            8.gap,
             BlocBuilder<PlayerCubit, Playback>(
               bloc: locator<PlayerCubit>(),
               builder: (context, playback) {
@@ -149,58 +150,6 @@ class _PlayerPageState extends State<PlayerPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Progress extends StatelessWidget {
-  const _Progress({required this.episode, required this.scheme});
-
-  final Episode episode;
-  final ColorScheme scheme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          switch (episode) {
-            Episode(played: true) => 'Played',
-            Episode(listened: > Duration.zero) =>
-              '-${episode.remaining.remainingLabel}',
-            _ => episode.total.remainingLabel,
-          },
-          textAlign: TextAlign.right,
-          style: GoogleFonts.unbounded(
-            color: scheme.onSurface,
-            fontSize: 56,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -2,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-        ),
-        8.gap,
-        _ProgressBar(progress: episode.progress, scheme: scheme),
-      ],
-    );
-  }
-}
-
-class _ProgressBar extends StatelessWidget {
-  const _ProgressBar({required this.progress, required this.scheme});
-
-  final double progress;
-  final ColorScheme scheme;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme cs = scheme;
-    return WavyLinearProgressIndicator(
-      value: progress.clamp(0.0, 1.0),
-      color: cs.primary,
-      trackColor: cs.onSurface.withValues(alpha: 0.14),
-      stopIndicatorColor: cs.primary,
     );
   }
 }

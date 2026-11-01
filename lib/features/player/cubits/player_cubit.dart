@@ -55,6 +55,27 @@ class PlayerCubit extends Cubit<Playback> {
 
   Future<void> seek(Duration position) => _handler.seek(position);
 
+  /// Seeks [episode] without starting it. One that isn't loaded yet gets
+  /// loaded at [position] and stays paused.
+  Future<void> seekEpisode(Episode episode, Duration position) async {
+    final int? id = episode.id;
+    if (id == null) return;
+
+    if (id == state.episode?.id) return _handler.seek(position);
+
+    await _save();
+
+    emit(
+      Playback(
+        episode: episode,
+        loading: true,
+        positions: {...state.positions, id: position},
+      ),
+    );
+
+    await _handler.load(episode.withPosition(position));
+  }
+
   void _onPlaybackState(PlaybackState playback) {
     final bool completed =
         playback.processingState == AudioProcessingState.completed;
