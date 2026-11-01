@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const String _lastEpisode = 'last_episode';
 const String _themeMode = 'theme_mode';
 const String _secureStorageCleared = 'secure_storage_cleared';
+const String _channelSeeds = 'channel_seeds';
 
 class PreferencesLocalData {
   const PreferencesLocalData({required this.sharedPreferences});
@@ -43,6 +44,28 @@ class PreferencesLocalData {
 
   Future<void> cacheThemeMode(ThemeMode mode) {
     return sharedPreferences.setString(_themeMode, mode.name);
+  }
+
+  Map<int, Color> get channelSeeds {
+    final String? json = sharedPreferences.getString(_channelSeeds);
+    if (json == null) return {};
+
+    final Map<String, dynamic> seeds = jsonDecode(json);
+
+    return {
+      for (final MapEntry(:key, :value) in seeds.entries)
+        int.parse(key): Color(value),
+    };
+  }
+
+  Future<void> cacheChannelSeeds(Map<int, Color> seeds) {
+    return sharedPreferences.setString(
+      _channelSeeds,
+      jsonEncode({
+        for (final MapEntry(:key, :value) in seeds.entries)
+          '$key': value.toARGB32(),
+      }),
+    );
   }
 
   Future<void> clearUser() async {

@@ -49,7 +49,7 @@ class SubscriptionTile extends StatelessWidget {
                   height: 56,
                   child: SmoothImage(
                     url: channel.image ?? '',
-                    placeholderColor: channel.seed,
+                    placeholderColor: channel.seed(context),
                     placeholderChild: Icon(
                       Icons.podcasts_rounded,
                       color: cs.onSurfaceVariant,

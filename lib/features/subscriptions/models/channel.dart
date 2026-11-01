@@ -1,3 +1,4 @@
+import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class Channel {
@@ -53,14 +54,22 @@ class Channel {
     };
   }
 
-  Color get seed => seedOf(id);
+  Color seed(BuildContext context) {
+    return ChannelColors.seedOf(context, id: id, image: image);
+  }
 
-  ColorScheme scheme(BuildContext context) => schemeOf(context, id);
+  ColorScheme scheme(BuildContext context) {
+    return schemeOf(context, id: id, image: image);
+  }
 
-  /// Building a scheme from a seed is slow, and there are only a few seeds,
-  /// so each one is built once per brightness and reused.
-  static ColorScheme schemeOf(BuildContext context, int? id) {
-    final Color seed = seedOf(id);
+  /// Building a scheme from a seed is slow, so each one is built once per
+  /// brightness and reused.
+  static ColorScheme schemeOf(
+    BuildContext context, {
+    required int? id,
+    required String? image,
+  }) {
+    final Color seed = ChannelColors.seedOf(context, id: id, image: image);
     final Brightness brightness = Theme.of(context).brightness;
 
     return _schemes[(seed, brightness)] ??= ColorScheme.fromSeed(
@@ -71,19 +80,4 @@ class Channel {
   }
 
   static final Map<(Color, Brightness), ColorScheme> _schemes = {};
-
-  // TODO: Use the cover art's color instead of a fixed list. Work it out on
-  // the server once per channel and send it as a hex field.
-  static Color seedOf(int? id) => _seeds[(id ?? 0) % _seeds.length];
 }
-
-const List<Color> _seeds = [
-  Color(0xFFB01E28),
-  Color(0xFF1F7A6B),
-  Color(0xFF294B63),
-  Color(0xFF4C6EF5),
-  Color(0xFF311732),
-  Color(0xFFA1836E),
-  Color(0xFF2F6E8F),
-  Color(0xFF7D6D5E),
-];

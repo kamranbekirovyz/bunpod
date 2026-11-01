@@ -18,6 +18,7 @@ Future<void> setupLocator() async {
     ),
   );
   locator.registerSingleton<ThemeModeCubit>(ThemeModeCubit());
+  locator.registerSingleton<ChannelColorsCubit>(ChannelColorsCubit());
   locator.registerSingleton<SocialSignInService>(
     useMocks ? const MockSocialSignInService() : const SocialSignInService(),
   );

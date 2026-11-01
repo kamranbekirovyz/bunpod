@@ -95,7 +95,6 @@ class Episode {
   double get progress =>
       total.inSeconds == 0 ? 0 : listened.inSeconds / total.inSeconds;
 
-  Color get seed => Channel.seedOf(channelId);
 
   Bucket get bucket {
     final DateTime date = publishedAt ?? DateTime.now();
@@ -122,7 +121,7 @@ class Episode {
   }
 
   ColorScheme scheme(BuildContext context) {
-    return Channel.schemeOf(context, channelId);
+    return Channel.schemeOf(context, id: channelId, image: cover);
   }
 }
 

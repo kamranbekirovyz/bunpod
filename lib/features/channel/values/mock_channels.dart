@@ -89,7 +89,7 @@ List<MockChannel> get mockChannels {
         MockChannel(
           name: name,
           host: e.channel?.author ?? '',
-          seed: e.seed,
+          seed: ChannelColors.fallback,
           image: e.cover,
           description: _channelDescriptions[name] ?? '',
         ),

@@ -122,14 +122,14 @@ class _ChannelView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int? id = channel?.id ?? fallbackId;
+    final String image = channel?.image ?? preview?.image ?? '';
     final ColorScheme cs = id == null
         ? Theme.of(context).colorScheme
-        : Channel.schemeOf(context, id);
+        : Channel.schemeOf(context, id: id, image: image);
     final TextTheme tt = Theme.of(context).textTheme;
 
     final String title = channel?.title ?? preview?.title ?? '';
     final String author = channel?.author ?? preview?.author ?? '';
-    final String image = channel?.image ?? preview?.image ?? '';
     final String description = (channel?.description ?? '')
         .replaceAll(RegExp(r'<[^>]*>'), '')
         .trim();

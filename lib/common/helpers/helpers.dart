@@ -4,6 +4,7 @@ export 'navigation.dart';
 export 'logarte.dart';
 export 'precache_fonts.dart';
 export 'precache_logos.dart';
+export 'seed_color_from_image.dart';
 export 'sign_out.dart';
 export 'haptics_helper.dart';
 export 'contact_support.dart';
