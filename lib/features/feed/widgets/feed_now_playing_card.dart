@@ -396,7 +396,16 @@ class _PlayButton extends StatelessWidget {
           child: Material(
             color: scheme.onPrimary,
             child: InkWell(
-              onTap: () => current ? player.toggle() : player.play(episode),
+              onTap: () {
+                if (playing) {
+                  HapticsHelper.light();
+                  player.toggle();
+                  return;
+                }
+
+                HapticsHelper.medium();
+                current ? player.toggle() : player.play(episode);
+              },
               child: SizedBox(
                 width: size,
                 height: size,
