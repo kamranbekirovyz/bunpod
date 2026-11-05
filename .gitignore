@@ -53,3 +53,8 @@ google-services.json
 GoogleService-Info.plist
 firebase_options.dart
 firebase.json
+
+# Release signing
+*.jks
+*.keystore
+key.properties
