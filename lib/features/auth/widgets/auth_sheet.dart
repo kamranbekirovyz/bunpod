@@ -57,6 +57,8 @@ class AuthSheet extends StatelessWidget {
                 GoogleSignInButton(),
                 8.gap,
                 AppleSignInButton(),
+                12.gap,
+                const LegalNote(),
               ],
             ),
           ),
