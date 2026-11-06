@@ -33,6 +33,10 @@
 - [ ] Localization
 - [ ] Force update mechanism
 
+## License
+
+Copyright (c) 2025-2026 Kamran Bekirov. All rights reserved. The source is public for viewing only. See [LICENSE](LICENSE).
+
 ---
 
 <p align="center"><i>I build Flutter apps — <a href="https://kamranbekirov.com" target="_blank" rel="noopener">kamranbekirov.com</a></i></p>

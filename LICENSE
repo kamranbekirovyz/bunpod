@@ -1,0 +1,38 @@
+Copyright (c) 2025-2026 Kamran Bekirov. All rights reserved.
+
+This repository and everything in it, including source code, designs, graphics,
+icons, names, logos and other assets (the "Software"), is the proprietary
+property of Kamran Bekirov.
+
+The Software is made publicly visible for viewing only. No license or other
+right is granted to anyone, by implication, estoppel or otherwise. In
+particular, without prior written permission from the copyright holder, you
+may not:
+
+  1. Copy, reproduce, modify, translate or create derivative works of the
+     Software, in whole or in part.
+  2. Distribute, publish, sublicense, sell, rent, lend or otherwise make the
+     Software, or any part of it, available to anyone.
+  3. Build, compile, run or publish the Software, or any app based on it, on
+     any app store, website or other platform.
+  4. Use the Software, or any part of it, in any commercial or noncommercial
+     product or service.
+  5. Use the Software, or any part of it, to train, fine-tune or evaluate
+     machine learning or artificial intelligence models.
+  6. Use the names "Bunpod" or "BunPod", or their logos, in any way that
+     suggests endorsement or affiliation.
+  7. Remove or alter this notice or any other copyright notice.
+
+Viewing the Software on GitHub, and forking it within GitHub as permitted by
+GitHub's Terms of Service, does not grant any of the rights above.
+
+Third-party code in this repository, such as the packages in the `packages/`
+directory, stays under its own license, which is in that package's directory.
+Those licenses apply only to that code.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR ITS USE.
+
+For permission requests, contact kamran@bunpod.app.
