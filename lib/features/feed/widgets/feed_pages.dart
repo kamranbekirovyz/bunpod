@@ -29,46 +29,36 @@ class FeedPages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<double?>(
-      valueListenable: header.cardHeight,
-      builder: (context, _, _) {
-        return ExpressiveRefreshIndicator(
-          onRefresh: locator<FeedCubit>().refresh,
-          edgeOffset: header.headerMax,
-          notificationPredicate: (notification) {
-            return notification.depth == 1;
-          },
-          child: NotificationListener<ScrollEndNotification>(
-            onNotification: (notification) => _snap(context, notification),
-            child: StreamBuilder<int?>(
-              stream: locator<FeedCubit>().channelId$,
-              builder: (context, snapshot) {
-                final int? channelId = snapshot.data;
-
-                return BlocConsumer<FeedCubit, Feed?>(
-                  bloc: locator<FeedCubit>(),
-                  listener: (context, feed) => onFeed(feed),
-                  builder: (context, feed) {
-                    return TabBarView(
-                      controller: header.tabController,
-                      physics: const SpringPagePhysics(),
-                      children: [
-                        for (final (int i, Channel? channel) in tabs.indexed)
-                          FeedEpisodeList(
-                            key: PageStorageKey('${channel?.id}'),
-                            controller: header.scrollFor(i),
-                            topPadding: header.headerMax,
-                            feed: channel?.id == channelId ? feed : null,
-                          ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        );
+    return ExpressiveRefreshIndicator(
+      onRefresh: locator<FeedCubit>().refresh,
+      edgeOffset: header.headerMax,
+      notificationPredicate: (notification) {
+        return notification.depth == 1;
       },
+      child: NotificationListener<ScrollEndNotification>(
+        onNotification: (notification) => _snap(context, notification),
+        child: BlocConsumer<FeedCubit, FeedState>(
+          bloc: locator<FeedCubit>(),
+          listener: (context, state) {
+            onFeed(state.feedOf(locator<FeedCubit>().channelId));
+          },
+          builder: (context, state) {
+            return TabBarView(
+              controller: header.tabController,
+              physics: const SpringPagePhysics(),
+              children: [
+                for (final (int i, Channel? channel) in tabs.indexed)
+                  FeedEpisodeList(
+                    key: PageStorageKey('${channel?.id}'),
+                    controller: header.scrollFor(i),
+                    topPadding: header.headerMax,
+                    feed: state.feedOf(channel?.id),
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }

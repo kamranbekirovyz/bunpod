@@ -1,3 +1,4 @@
+import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Drives the feed header from the visible list's scroll. The first [range]
@@ -10,46 +11,28 @@ class FeedHeaderController {
 
   final ValueNotifier<double> shrink = ValueNotifier<double>(0);
 
-  final ValueNotifier<double?> cardHeight = ValueNotifier<double?>(null);
-
   final Map<int, ScrollController> _scrolls = {};
 
+  static const double cardHeight = FeedNowPlayingCard.expandedHeight;
   static const double tabsHeight = 64;
   static const double pillHeight = 64;
   static const EdgeInsets cardPadding = EdgeInsets.fromLTRB(16, 24, 16, 16);
 
-  double get headerMax {
-    return (cardHeight.value ?? 0) + cardPadding.vertical + tabsHeight;
-  }
+  double get headerMax => cardHeight + cardPadding.vertical + tabsHeight;
 
-  double get range {
-    final double? card = cardHeight.value;
-    if (card == null) return 0;
+  /// Scroll spent shrinking the card into the pill.
+  double get range => cardHeight - pillHeight;
 
-    return card - pillHeight;
-  }
-
-  double get pillArea {
-    if (cardHeight.value == null) return 0;
-
-    return pillHeight + cardPadding.vertical;
-  }
+  /// Scroll spent pushing the pill out of the top.
+  double get pillArea => pillHeight + cardPadding.vertical;
 
   double get total => range + pillArea;
 
-  double get collapse {
-    if (range <= 0) return 0;
+  double get collapse => (shrink.value / range).clamp(0.0, 1.0);
 
-    return (shrink.value / range).clamp(0.0, 1.0);
-  }
+  double get pushed => ((shrink.value - range) / pillArea).clamp(0.0, 1.0);
 
-  double get pushed {
-    if (pillArea <= 0) return 0;
-
-    return ((shrink.value - range) / pillArea).clamp(0.0, 1.0);
-  }
-
-  bool get docked => total > 0 && shrink.value >= total;
+  bool get docked => shrink.value >= total;
 
   ScrollController scrollFor(int index) {
     return _scrolls.putIfAbsent(index, () {
@@ -110,6 +93,5 @@ class FeedHeaderController {
       controller.dispose();
     }
     shrink.dispose();
-    cardHeight.dispose();
   }
 }

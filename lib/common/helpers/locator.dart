@@ -25,6 +25,11 @@ Future<void> setupLocator() async {
   locator.registerSingleton<AuthRemoteData>(
     useMocks ? const MockAuthRemoteData() : const AuthRemoteData(),
   );
+  locator.registerSingleton<AppDatabase>(AppDatabase());
+  locator.registerSingleton<FeedLocalData>(const FeedLocalData());
+  locator.registerSingleton<SubscriptionsLocalData>(
+    const SubscriptionsLocalData(),
+  );
   locator.registerSingleton<FeedRemoteData>(
     useMocks ? const MockFeedRemoteData() : const FeedRemoteData(),
   );

@@ -8,12 +8,10 @@ class FeedNowPlaying extends StatelessWidget {
     super.key,
     required this.suggested,
     required this.collapse,
-    this.onCardHeight,
   });
 
   final Episode? suggested;
   final double collapse;
-  final ValueChanged<double>? onCardHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +29,6 @@ class FeedNowPlaying extends StatelessWidget {
             return FeedNowPlayingCard(
               episode: episode,
               collapse: collapse,
-              onExpandedHeight: onCardHeight,
             );
           },
         );

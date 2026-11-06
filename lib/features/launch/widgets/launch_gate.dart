@@ -33,9 +33,15 @@ class _LaunchGateState extends State<LaunchGate> {
       listeners: [
         BlocListener<LaunchCubit, LaunchDestination?>(
           bloc: _launchCubit,
-          listener: (context, destination) {
-            if (destination == .feed) {
-              locator<ChangelogCubit>().initialize();
+          listener: (context, destination) async {
+            switch (destination) {
+              case .preparing:
+                await warmUpFeed(context);
+                _launchCubit.prepared();
+              case .feed:
+                locator<ChangelogCubit>().initialize();
+              case .welcome || null:
+                break;
             }
           },
         ),
@@ -55,7 +61,7 @@ class _LaunchGateState extends State<LaunchGate> {
         bloc: _launchCubit,
         builder: (context, destination) {
           return switch (destination) {
-            null => ColoredBox(
+            null || .preparing => ColoredBox(
               color: Theme.of(context).colorScheme.surface,
             ),
             .welcome => const WelcomePage(),

@@ -32,6 +32,7 @@ class FeedEpisodeList extends StatelessWidget {
             FeedDateGroupSliver(
               key: ValueKey<Bucket>(group.bucket),
               group: group,
+              arrivals: feed.arrivals,
               first: i == 0,
             ),
           SliverToBoxAdapter(

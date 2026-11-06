@@ -36,9 +36,6 @@ class FeedHeader extends StatelessWidget {
                     child: FeedNowPlaying(
                       suggested: suggested,
                       collapse: header.collapse,
-                      onCardHeight: (height) {
-                        header.cardHeight.value = height;
-                      },
                     ),
                   ),
                 ),

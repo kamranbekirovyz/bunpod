@@ -84,7 +84,7 @@ class _FeedView extends StatefulWidget {
 }
 
 class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
-  late final List<Channel?> _tabs = [null, ...widget.channels];
+  List<Channel?> get _tabs => [null, ...widget.channels];
 
   late final TabController _tabController = TabController(
     length: _tabs.length,
@@ -107,10 +107,12 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
       locator<FeedCubit>().setChannelId(_tabs[_tabController.index]?.id);
       _header.sync();
     });
-    locator<FeedCubit>().setChannelId(null);
+    locator<FeedCubit>()
+      ..syncChannels(widget.channels)
+      ..setChannelId(null);
     _playing =
         locator<PreferencesLocalData>().lastEpisode ??
-        _firstPlaying(locator<FeedCubit>().state);
+        _firstPlaying(locator<FeedCubit>().state.feedOf(null));
   }
 
   @override

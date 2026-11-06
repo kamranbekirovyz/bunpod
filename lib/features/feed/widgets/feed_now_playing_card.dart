@@ -7,8 +7,6 @@ import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_wavy_progress_indicator/material_wavy_progress_indicator.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:motor/motor.dart';
 
 /// Shrinks from the full card into a pill as [collapse] goes from 0 to 1.
@@ -17,13 +15,12 @@ class FeedNowPlayingCard extends StatelessWidget {
     super.key,
     required this.episode,
     this.collapse = 0,
-    this.onExpandedHeight,
   });
 
   final Episode episode;
   final double collapse;
-  final ValueChanged<double>? onExpandedHeight;
 
+  static const double expandedHeight = 220;
   static const double _collapsedHeight = 64;
 
   void _openPlayer(BuildContext context) {
@@ -53,35 +50,38 @@ class FeedNowPlayingCard extends StatelessWidget {
             lerpDouble(36, _collapsedHeight / 2, collapse)!,
           ),
         ),
-        child: _ShrinkBox(
-          collapse: collapse,
-          collapsedHeight: _collapsedHeight,
-          onFullHeight: onExpandedHeight,
-          child: Stack(
-            children: [
-              Positioned(
-                top: -44,
-                right: -44,
-                child: Opacity(
-                  opacity: 0.12 * full,
-                  child: _Blob(color: cs.onPrimary),
+        child: SizedBox(
+          height: lerpDouble(expandedHeight, _collapsedHeight, collapse),
+          child: OverflowBox(
+            alignment: .topCenter,
+            minHeight: expandedHeight,
+            maxHeight: expandedHeight,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -44,
+                  right: -44,
+                  child: Opacity(
+                    opacity: 0.12 * full,
+                    child: _Blob(color: cs.onPrimary),
+                  ),
                 ),
-              ),
-              _FadeIn(
-                opacity: full,
-                child: _FullContent(episode: episode, scheme: cs),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: _collapsedHeight,
-                child: _FadeIn(
-                  opacity: mini,
-                  child: _MiniContent(episode: episode, scheme: cs),
+                _FadeIn(
+                  opacity: full,
+                  child: _FullContent(episode: episode, scheme: cs),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: _collapsedHeight,
+                  child: _FadeIn(
+                    opacity: mini,
+                    child: _MiniContent(episode: episode, scheme: cs),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -140,7 +140,6 @@ class _FullContent extends StatelessWidget {
     return Padding(
       padding: const .all(24),
       child: Column(
-        mainAxisSize: .min,
         crossAxisAlignment: .start,
         children: [
           Row(
@@ -161,13 +160,15 @@ class _FullContent extends StatelessWidget {
             ],
           ),
           4.gap,
-          Text(
-            episode.title ?? '',
-            maxLines: 2,
-            overflow: .ellipsis,
-            style: tt.headlineSmall?.copyWith(
-              color: scheme.onPrimary,
-              fontWeight: .w800,
+          Expanded(
+            child: Text(
+              episode.title ?? '',
+              maxLines: 2,
+              overflow: .ellipsis,
+              style: tt.headlineSmall?.copyWith(
+                color: scheme.onPrimary,
+                fontWeight: .w800,
+              ),
             ),
           ),
           16.gap,
@@ -256,98 +257,6 @@ class _TimeLeft extends StatelessWidget {
         color: scheme.onPrimary.withValues(alpha: 0.8),
         fontWeight: FontWeight.w600,
       ),
-    );
-  }
-}
-
-/// Lays the child out at full height and clips it down toward
-/// [collapsedHeight] as [collapse] grows.
-class _ShrinkBox extends SingleChildRenderObjectWidget {
-  const _ShrinkBox({
-    required this.collapse,
-    required this.collapsedHeight,
-    required this.onFullHeight,
-    required super.child,
-  });
-
-  final double collapse;
-  final double collapsedHeight;
-  final ValueChanged<double>? onFullHeight;
-
-  @override
-  _RenderShrinkBox createRenderObject(BuildContext context) {
-    return _RenderShrinkBox(collapse, collapsedHeight)
-      ..onFullHeight = onFullHeight;
-  }
-
-  @override
-  void updateRenderObject(BuildContext context, _RenderShrinkBox renderObject) {
-    renderObject
-      ..collapse = collapse
-      ..collapsedHeight = collapsedHeight
-      ..onFullHeight = onFullHeight;
-  }
-}
-
-class _RenderShrinkBox extends RenderProxyBox {
-  _RenderShrinkBox(this._collapse, this._collapsedHeight);
-
-  ValueChanged<double>? onFullHeight;
-
-  double? _reportedHeight;
-
-  double _collapse;
-  set collapse(double value) {
-    if (value == _collapse) return;
-    _collapse = value;
-    markNeedsLayout();
-  }
-
-  double _collapsedHeight;
-  set collapsedHeight(double value) {
-    if (value == _collapsedHeight) return;
-    _collapsedHeight = value;
-    markNeedsLayout();
-  }
-
-  @override
-  void performLayout() {
-    final RenderBox? child = this.child;
-    if (child == null) {
-      size = constraints.smallest;
-      return;
-    }
-
-    child.layout(
-      BoxConstraints(
-        minWidth: constraints.minWidth,
-        maxWidth: constraints.maxWidth,
-      ),
-      parentUsesSize: true,
-    );
-
-    final double full = child.size.height;
-
-    if (full != _reportedHeight) {
-      _reportedHeight = full;
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        onFullHeight?.call(full);
-      });
-    }
-    final double height = lerpDouble(full, _collapsedHeight, _collapse)!;
-
-    size = constraints.constrain(Size(child.size.width, height));
-  }
-
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    if (child == null) return;
-
-    context.pushClipRect(
-      needsCompositing,
-      offset,
-      Offset.zero & size,
-      super.paint,
     );
   }
 }

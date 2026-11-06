@@ -10,7 +10,9 @@ class LaunchCubit extends Cubit<LaunchDestination?> {
       final bool authenticated =
           await locator<SecureStorageLocalData>().accessToken != null;
 
-      emit(authenticated ? .feed : .welcome);
+      emit(
+        authenticated ? .preparing : .welcome,
+      );
     } catch (error, stackTrace) {
       // Never leave the gate blank. Welcome lets the user sign in again.
       logarte.log('launch resolve failed: $error');
@@ -18,5 +20,9 @@ class LaunchCubit extends Cubit<LaunchDestination?> {
 
       emit(.welcome);
     }
+  }
+
+  void prepared() {
+    emit(.feed);
   }
 }

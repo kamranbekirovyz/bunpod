@@ -20,7 +20,12 @@ class AuthSheet extends StatelessWidget {
     final TextTheme tt = Theme.of(context).textTheme;
 
     return Padding(
-      padding: .fromLTRB(16, 0, 16, BottomPadding.of(context)),
+      padding: .fromLTRB(
+        16,
+        0,
+        16,
+        16,
+      ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           maxWidth: 560,

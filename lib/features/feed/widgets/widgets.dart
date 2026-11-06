@@ -1,4 +1,5 @@
 export 'feed_app_bar.dart';
+export 'feed_arrival.dart';
 export 'feed_episode_card.dart';
 export 'feed_episode_list.dart';
 export 'feed_header.dart';
