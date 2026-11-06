@@ -8,11 +8,24 @@ class PlayerHandler extends BaseAudioHandler with SeekHandler {
     _player.playbackEventStream.listen((_) => _broadcast());
     _player.playingStream.listen((_) => _broadcast());
     _player.durationStream.listen(_updateDuration);
+    _player.positionStream.listen((_) => position);
+    _player.errorStream.listen((_) => _recover());
+    _player.processingStateStream
+        .where((state) => state == ProcessingState.ready)
+        .listen((_) => _retries = 0);
   }
+
+  static const int _maxRetries = 3;
 
   final AudioPlayer _player = AudioPlayer();
 
   Duration? _seekTarget;
+
+  Duration _position = Duration.zero;
+
+  Uri? _url;
+
+  int _retries = 0;
 
   static Future<PlayerHandler> init() async {
     final AudioSession session = await AudioSession.instance;
@@ -32,7 +45,16 @@ class PlayerHandler extends BaseAudioHandler with SeekHandler {
 
   Stream<Duration> get positionStream => _player.positionStream;
 
-  Duration get position => _player.position;
+  /// The last position of a loaded episode. After an error the player goes
+  /// idle and reports zero, which would overwrite the saved progress. While
+  /// loading it isn't settled yet either.
+  Duration get position {
+    if (_player.processingState case .ready || .buffering || .completed) {
+      _position = _player.position;
+    }
+
+    return _position;
+  }
 
   Duration? get duration => _player.duration;
 
@@ -50,10 +72,44 @@ class PlayerHandler extends BaseAudioHandler with SeekHandler {
       ),
     );
 
+    final Duration? start = episode.completed == true ? null : episode.listened;
+    _position = start ?? Duration.zero;
+    final Uri url = Uri.parse(episode.audioUrl ?? '');
+    _url = url;
+    _retries = 0;
+
     await _player.setAudioSource(
-      AudioSource.uri(Uri.parse(episode.audioUrl ?? '')),
-      initialPosition: episode.completed == true ? null : episode.listened,
+      AudioSource.uri(url),
+      initialPosition: start,
     );
+  }
+
+  /// A dropped stream reloads where it stopped, and keeps playing if it was. After
+  /// [_maxRetries] failures in a row it pauses instead.
+  Future<void> _recover() async {
+    final Uri? url = _url;
+    if (url == null) return;
+
+    if (_retries >= _maxRetries) {
+      await _player.pause();
+      return;
+    }
+
+    final bool resume = _player.playing;
+    _retries++;
+    await Future<void>.delayed(Duration(seconds: _retries));
+    if (url != _url) return;
+
+    try {
+      await _player.setAudioSource(
+        AudioSource.uri(url),
+        initialPosition: _position,
+      );
+      if (resume) await _player.play();
+    } catch (error) {
+      // The failure lands in the error stream, which retries again.
+      logarte.log('playback recovery $_retries failed: $error');
+    }
   }
 
   @override
