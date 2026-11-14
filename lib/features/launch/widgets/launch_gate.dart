@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Sits at the app's root and lets the right first page through once
@@ -34,14 +35,14 @@ class _LaunchGateState extends State<LaunchGate> {
         BlocListener<LaunchCubit, LaunchDestination?>(
           bloc: _launchCubit,
           listener: (context, destination) async {
-            switch (destination) {
-              case .preparing:
-                await warmUpFeed(context);
-                _launchCubit.prepared();
-              case .feed:
-                locator<ChangelogCubit>().initialize();
-              case .welcome || null:
-                break;
+            if (destination == .preparing) {
+              await warmUpFeed(context);
+              _launchCubit.prepared();
+            } else if (destination == .feed) {
+              FlutterNativeSplash.remove();
+              locator<ChangelogCubit>().initialize();
+            } else if (destination == .welcome) {
+              FlutterNativeSplash.remove();
             }
           },
         ),

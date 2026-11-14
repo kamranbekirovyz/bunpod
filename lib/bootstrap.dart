@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bunpod/bunpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:userorient_flutter/userorient_flutter.dart';
 
@@ -9,7 +10,8 @@ abstract final class Bootstrap {
   /// Always ends in [runApp]. If any launch step throws, the user gets a
   /// friendly error screen instead of a splash that never goes away.
   static Future<void> run(Widget Function() builder) async {
-    WidgetsFlutterBinding.ensureInitialized();
+    final WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
+    FlutterNativeSplash.preserve(widgetsBinding: binding);
 
     try {
       await _init();
@@ -18,6 +20,7 @@ abstract final class Bootstrap {
       logarte.log('stack trace: $stackTrace');
 
       runApp(const LaunchFailureApp());
+      FlutterNativeSplash.remove();
 
       LaunchFailureReporter.report(
         error: error,
