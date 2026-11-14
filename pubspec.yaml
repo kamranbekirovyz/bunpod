@@ -74,6 +74,20 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   drift_dev: ^2.35.2
   build_runner: ^2.17.1
+  flutter_native_splash: ^2.4.8
+
+flutter_native_splash:
+  color: "#FFF9EB"
+  color_dark: "#15130C"
+  image: assets/splash/splash-light.png
+  image_dark: assets/splash/splash-dark.png
+  android_12:
+    color: "#FFF9EB"
+    color_dark: "#15130C"
+    icon_background_color: "#FFF9EB"
+    icon_background_color_dark: "#15130C"
+    image: assets/splash/android-12-light.png
+    image_dark: assets/splash/android-12-dark.png
 
 flutter_launcher_icons:
   android: true
