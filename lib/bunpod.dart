@@ -15,6 +15,7 @@ export 'features/versionarte/versionarte.dart';
 export 'features/changelog/changelog.dart';
 export 'common/data_sources/data_sources.dart';
 export 'common/database/database.dart';
+export 'common/cubits/cubits.dart';
 export 'common/models/models.dart';
 export 'common/network/network.dart';
 export 'common/values/values.dart';

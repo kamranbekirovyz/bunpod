@@ -25,13 +25,20 @@ class MockChannelRemoteData implements ChannelRemoteData {
   }
 
   @override
-  Future<List<Episode>> episodes({required int id}) async {
+  Future<List<Episode>> episodes({
+    required int id,
+    required int offset,
+    required int limit,
+  }) async {
     await Future<void>.delayed(AppValues.mockDelay);
 
-    return [
-      for (final Episode episode in mockEpisodes)
-        if (episode.channelId == id) episode,
-    ];
+    return mockEpisodes
+        .where((Episode episode) {
+          return episode.channelId == id;
+        })
+        .skip(offset)
+        .take(limit)
+        .toList();
   }
 
   @override

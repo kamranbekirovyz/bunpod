@@ -20,10 +20,16 @@ class ChannelRemoteData {
     return Channel.fromJson(response.data ?? {});
   }
 
-  Future<List<Episode>> episodes({required int id}) async {
+  Future<List<Episode>> episodes({
+    required int id,
+    required int offset,
+    required int limit,
+  }) async {
     final Response<Map<String, dynamic>> response =
         await RestfulEndpoints.channelEpisodes(
           id: id,
+          offset: offset,
+          limit: limit,
         ).send<Map<String, dynamic>>();
 
     final List<dynamic> items = response.data?['items'] ?? [];

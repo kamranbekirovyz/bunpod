@@ -119,11 +119,16 @@ class RestfulEndpoints {
     );
   }
 
-  static Endpoint channelEpisodes({required int id, int? limit}) {
+  static Endpoint channelEpisodes({
+    required int id,
+    int? limit,
+    int? offset,
+  }) {
     return Endpoint.get(
       url: '${AppConfig.baseUrl}/podcasts/$id/episodes',
       query: {
         'limit': ?limit,
+        'offset': ?offset,
       },
     );
   }

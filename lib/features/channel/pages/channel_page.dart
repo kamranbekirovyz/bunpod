@@ -178,85 +178,104 @@ class _ChannelView extends StatelessWidget {
         color: cs.onPrimaryContainer,
         backgroundColor: cs.primaryContainer,
         edgeOffset: topPad + kToolbarHeight,
-        child: CustomScrollView(
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _ChannelHeaderDelegate(
-                title: title,
-                author: author,
-                image: image,
-                scheme: cs,
-                topPad: topPad,
-                minExtentValue: minExtent,
-                maxExtentValue: maxExtent,
-                entered: entered,
-                subscribed: subscribed,
-                onSubscribe: onSubscribe,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (description.isNotEmpty) ...[
-                      ExpandableText(
-                        text: description,
-                        scheme: cs,
-                        style: tt.bodyMedium?.copyWith(
-                          color: cs.onSurfaceVariant,
-                          height: 1.5,
-                        ),
-                      ),
-                      28.gap,
-                    ],
-                    Text(
-                      'Episodes',
-                      style: GoogleFonts.unbounded(
-                        textStyle: tt.titleLarge,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.3,
-                        color: cs.onSurface,
-                      ),
-                    ),
-                    12.gap,
-                  ],
+        child: LoadMoreListener(
+          onLoadMore: episodesCubit.loadMore,
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _ChannelHeaderDelegate(
+                  title: title,
+                  author: author,
+                  image: image,
+                  scheme: cs,
+                  topPad: topPad,
+                  minExtentValue: minExtent,
+                  maxExtentValue: maxExtent,
+                  entered: entered,
+                  subscribed: subscribed,
+                  onSubscribe: onSubscribe,
                 ),
               ),
-            ),
-            BlocBuilder<ChannelEpisodesCubit, List<Episode>?>(
-              bloc: episodesCubit,
-              builder: (context, episodes) {
-                if (episodes == null) {
-                  return SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 48),
-                      child: Center(child: LoadingIndicator()),
-                    ),
-                  );
-                }
-
-                return SliverList.builder(
-                  itemCount: episodes.length,
-                  itemBuilder: (context, i) {
-                    final Episode episode = episodes[i];
-
-                    return Padding(
-                      padding: const .fromLTRB(20, 0, 20, 8),
-                      child: FeedEpisodeCard(
-                        episode: episode,
-                        fromChannel: true,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (description.isNotEmpty) ...[
+                        ExpandableText(
+                          text: description,
+                          scheme: cs,
+                          style: tt.bodyMedium?.copyWith(
+                            color: cs.onSurfaceVariant,
+                            height: 1.5,
+                          ),
+                        ),
+                        28.gap,
+                      ],
+                      Text(
+                        'Episodes',
+                        style: GoogleFonts.unbounded(
+                          textStyle: tt.titleLarge,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                          color: cs.onSurface,
+                        ),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
-          ],
+                      12.gap,
+                    ],
+                  ),
+                ),
+              ),
+              BlocBuilder<ChannelEpisodesCubit, Paged<Episode>>(
+                bloc: episodesCubit,
+                builder: (context, episodes) {
+                  if (episodes.firstLoad) {
+                    return const _EpisodesLoader();
+                  }
+
+                  return SliverList.builder(
+                    itemCount: episodes.loadingMore
+                        ? episodes.items.length + 1
+                        : episodes.items.length,
+                    itemBuilder: (context, i) {
+                      if (i == episodes.items.length) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Center(child: LoadingIndicator()),
+                        );
+                      }
+
+                      return Padding(
+                        padding: const .fromLTRB(20, 0, 20, 8),
+                        child: FeedEpisodeCard(
+                          episode: episodes.items[i],
+                          fromChannel: true,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _EpisodesLoader extends StatelessWidget {
+  const _EpisodesLoader();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 48),
+        child: Center(child: LoadingIndicator()),
       ),
     );
   }

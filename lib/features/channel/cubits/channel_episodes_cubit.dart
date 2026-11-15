@@ -1,10 +1,23 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChannelEpisodesCubit extends Cubit<List<Episode>?> {
-  ChannelEpisodesCubit() : super(null);
+class ChannelEpisodesCubit extends PagedCubit<Episode> {
+  late int _id;
 
-  Future<void> load({required int id}) async {
-    emit(await locator<ChannelRemoteData>().episodes(id: id));
+  Future<void> load({required int id}) {
+    _id = id;
+
+    return refresh();
+  }
+
+  @override
+  Future<List<Episode>> fetch({
+    required int offset,
+    required int limit,
+  }) {
+    return locator<ChannelRemoteData>().episodes(
+      id: _id,
+      offset: offset,
+      limit: limit,
+    );
   }
 }
