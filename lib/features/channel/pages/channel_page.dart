@@ -4,7 +4,6 @@ import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:material_ui/material_ui.dart'
     hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
@@ -212,18 +211,7 @@ class _ChannelView extends StatelessWidget {
                             height: 1.5,
                           ),
                         ),
-                        28.gap,
                       ],
-                      Text(
-                        'Episodes',
-                        style: GoogleFonts.unbounded(
-                          textStyle: tt.titleLarge,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.3,
-                          color: cs.onSurface,
-                        ),
-                      ),
-                      12.gap,
                     ],
                   ),
                 ),
@@ -235,26 +223,27 @@ class _ChannelView extends StatelessWidget {
                     return const _EpisodesLoader();
                   }
 
-                  return SliverList.builder(
-                    itemCount: episodes.loadingMore
-                        ? episodes.items.length + 1
-                        : episodes.items.length,
-                    itemBuilder: (context, i) {
-                      if (i == episodes.items.length) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Center(child: LoadingIndicator()),
-                        );
-                      }
+                  final List<FeedDateGroup> groups = FeedDateGroup.group(
+                    episodes.items,
+                  );
 
-                      return Padding(
-                        padding: const .fromLTRB(20, 0, 20, 8),
-                        child: FeedEpisodeCard(
-                          episode: episodes.items[i],
+                  return SliverMainAxisGroup(
+                    slivers: [
+                      for (final (int i, FeedDateGroup group) in groups.indexed)
+                        FeedDateGroupSliver(
+                          key: ValueKey<String>(group.label),
+                          group: group,
+                          first: i == 0,
                           fromChannel: true,
                         ),
-                      );
-                    },
+                      if (episodes.loadingMore)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: LoadingIndicator()),
+                          ),
+                        ),
+                    ],
                   );
                 },
               ),

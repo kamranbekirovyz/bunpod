@@ -5,7 +5,7 @@ class Feed {
   Feed(
     this.episodes, {
     List<Episode> arrived = const [],
-  }) : groups = _group(episodes),
+  }) : groups = FeedDateGroup.group(episodes),
        arrivals = {
          for (final (int i, Episode episode) in arrived.indexed)
            if (episode.id case final int id) id: i,
@@ -19,27 +19,27 @@ class Feed {
 
   /// The same feed with its arrivals already shown.
   Feed get settled => arrivals.isEmpty ? this : Feed(episodes);
+}
 
-  static List<FeedDateGroup> _group(List<Episode> episodes) {
-    final Map<Bucket, List<Episode>> groups = {};
+class FeedDateGroup {
+  const FeedDateGroup({
+    required this.label,
+    required this.episodes,
+  });
+
+  final String label;
+  final List<Episode> episodes;
+
+  static List<FeedDateGroup> group(List<Episode> episodes) {
+    final Map<String, List<Episode>> groups = {};
 
     for (final Episode episode in episodes) {
       (groups[episode.bucket] ??= []).add(episode);
     }
 
     return [
-      for (final MapEntry(key: bucket, value: group) in groups.entries)
-        FeedDateGroup(bucket: bucket, episodes: group),
+      for (final MapEntry(key: label, value: group) in groups.entries)
+        FeedDateGroup(label: label, episodes: group),
     ];
   }
-}
-
-class FeedDateGroup {
-  const FeedDateGroup({
-    required this.bucket,
-    required this.episodes,
-  });
-
-  final Bucket bucket;
-  final List<Episode> episodes;
 }

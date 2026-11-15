@@ -117,7 +117,7 @@ class Episode {
   double get progress =>
       total.inSeconds == 0 ? 0 : listened.inSeconds / total.inSeconds;
 
-  Bucket get bucket {
+  String get bucket {
     final DateTime date = publishedAt ?? DateTime.now();
     final DateTime now = DateTime.now();
     final int daysAgo = DateTime(
@@ -126,12 +126,12 @@ class Episode {
       now.day,
     ).difference(DateTime(date.year, date.month, date.day)).inDays;
 
-    if (daysAgo <= 0) return Bucket.today;
-    if (daysAgo == 1) return Bucket.yesterday;
-    if (daysAgo < 7) return Bucket.thisWeek;
-    if (daysAgo < 30) return Bucket.thisMonth;
+    if (daysAgo <= 0) return 'Today';
+    if (daysAgo == 1) return 'Yesterday';
 
-    return Bucket.earlier;
+    final String month = _fullMonths[date.month - 1];
+
+    return date.year == now.year ? month : '$month ${date.year}';
   }
 
   String get date {
@@ -145,6 +145,21 @@ class Episode {
     return Channel.schemeOf(context, id: channelId, image: cover);
   }
 }
+
+const List<String> _fullMonths = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 const List<String> _months = [
   'Jan',

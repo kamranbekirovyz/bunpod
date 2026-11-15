@@ -43,7 +43,7 @@ const String _officeLadiesImage =
 
 final List<Episode> mockEpisodes = <Episode>[
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Deep Questions',
     host: 'Cal Newport',
     title: 'How to Escape the Productivity Trap',
@@ -52,7 +52,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 22),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Candace',
     host: 'Candace Owens',
     title: 'Silence Is a Choice: On Gaza and Conscience',
@@ -61,7 +61,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 49),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Jocko Podcast',
     host: 'Jocko Willink',
     title: 'Ownership and Extreme Accountability',
@@ -70,7 +70,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 2),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Lex Fridman Podcast',
     host: 'Lex Fridman',
     title: 'Roger Penrose: Physics of the Mind',
@@ -79,7 +79,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 12),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Krishnamurti',
     host: 'Jiddu Krishnamurti',
     title: 'What Is Meditation, Really?',
@@ -88,7 +88,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Lex Fridman Podcast',
     host: 'Lex Fridman',
     title: 'Black Holes, Time, and the Limits of Physics',
@@ -97,7 +97,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 33),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Candace',
     host: 'Candace Owens',
     title: 'The Truth About the Culture War',
@@ -106,7 +106,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Deep Questions',
     host: 'Cal Newport',
     title: 'The Deep Reset',
@@ -115,7 +115,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 9),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Being in The Way',
     host: 'Alan Watts',
     title: 'The Art of Letting Go',
@@ -124,7 +124,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 47),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Deep Questions',
     host: 'Cal Newport',
     title: 'Slow Productivity in a Busy World',
@@ -133,7 +133,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 14),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Merdiven Altı Terapi',
     host: 'Merdiven Altı Terapi',
     title: 'Kaygıyla Başa Çıkmak',
@@ -142,7 +142,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 34),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Naval',
     host: 'Naval Ravikant',
     title: 'How to Get Rich Without Getting Lucky',
@@ -151,7 +151,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 2),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Jocko Podcast',
     host: 'Jocko Willink',
     title: 'Detach to Win the Hard Fights',
@@ -160,7 +160,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 41),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Krishnamurti',
     host: 'Jiddu Krishnamurti',
     title: 'Freedom from the Known',
@@ -169,7 +169,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 14),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Candace',
     host: 'Candace Owens',
     title: 'The War on Free Speech',
@@ -178,7 +178,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 9),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Kurcala Podcast Yaptı',
     host: 'Nevzat Can Ünsal & Kaan Biber',
     title: 'Sınav stresiyle başa çıkmak',
@@ -187,7 +187,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 52),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Lex Fridman Podcast',
     host: 'Lex Fridman',
     title: 'The Nature of Intelligence and Consciousness',
@@ -196,7 +196,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Being in The Way',
     host: 'Alan Watts',
     title: 'Accepting the Present Moment',
@@ -205,7 +205,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 33),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Naval',
     host: 'Naval Ravikant',
     title: 'How to Be Happy: It Is a Skill',
@@ -214,7 +214,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 49),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Jocko Podcast',
     host: 'Jocko Willink',
     title: 'Discipline Equals Freedom When It Gets Hard',
@@ -223,7 +223,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 2, minutes: 3),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Merdiven Altı Terapi',
     host: 'Merdiven Altı Terapi',
     title: 'İlişkilerde Sınır Koymak',
@@ -232,7 +232,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 18),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Kurcala Podcast Yaptı',
     host: 'Nevzat Can Ünsal & Kaan Biber',
     title: 'Bayram ziyaretinde faydalı bilgiler',
@@ -241,7 +241,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Candace',
     host: 'Candace Owens',
     title: 'Hollywood and the Stories We Are Told',
@@ -250,7 +250,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 41),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Lex Fridman Podcast',
     host: 'Lex Fridman',
     title: 'The Future of AI and Humanity',
@@ -259,7 +259,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 2, minutes: 38),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Merdiven Altı Terapi',
     host: 'Merdiven Altı Terapi',
     title: 'Öz Şefkat Üzerine',
@@ -268,7 +268,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 57),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Naval',
     host: 'Naval Ravikant',
     title: 'Reading, Learning, and Compounding',
@@ -277,7 +277,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 20),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Being in The Way',
     host: 'Alan Watts',
     title: 'Time and the More Abundant Life',
@@ -286,7 +286,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 48),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Deep Questions',
     host: 'Cal Newport',
     title: 'Quitting the Internet for 30 Days',
@@ -295,7 +295,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 11),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Jocko Podcast',
     host: 'Jocko Willink',
     title: 'There Is No Easy Way Out',
@@ -304,7 +304,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 2, minutes: 27),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Krishnamurti',
     host: 'Jiddu Krishnamurti',
     title: 'On Fear and the Ending of Sorrow',
@@ -313,7 +313,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 6),
   ),
   _episode(
-    bucket: Bucket.earlier,
+    daysAgo: 60,
     channel: 'Kurcala Podcast Yaptı',
     host: 'Nevzat Can Ünsal & Kaan Biber',
     title: 'Burçlara göre arkadaş seçmek',
@@ -322,7 +322,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 58),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'MANPASI',
     host: 'DJ Fateh & Rəvan Bağırov',
     title: 'Kimi şəxsən tanımasanız da ona simpatiyanız var',
@@ -331,7 +331,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 27),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'MANPASI',
     host: 'DJ Fateh & Rəvan Bağırov',
     title: 'Səhər söhbəti: yay istisi və şəhər həyatı',
@@ -340,7 +340,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'MANPASI',
     host: 'DJ Fateh & Rəvan Bağırov',
     title: 'Məsləhətli mövzu',
@@ -349,7 +349,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 14),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'MANPASI',
     host: 'DJ Fateh & Rəvan Bağırov',
     title: 'Dinləyici zəngləri və gündəm',
@@ -358,7 +358,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 41),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Söhbətgah',
     host: 'DJ Tural & Əli Xəyyam',
     title:
@@ -368,7 +368,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 38),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Söhbətgah',
     host: 'DJ Tural & Əli Xəyyam',
     title: 'Alqoritmlər bizi necə idarə edir? | Müzəffər Qaraxanlı',
@@ -377,7 +377,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 15),
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Söhbətgah',
     host: 'DJ Tural & Əli Xəyyam',
     title: 'Qidalanma vərdişləri və sağlamlıq | Dr. Fərhad Burzu',
@@ -386,7 +386,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 44),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Söhbətgah',
     host: 'DJ Tural & Əli Xəyyam',
     title: 'Biznes, fintex və gələcək | Zeynal Kərimzadə',
@@ -395,7 +395,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 51),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'The Mehdi Hasan Show',
     host: 'Mehdi Hasan',
     title: "The Media's Gaza Blind Spot",
@@ -404,7 +404,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 19),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'The Mehdi Hasan Show',
     host: 'Mehdi Hasan',
     title: 'Fact-Checking the Powerful, Live',
@@ -413,7 +413,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'The Mehdi Hasan Show',
     host: 'Mehdi Hasan',
     title: 'Debating the Case for Free Speech Absolutism',
@@ -422,7 +422,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 44),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'The Mehdi Hasan Show',
     host: 'Mehdi Hasan',
     title: 'Holding Power to Account: A Year of Zeteo',
@@ -431,7 +431,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 12),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'The Jordan B. Peterson Podcast',
     host: 'Jordan B. Peterson',
     title: 'Meaning, Responsibility, and the Weight of Freedom',
@@ -440,7 +440,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 31),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'The Jordan B. Peterson Podcast',
     host: 'Jordan B. Peterson',
     title: 'The Psychology of the Biblical Stories',
@@ -449,7 +449,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'The Jordan B. Peterson Podcast',
     host: 'Jordan B. Peterson',
     title: 'Order, Chaos, and the Architecture of Belief',
@@ -458,7 +458,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 3),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'The Jordan B. Peterson Podcast',
     host: 'Jordan B. Peterson',
     title: 'On Discipline, Ambition, and the Life Worth Living',
@@ -467,7 +467,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 2, minutes: 22),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Y Combinator',
     host: 'Y Combinator',
     title: 'How the Best Founders Find Their First Users',
@@ -476,7 +476,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 12),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Y Combinator',
     host: 'Y Combinator',
     title: 'Fundraising: What Actually Convinces Investors',
@@ -485,7 +485,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Y Combinator',
     host: 'Y Combinator',
     title: 'Building in the Age of AI Agents',
@@ -494,7 +494,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 40),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Y Combinator',
     host: 'Y Combinator',
     title: 'Lessons From 20 Years of Funding Startups',
@@ -503,7 +503,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 17),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Stuff You Should Know',
     host: 'Josh Clark & Chuck Bryant',
     title: 'How Bioluminescence Works',
@@ -512,7 +512,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 8),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Stuff You Should Know',
     host: 'Josh Clark & Chuck Bryant',
     title: 'The Wild History of the Ferris Wheel',
@@ -521,7 +521,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Stuff You Should Know',
     host: 'Josh Clark & Chuck Bryant',
     title: 'Short Stuff: Why Do We Hiccup?',
@@ -530,7 +530,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 18),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Stuff You Should Know',
     host: 'Josh Clark & Chuck Bryant',
     title: 'How Volcanoes Really Work',
@@ -539,7 +539,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 33),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'The Minimalists',
     host: 'Joshua Fields Millburn & Ryan Nicodemus',
     title: 'Owning Less, Living More',
@@ -548,7 +548,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 21),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'The Minimalists',
     host: 'Joshua Fields Millburn & Ryan Nicodemus',
     title: 'How to Let Go of Sentimental Clutter',
@@ -557,7 +557,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'The Minimalists',
     host: 'Joshua Fields Millburn & Ryan Nicodemus',
     title: 'Intentional Spending in a Consumer World',
@@ -566,7 +566,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 47),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'The Minimalists',
     host: 'Joshua Fields Millburn & Ryan Nicodemus',
     title: 'Digital Declutter: Reclaiming Your Attention',
@@ -575,7 +575,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 9),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'The Joe Rogan Experience',
     host: 'Joe Rogan',
     title: 'The Frontiers of Consciousness and Psychedelics',
@@ -584,7 +584,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 26),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'The Joe Rogan Experience',
     host: 'Joe Rogan',
     title: 'Comedy, Combat Sports, and Staying Curious',
@@ -593,7 +593,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'The Joe Rogan Experience',
     host: 'Joe Rogan',
     title: 'AI, Aliens, and the Future of Humanity',
@@ -602,7 +602,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 52),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'The Joe Rogan Experience',
     host: 'Joe Rogan',
     title: 'Hunting, Health, and the Wild Within',
@@ -611,7 +611,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 2, minutes: 57),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Good Inside with Dr. Becky',
     host: 'Dr. Becky Kennedy',
     title: 'When Your Kid Falls Apart (and You Do Too)',
@@ -620,7 +620,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 15),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Good Inside with Dr. Becky',
     host: 'Dr. Becky Kennedy',
     title: 'Setting Boundaries Without Guilt',
@@ -629,7 +629,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Good Inside with Dr. Becky',
     host: 'Dr. Becky Kennedy',
     title: 'Raising Kids Who Trust Themselves',
@@ -638,7 +638,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 38),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Good Inside with Dr. Becky',
     host: 'Dr. Becky Kennedy',
     title: 'The Deepest Feelings Behind Tantrums',
@@ -647,7 +647,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 47),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: "Lenny's Podcast",
     host: 'Lenny Rachitsky',
     title: 'How Great Products Actually Get Built',
@@ -656,7 +656,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 24),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: "Lenny's Podcast",
     host: 'Lenny Rachitsky',
     title: 'Finding Product-Market Fit, Step by Step',
@@ -665,7 +665,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: "Lenny's Podcast",
     host: 'Lenny Rachitsky',
     title: 'Lessons on Growth From the Best in Tech',
@@ -674,7 +674,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 55),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: "Lenny's Podcast",
     host: 'Lenny Rachitsky',
     title: 'Career Advice for Ambitious Builders',
@@ -683,7 +683,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(hours: 1, minutes: 19),
   ),
   _episode(
-    bucket: Bucket.today,
+    daysAgo: 0,
     channel: 'Office Ladies',
     host: 'Jenna Fischer & Angela Kinsey',
     title: 'Booze Cruise: Behind the Scenes',
@@ -692,7 +692,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 17),
   ),
   _episode(
-    bucket: Bucket.yesterday,
+    daysAgo: 1,
     channel: 'Office Ladies',
     host: 'Jenna Fischer & Angela Kinsey',
     title: 'The Dundies: Fan Questions Answered',
@@ -701,7 +701,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration.zero,
   ),
   _episode(
-    bucket: Bucket.thisWeek,
+    daysAgo: 3,
     channel: 'Office Ladies',
     host: 'Jenna Fischer & Angela Kinsey',
     title: 'Casino Night: The One Where They Kiss',
@@ -710,7 +710,7 @@ final List<Episode> mockEpisodes = <Episode>[
     listened: Duration(minutes: 42),
   ),
   _episode(
-    bucket: Bucket.thisMonth,
+    daysAgo: 10,
     channel: 'Office Ladies',
     host: 'Jenna Fischer & Angela Kinsey',
     title: 'Diversity Day: Where It All Began',
@@ -724,16 +724,8 @@ final Map<String, int> _podcastIds = {};
 
 int _lastId = 0;
 
-const Map<Bucket, Duration> _ago = {
-  Bucket.today: Duration.zero,
-  Bucket.yesterday: Duration(days: 1),
-  Bucket.thisWeek: Duration(days: 3),
-  Bucket.thisMonth: Duration(days: 10),
-  Bucket.earlier: Duration(days: 60),
-};
-
 Episode _episode({
-  required Bucket bucket,
+  required int daysAgo,
   required String channel,
   required String host,
   required String title,
@@ -752,7 +744,7 @@ Episode _episode({
     channel: Channel(id: channelId, title: channel, author: host, image: image),
     title: title,
     image: image,
-    publishedAt: DateTime.now().subtract(_ago[bucket]!),
+    publishedAt: DateTime.now().subtract(Duration(days: daysAgo)),
     duration: total.inSeconds,
     position: listened.inSeconds,
     completed: false,

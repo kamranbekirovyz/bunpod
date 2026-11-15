@@ -30,7 +30,7 @@ class FeedEpisodeList extends StatelessWidget {
         else ...[
           for (final (int i, FeedDateGroup group) in feed.groups.indexed)
             FeedDateGroupSliver(
-              key: ValueKey<Bucket>(group.bucket),
+              key: ValueKey<String>(group.label),
               group: group,
               arrivals: feed.arrivals,
               first: i == 0,

@@ -5,13 +5,15 @@ class FeedDateGroupSliver extends StatelessWidget {
   const FeedDateGroupSliver({
     super.key,
     required this.group,
-    required this.arrivals,
     required this.first,
+    this.arrivals = const {},
+    this.fromChannel = false,
   });
 
   final FeedDateGroup group;
-  final Map<int, int> arrivals;
   final bool first;
+  final Map<int, int> arrivals;
+  final bool fromChannel;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class FeedDateGroupSliver extends StatelessWidget {
       slivers: [
         SliverToBoxAdapter(
           child: FeedSectionHeader(
-            label: group.bucket.label,
+            label: group.label,
             count: episodes.length,
             topPadding: first ? 16 : 32,
           ),
@@ -48,6 +50,7 @@ class FeedDateGroupSliver extends StatelessWidget {
                   padding: const .only(bottom: 8),
                   child: FeedEpisodeCard(
                     episode: episode,
+                    fromChannel: fromChannel,
                   ),
                 ),
               );
