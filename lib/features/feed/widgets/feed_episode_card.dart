@@ -252,6 +252,8 @@ class _EpisodeCardState extends State<_EpisodeCard>
               children: [
                 Text(
                   (episode.channel?.title ?? '').toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: tt.labelSmall?.copyWith(
                     color: fg,
                     fontWeight: FontWeight.w700,
