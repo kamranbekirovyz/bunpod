@@ -1,7 +1,6 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:expressive_shapes/expressive_shapes.dart';
 
 class FeedSectionHeader extends StatelessWidget {
   const FeedSectionHeader({
@@ -25,12 +24,15 @@ class FeedSectionHeader extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 30,
             height: 30,
+            constraints: const BoxConstraints(minWidth: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             alignment: Alignment.center,
             decoration: ShapeDecoration(
               color: cs.primaryContainer,
-              shape: MaterialShapeBorder(shape: MaterialShapes.square),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: Text(
               '$count',
