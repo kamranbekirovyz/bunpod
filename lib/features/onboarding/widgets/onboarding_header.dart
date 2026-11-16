@@ -2,9 +2,7 @@ import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnboardingHeader extends StatelessWidget {
-  const OnboardingHeader({super.key, required this.minPicks});
-
-  final int minPicks;
+  const OnboardingHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +53,8 @@ class OnboardingHeader extends StatelessWidget {
         ),
         12.gap,
         Text(
-          'These are trending with listeners around you. Choose '
-          '$minPicks or more and we’ll shape your feed around them.',
+          'These are trending with listeners around you. Tap the ones '
+          'you like and we’ll shape your feed around them.',
           style: tt.bodyLarge?.copyWith(
             color: cs.onSurfaceVariant,
             height: 1.4,

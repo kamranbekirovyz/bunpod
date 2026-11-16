@@ -8,12 +8,10 @@ class OnboardingShowGrid extends StatelessWidget {
     super.key,
     required this.shows,
     required this.followPicksCubit,
-    required this.minPicks,
   });
 
   final List<ChannelPreview>? shows;
   final FollowPicksCubit followPicksCubit;
-  final int minPicks;
 
   static const SliverGridDelegate _gridDelegate =
       SliverGridDelegateWithFixedCrossAxisCount(
@@ -79,7 +77,7 @@ class OnboardingShowGrid extends StatelessWidget {
 
                             final bool unlocked =
                                 followPicksCubit.picked.contains(appleId) &&
-                                followPicksCubit.picked.length == minPicks;
+                                followPicksCubit.picked.length == 1;
 
                             unlocked
                                 ? HapticsHelper.medium()

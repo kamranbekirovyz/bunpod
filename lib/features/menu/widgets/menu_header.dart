@@ -1,11 +1,9 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 
-/// Menu page header: the user's avatar in a pill shape, with their name and
-/// email beside it.
 class MenuHeader extends StatelessWidget {
   const MenuHeader({super.key});
 
@@ -14,70 +12,72 @@ class MenuHeader extends StatelessWidget {
     final ColorScheme cs = Theme.of(context).colorScheme;
     final TextTheme tt = Theme.of(context).textTheme;
 
-    return Padding(
-      padding: const .symmetric(horizontal: 8),
-      child: Row(
-        children: [
-          ClipPath(
-            clipper: ShapeBorderClipper(
-              shape: MaterialShapeBorder(
-                shape: MaterialShapes.pill,
-              ),
-            ),
-            child: const SizedBox.square(
-              dimension: 64,
-              child: UserAvatar(),
-            ),
+    return Center(
+      widthFactor: 1,
+      child: ConstrainedBox(
+        // room for the back button, the rest is the chip's
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.sizeOf(context).width - 96,
+        ),
+        child: DecoratedBox(
+          decoration: ShapeDecoration(
+            color: cs.surfaceContainer,
+            shape: const StadiumBorder(),
           ),
-          16.gap,
-          Expanded(
-            child: BlocBuilder<UserCubit, User?>(
-              bloc: locator<UserCubit>(),
-              builder: (context, user) {
-                final bool loading = user == null;
-
-                return ShimmerScope(
-                  active: loading,
-                  child: ShimmerReveal(
-                    loading: loading,
-                    placeholder: Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        const ShimmerPlaceholder(width: 140, height: 18),
-                        8.gap,
-                        const ShimmerPlaceholder(width: 180, height: 12),
-                      ],
+          child: Padding(
+            padding: const .fromLTRB(3, 3, 10, 3),
+            child: Row(
+              mainAxisSize: .min,
+              children: [
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: MaterialShapeBorder(
+                      shape: MaterialShapes.cookie7Sided,
                     ),
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Text(
-                          user?.name ?? '',
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                          style: GoogleFonts.unbounded(
-                            textStyle: tt.titleMedium,
-                            fontWeight: .w700,
-                            letterSpacing: -0.3,
+                  ),
+                  child: const SizedBox.square(
+                    dimension: 22,
+                    child: UserAvatar(),
+                  ),
+                ),
+                6.gap,
+                Flexible(
+                  child: BlocBuilder<UserCubit, User?>(
+                    bloc: locator<UserCubit>(),
+                    builder: (context, user) {
+                      final bool loading = user == null;
+                      final String? name = user?.name?.trim();
+
+                      // no name, e.g. apple sign in
+                      final String label = name != null && name.isNotEmpty
+                          ? name
+                          : user?.email ?? '';
+
+                      return ShimmerScope(
+                        active: loading,
+                        child: ShimmerReveal(
+                          loading: loading,
+                          placeholder: const ShimmerPlaceholder(
+                            width: 72,
+                            height: 10,
                           ),
-                        ),
-                        if (user?.email case final String email)
-                          Text(
-                            email,
+                          child: Text(
+                            label,
                             maxLines: 1,
                             overflow: .ellipsis,
-                            style: tt.bodyMedium?.copyWith(
+                            style: tt.labelMedium?.copyWith(
                               color: cs.onSurfaceVariant,
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

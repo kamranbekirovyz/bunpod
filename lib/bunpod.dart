@@ -9,6 +9,7 @@ export 'features/player/player.dart';
 export 'features/channel/channel.dart';
 export 'features/downloads/downloads.dart';
 export 'features/subscriptions/subscriptions.dart';
+export 'features/opml_import/opml_import.dart';
 export 'features/menu/menu.dart';
 export 'features/profile/profile.dart';
 export 'features/versionarte/versionarte.dart';

@@ -20,7 +20,7 @@ class ExpressiveActionButton extends StatefulWidget {
   });
 
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color background;
   final Color foreground;
   final IconData? icon;

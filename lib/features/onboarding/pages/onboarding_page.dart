@@ -18,8 +18,6 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  static const int _minPicks = 3;
-
   late final TrendingCubit _trendingCubit;
   late final FollowPicksCubit _followPicksCubit;
 
@@ -37,6 +35,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
     super.dispose();
   }
 
+  Future<void> _import() async {
+    await Navigator.of(context).push(
+      const OpmlImportPage().asAdaptiveSheetRoute<void>(),
+    );
+    await locator<SubscriptionsCubit>().load();
+
+    final bool followsAny =
+        locator<SubscriptionsCubit>().state?.isNotEmpty ?? false;
+
+    if (followsAny && mounted) Navigator.of(context).pop(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<FollowPicksCubit, bool?>(
@@ -50,41 +60,48 @@ class _OnboardingPageState extends State<OnboardingPage> {
       child: Scaffold(
         body: Stack(
           children: [
-            CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: .fromLTRB(
-                    24,
-                    TopPadding.of(context) + 24,
-                    24,
-                    24,
-                  ),
-                  sliver: SliverToBoxAdapter(
-                    child: OnboardingHeader(
-                      minPicks: _minPicks,
+            ProgressiveFade(
+              edge: .bottomCenter,
+              inset: BottomPadding.of(context),
+              height: 96,
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: .fromLTRB(
+                      24,
+                      TopPadding.of(context) + 24,
+                      24,
+                      24,
+                    ),
+                    sliver: SliverToBoxAdapter(
+                      child: OnboardingHeader(),
                     ),
                   ),
-                ),
-                BlocBuilder<TrendingCubit, List<ChannelPreview>?>(
-                  bloc: _trendingCubit,
-                  builder: (context, trending) {
-                    return OnboardingShowGrid(
-                      shows: trending,
-                      followPicksCubit: _followPicksCubit,
-                      minPicks: _minPicks,
-                    );
-                  },
-                ),
-                // Clearance so the last row scrolls out from under the CTA.
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 132 + BottomPadding.of(context),
+                  SliverPadding(
+                    padding: const .fromLTRB(20, 0, 20, 28),
+                    sliver: SliverToBoxAdapter(
+                      child: OpmlImportEntryCard(onTap: _import),
+                    ),
                   ),
-                ),
-              ],
+                  BlocBuilder<TrendingCubit, List<ChannelPreview>?>(
+                    bloc: _trendingCubit,
+                    builder: (context, trending) {
+                      return OnboardingShowGrid(
+                        shows: trending,
+                        followPicksCubit: _followPicksCubit,
+                      );
+                    },
+                  ),
+                  // Clearance so the last row scrolls out from under the CTA.
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 120 + BottomPadding.of(context),
+                    ),
+                  ),
+                ],
+              ),
             ),
             OnboardingFollowButton(
-              minPicks: _minPicks,
               followPicksCubit: _followPicksCubit,
             ),
           ],

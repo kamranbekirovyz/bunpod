@@ -41,6 +41,9 @@ Future<void> setupLocator() async {
   locator.registerSingleton<OnboardingRemoteData>(
     useMocks ? const MockOnboardingRemoteData() : const OnboardingRemoteData(),
   );
+  locator.registerSingleton<OpmlImportRemoteData>(
+    useMocks ? const MockOpmlImportRemoteData() : const OpmlImportRemoteData(),
+  );
   locator.registerSingleton<ExploreRemoteData>(
     useMocks ? const MockExploreRemoteData() : const ExploreRemoteData(),
   );

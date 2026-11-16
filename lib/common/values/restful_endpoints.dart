@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:bunpod/bunpod.dart';
+import 'package:dio/dio.dart';
 
 class RestfulEndpoints {
   const RestfulEndpoints._();
@@ -70,6 +71,21 @@ class RestfulEndpoints {
       body: {
         'apple_ids': appleIds,
       },
+    );
+  }
+
+  static Endpoint importOpml({
+    required List<int> bytes,
+    required String fileName,
+  }) {
+    return Endpoint.post(
+      url: '${AppConfig.baseUrl}/subscriptions/import',
+      body: FormData.fromMap({
+        'file': MultipartFile.fromBytes(
+          bytes,
+          filename: fileName,
+        ),
+      }),
     );
   }
 

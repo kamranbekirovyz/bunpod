@@ -33,8 +33,7 @@ class _BodyState extends State<_Body> {
         BottomPadding.of(context),
       ),
       children: [
-        const MenuHeader(),
-        32.gap,
+        16.gap,
         MenuSection(
           label: 'Library',
           children: [
@@ -63,6 +62,21 @@ class _BodyState extends State<_Body> {
               title: 'Subscriptions',
               onTap: () {
                 Navigator.of(context).push(SubscriptionsPage.route());
+              },
+            ),
+            MenuTile(
+              icon: Icons.library_add_outlined,
+              title: 'Switch from another app',
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) {
+                      return const OpmlImportPage();
+                    },
+                  ),
+                );
+
+                locator<SubscriptionsCubit>().load();
               },
             ),
           ],
@@ -203,6 +217,10 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: const StyledBackButton(),
+      actions: [
+        const MenuHeader(),
+        16.gap,
+      ],
     );
   }
 
