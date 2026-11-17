@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 class Episode {
   const Episode({
     this.id,
+    this.feedUrl,
     this.channelId,
     this.channel,
     this.title,
@@ -17,7 +18,9 @@ class Episode {
     this.completed,
   });
 
-  final int? id;
+  // The item's guid, or its audio URL when it has none.
+  final String? id;
+  final String? feedUrl;
   final int? channelId;
   final Channel? channel;
   final String? title;
@@ -32,7 +35,8 @@ class Episode {
 
   factory Episode.fromJson(Map<String, dynamic> json) {
     return Episode(
-      id: json['id'],
+      id: json['id']?.toString(),
+      feedUrl: json['feed_url'],
       channelId: json['podcast_id'],
       channel: json['podcast'] == null
           ? null
@@ -52,6 +56,7 @@ class Episode {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'feed_url': feedUrl,
       'podcast_id': channelId,
       'podcast': channel?.toJson(),
       'title': title,
@@ -83,6 +88,7 @@ class Episode {
   Episode _copyWith({int? duration, num? position}) {
     return Episode(
       id: id,
+      feedUrl: feedUrl,
       channelId: channelId,
       channel: channel,
       title: title,

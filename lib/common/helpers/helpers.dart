@@ -10,3 +10,4 @@ export 'haptics_helper.dart';
 export 'contact_support.dart';
 export 'clear_stale_secure_storage.dart';
 export 'rss_parser.dart';
+export 'map_with_limit.dart';
