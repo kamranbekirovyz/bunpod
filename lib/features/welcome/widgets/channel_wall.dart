@@ -20,16 +20,15 @@ import 'package:motor/motor.dart';
 /// Under reduced-motion the morph is skipped: tiles render statically in their
 /// settled shape as soon as their image is ready.
 class ChannelWall extends StatelessWidget {
-  const ChannelWall({super.key, required this.channels});
+  const ChannelWall({super.key, required this.covers});
 
-  final List<MockChannel> channels;
+  final List<String> covers;
 
   /// Target on-screen tile size; the column count is chosen to land near it.
   static const double _targetTile = 118;
 
   /// Builds a gapless, full-bleed grid of square cells covering the [w]×[h] box.
-  /// Cells cycle through the available channels so the whole background fills.
-  static List<_TileSpec> _layoutFor(double w, double h, int channelCount) {
+  static List<_TileSpec> _layoutFor(double w, double h, int coverCount) {
     final int cols = (w / _targetTile).round().clamp(3, 5);
     final double cell = w / cols;
     final int rows = (h / cell).ceil();
@@ -44,7 +43,7 @@ class ChannelWall extends StatelessWidget {
             left: col * cell,
             top: row * cell,
             size: cell,
-            channelIndex: i % channelCount,
+            coverIndex: i % coverCount,
             shape: i % _FloatingTile.shapeCount,
           ),
         );
@@ -55,21 +54,21 @@ class ChannelWall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (channels.isEmpty) return const SizedBox.shrink();
+    if (covers.isEmpty) return const SizedBox.shrink();
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final List<_TileSpec> layout = _layoutFor(
           constraints.maxWidth,
           constraints.maxHeight,
-          channels.length,
+          covers.length,
         );
         return Stack(
           children: <Widget>[
             for (final _TileSpec spec in layout)
               _FloatingTile(
                 key: ValueKey<int>(spec.index),
-                channel: channels[spec.channelIndex],
+                cover: covers[spec.coverIndex],
                 spec: spec,
               ),
           ],
@@ -85,7 +84,7 @@ class _TileSpec {
     required this.left,
     required this.top,
     required this.size,
-    required this.channelIndex,
+    required this.coverIndex,
     required this.shape,
   });
 
@@ -97,7 +96,7 @@ class _TileSpec {
   final double top;
   final double size;
 
-  final int channelIndex;
+  final int coverIndex;
 
   /// Index into the shared settle-shape table.
   final int shape;
@@ -106,11 +105,11 @@ class _TileSpec {
 class _FloatingTile extends StatefulWidget {
   const _FloatingTile({
     super.key,
-    required this.channel,
+    required this.cover,
     required this.spec,
   });
 
-  final MockChannel channel;
+  final String cover;
   final _TileSpec spec;
 
   // The expressive shape each square settles into.
@@ -140,7 +139,7 @@ class _FloatingTileState extends State<_FloatingTile> {
   static const Duration _hold = Duration(milliseconds: 300);
 
   late final ImageProvider _provider = ExtendedNetworkImageProvider(
-    widget.channel.image,
+    widget.cover,
     cache: true,
   );
   ImageStream? _stream;
@@ -275,8 +274,8 @@ class _FloatingTileState extends State<_FloatingTile> {
           // Smooth fade-in over a seed-colored placeholder. The separate image
           // stream above still drives the shape-morph timing.
           child: SmoothImage(
-            url: widget.channel.image,
-            placeholderColor: widget.channel.seed,
+            url: widget.cover,
+            placeholderColor: ChannelColors.fallback,
           ),
         ),
       ),

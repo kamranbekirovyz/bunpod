@@ -45,11 +45,7 @@ class _SubscriptionRowState extends State<SubscriptionRow> {
     );
   }
 
-  void _toggle() {
-    final int? id = widget.channel.id;
-
-    if (id != null) _followCubit.toggle(id: id);
-  }
+  void _toggle() => _followCubit.toggle(widget.channel);
 
   void _onSucceeded(BuildContext context, Follow? follow) {
     final bool subscribed = follow?.subscribed == true;

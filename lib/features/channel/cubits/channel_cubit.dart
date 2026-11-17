@@ -5,12 +5,13 @@ class ChannelCubit extends Cubit<Channel?> {
   ChannelCubit() : super(null);
 
   Future<void> load({int? id, int? appleId}) async {
-    final ChannelRemoteData remote = locator<ChannelRemoteData>();
+    final PodcastIndexRemoteData podcastIndex =
+        locator<PodcastIndexRemoteData>();
 
     if (id != null) {
-      emit(await remote.channel(id: id));
+      emit(await podcastIndex.byFeedId(id));
     } else if (appleId != null) {
-      emit(await remote.channelByAppleId(appleId: appleId));
+      emit(await podcastIndex.byItunesId(appleId));
     }
   }
 }

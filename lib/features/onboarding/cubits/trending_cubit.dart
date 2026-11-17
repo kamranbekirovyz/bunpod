@@ -7,6 +7,6 @@ class TrendingCubit extends Cubit<List<ChannelPreview>?> {
   Future<void> load() async {
     emit(null);
 
-    emit(await locator<OnboardingRemoteData>().trending());
+    emit(await locator<ApplePodcastsRemoteData>().topShows());
   }
 }

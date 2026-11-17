@@ -1,8 +1,8 @@
 abstract final class AppValues {
   static String get title => 'BunPod';
 
-  /// What every mock waits before answering, so the loading states are visible.
-  static const Duration mockDelay = Duration(milliseconds: 250);
+  // Podcast Index asks clients to name themselves.
+  static const String userAgent = 'BunPod/1.0';
 
   static String get termsUrl => 'https://bunpod.app/terms';
   static String get privacyUrl => 'https://bunpod.app/privacy';

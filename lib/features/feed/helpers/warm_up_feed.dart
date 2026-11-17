@@ -22,20 +22,14 @@ Future<void> _warmUp(BuildContext context) async {
   final SubscriptionsCubit subscriptions = locator<SubscriptionsCubit>();
   final FeedCubit feed = locator<FeedCubit>();
 
-  await subscriptions.restore();
-  if (subscriptions.state == null) subscriptions.load().ignore();
+  await subscriptions.load();
+  await feed.restore(subscriptions.state ?? []);
 
-  await feed.restore();
-
-  // With a cache, the feed page starts the sync. Without one there is
-  // nothing to show yet, so fetch it here.
-  final bool cached = feed.state.feedOf(null) != null;
-  if (!cached) feed.setChannelId(null);
-
-  await Future.wait([
-    _until(subscriptions, (channels) => channels != null),
-    if (!cached) _until(feed, (state) => state.feedOf(null) != null),
-  ]);
+  // Nothing stored yet means the feed page has nothing to sync from.
+  if (feed.state.feedOf(null) == null) {
+    feed.setChannelId(null);
+    await _until(feed, (state) => state.feedOf(null) != null);
+  }
 
   if (!context.mounted) return;
 

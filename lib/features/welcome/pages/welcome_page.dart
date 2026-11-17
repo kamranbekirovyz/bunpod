@@ -1,14 +1,8 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({
-    super.key,
-    this.farewell = .none,
-  });
-
-  final Farewell farewell;
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +13,8 @@ class WelcomePage extends StatelessWidget {
       body: Stack(
         fit: .expand,
         children: <Widget>[
-          ChannelWall(
-            channels: mockChannels,
+          const ChannelWall(
+            covers: welcomeCovers,
           ),
 
           // Scrim
@@ -44,7 +38,7 @@ class WelcomePage extends StatelessWidget {
                       const WelcomeLogo(),
                       const SizedBox(height: 20),
                       Text(
-                        farewell.title,
+                        'Podcasts, meet expression.',
                         style: text.headlineMedium?.copyWith(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w700,
@@ -54,7 +48,7 @@ class WelcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        farewell.subtitle,
+                        'Pick a few shows and press play.',
                         style: text.bodyLarge?.copyWith(
                           color: cs.onSurfaceVariant,
                         ),
@@ -62,17 +56,7 @@ class WelcomePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 28),
-                  _Button(
-                    farewell: farewell,
-                  ),
-                  // Android signs in straight from this button, so this is the
-                  // last screen before an account exists and the small print
-                  // has to be here. iOS opens [AuthSheet] instead, which
-                  // carries its own copy right above the buttons that matter.
-                  if (defaultTargetPlatform == .android) ...[
-                    12.gap,
-                    const LegalNote(),
-                  ],
+                  const _Button(),
                   const BottomPadding(),
                 ],
               ),
@@ -85,28 +69,30 @@ class WelcomePage extends StatelessWidget {
 }
 
 class _Button extends StatelessWidget {
-  const _Button({
-    required this.farewell,
-  });
+  const _Button();
 
-  final Farewell farewell;
+  Future<void> _start(BuildContext context) async {
+    await locator<PreferencesLocalData>().cacheWelcomed();
+
+    if (!context.mounted) return;
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(
+        builder: (_) {
+          return const FeedPage();
+        },
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bool isAndroid = defaultTargetPlatform == .android;
-
-    // Android has only Google Sign In, no need to open AuthSheet
-    if (isAndroid) {
-      return GoogleSignInButton();
-    }
-
     final ColorScheme cs = Theme.of(context).colorScheme;
     final TextTheme text = Theme.of(context).textTheme;
 
     return FilledButton(
-      onPressed: () {
-        AuthSheet.show(context);
-      },
+      onPressed: () => _start(context),
       style: FilledButton.styleFrom(
         backgroundColor: cs.primary,
         foregroundColor: cs.onPrimary,
@@ -119,11 +105,9 @@ class _Button extends StatelessWidget {
       child: Row(
         mainAxisAlignment: .center,
         children: <Widget>[
-          Text(
-            farewell.action,
-          ),
+          const Text('Start listening'),
           8.gap,
-          Icon(
+          const Icon(
             Icons.arrow_forward_rounded,
             size: 20,
           ),

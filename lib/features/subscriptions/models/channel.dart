@@ -11,7 +11,7 @@ class Channel {
     this.image,
     this.language,
     this.lastEpisodeAt,
-    this.subscribed,
+    this.feedUrl,
   });
 
   final int? id;
@@ -22,7 +22,7 @@ class Channel {
   final String? image;
   final String? language;
   final DateTime? lastEpisodeAt;
-  final bool? subscribed;
+  final String? feedUrl;
 
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
@@ -36,7 +36,26 @@ class Channel {
       lastEpisodeAt: DateTime.tryParse(
         json['last_episode_at'] ?? '',
       ),
-      subscribed: json['subscribed'],
+      feedUrl: json['feed_url'],
+    );
+  }
+
+  factory Channel.fromPodcastIndex(Map<String, dynamic> json) {
+    final int? newest = json['newestItemPublishTime'];
+    final String? artwork = json['artwork'];
+
+    return Channel(
+      id: json['id'],
+      appleId: json['itunesId'],
+      feedUrl: json['url'],
+      title: json['title'],
+      author: json['author'],
+      description: json['description'],
+      image: artwork == null || artwork.isEmpty ? json['image'] : artwork,
+      language: json['language'],
+      lastEpisodeAt: newest == null || newest == 0
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(newest * 1000),
     );
   }
 
@@ -50,7 +69,7 @@ class Channel {
       'image': image,
       'language': language,
       'last_episode_at': lastEpisodeAt?.toIso8601String(),
-      'subscribed': subscribed,
+      'feed_url': feedUrl,
     };
   }
 
@@ -62,8 +81,6 @@ class Channel {
     return schemeOf(context, id: id, image: image);
   }
 
-  /// Building a scheme from a seed is slow, so each one is built once per
-  /// brightness and reused.
   static ColorScheme schemeOf(
     BuildContext context, {
     required int? id,

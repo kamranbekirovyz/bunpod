@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
-import 'package:material_ui/material_ui.dart' hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
+import 'package:material_ui/material_ui.dart'
+    hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 
@@ -49,29 +50,33 @@ class FeedAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const SizedBox(width: 8),
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return MenuPage();
-                  },
-                ),
-              );
-            },
-            customBorder: MaterialShapeBorder(
-              shape: MaterialShapes.pill,
-            ),
-            child: ClipPath(
-              clipper: ShapeBorderClipper(
-                shape: MaterialShapeBorder(
-                  shape: MaterialShapes.pill,
-                ),
+          Tooltip(
+            message: 'Menu',
+            child: Material(
+              color: cs.surfaceContainerHigh,
+              shape: MaterialShapeBorder(
+                shape: MaterialShapes.pill,
               ),
-              child: const SizedBox(
-                width: 40,
-                height: 40,
-                child: UserAvatar(initials: false),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const MenuPage();
+                      },
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Icon(
+                    Icons.menu_rounded,
+                    color: cs.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ),
               ),
             ),
           ),

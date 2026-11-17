@@ -16,19 +16,23 @@ class ChannelFollowCubit extends Cubit<Follow?> {
         previous?.subscribed == current?.subscribed;
   }
 
-  void set(bool? subscribed) => emit(_idle(subscribed));
+  SubscriptionsLocalData get _local => locator<SubscriptionsLocalData>();
 
-  Future<void> toggle({required int id}) async {
+  Future<void> load({required int id}) async {
+    emit(_idle(await _local.isSubscribed(id)));
+  }
+
+  Future<void> toggle(Channel channel) async {
     final Follow? follow = state;
-    if (follow == null || follow.busy) return;
+    final int? id = channel.id;
+    if (follow == null || follow.busy || id == null) return;
 
     final bool next = !follow.subscribed;
-    final ChannelRemoteData remote = locator<ChannelRemoteData>();
 
     emit((subscribed: next, busy: true));
 
     try {
-      next ? await remote.subscribe(id: id) : await remote.unsubscribe(id: id);
+      next ? await _local.subscribe([channel]) : await _local.unsubscribe(id);
       emit((subscribed: next, busy: false));
     } catch (_) {
       emit((subscribed: !next, busy: false));

@@ -11,5 +11,5 @@ class Playback {
   final Episode? episode;
   final bool playing;
   final bool loading;
-  final Map<int, Duration> positions;
+  final Map<String, Duration> positions;
 }

@@ -5,21 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LaunchCubit extends Cubit<LaunchDestination?> {
   LaunchCubit() : super(null);
 
+  // Whatever doesn't move in time moves on the next launch.
+  static const Duration _migrationBudget = Duration(seconds: 5);
+
   Future<void> resolve() async {
     try {
-      final bool authenticated =
-          await locator<SecureStorageLocalData>().accessToken != null;
-
-      emit(
-        authenticated ? .preparing : .welcome,
+      await locator<LegacySubscriptionsMigration>().run().timeout(
+        _migrationBudget,
       );
-    } catch (error, stackTrace) {
-      // Never leave the gate blank. Welcome lets the user sign in again.
-      logarte.log('launch resolve failed: $error');
-      logarte.log('stack trace: $stackTrace');
-
-      emit(.welcome);
+    } catch (error) {
+      logarte.log('legacy subscriptions migration cut short: $error');
     }
+
+    final bool welcomed = locator<PreferencesLocalData>().welcomed;
+
+    emit(welcomed ? .preparing : .welcome);
   }
 
   void prepared() {

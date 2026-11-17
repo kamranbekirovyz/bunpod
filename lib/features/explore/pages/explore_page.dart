@@ -35,7 +35,6 @@ class _ExplorePageState extends State<ExplorePage> {
     super.initState();
     _trendingCubit = ExploreTrendingCubit()..load();
     _searchCubit = ExploreSearchCubit();
-    locator<ExploreCategoriesCubit>().load();
   }
 
   @override
@@ -86,15 +85,10 @@ class _ExplorePageState extends State<ExplorePage> {
           if (_browsing)
             Padding(
               padding: const .only(bottom: 16),
-              child: BlocBuilder<ExploreCategoriesCubit, List<Category>?>(
-                bloc: locator<ExploreCategoriesCubit>(),
-                builder: (context, categories) {
-                  return ExploreCategoryChips(
-                    categories: categories ?? [],
-                    selected: _category,
-                    onSelected: _pickCategory,
-                  );
-                },
+              child: ExploreCategoryChips(
+                categories: exploreCategories,
+                selected: _category,
+                onSelected: _pickCategory,
               ),
             ),
           Expanded(

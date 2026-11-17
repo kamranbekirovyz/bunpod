@@ -43,11 +43,9 @@ abstract final class Bootstrap {
     await precacheLogos();
     await precacheFonts();
 
-    if (!AppConfig.useMocks) {
-      await Firebase.initializeApp(
-        options: FirebaseConfig.currentPlatform,
-      );
-    }
+    await Firebase.initializeApp(
+      options: FirebaseConfig.currentPlatform,
+    );
 
     UserOrient.configure(
       apiKey: AppConfig.userOrientApiKey,
@@ -57,6 +55,5 @@ abstract final class Bootstrap {
     );
 
     await setupLocator();
-    await clearStaleSecureStorage();
   }
 }

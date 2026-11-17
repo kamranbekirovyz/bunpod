@@ -25,10 +25,6 @@ dependencies:
   get_it: ^9.3.0
   dio: ^5.11.1
   firebase_core: ^5.1.0
-  firebase_auth: ^7.0.1
-  google_sign_in: ^7.2.0
-  sign_in_with_apple: ^8.2.0
-  flutter_secure_storage: ^11.2.0
   crypto: ^3.0.6
   url_launcher: ^6.3.2
   package_info_plus: ^10.2.1
@@ -63,6 +59,7 @@ dependencies:
   firebase_analytics: ^13.0.1
   drift: ^2.35.3
   drift_flutter: ^0.3.1
+  xml: ^7.0.1
   file_picker: ^13.4.0
 
 

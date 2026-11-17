@@ -10,8 +10,8 @@ class ExploreTrendingCubit extends Cubit<List<ChannelPreview>?> {
     _categoryId = categoryId;
     emit(null);
 
-    final List<ChannelPreview> shows = await locator<ExploreRemoteData>()
-        .trending(categoryId: categoryId);
+    final List<ChannelPreview> shows = await locator<ApplePodcastsRemoteData>()
+        .topShows(genre: categoryId);
 
     if (categoryId == _categoryId) emit(shows);
   }

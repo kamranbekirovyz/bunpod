@@ -7,68 +7,42 @@ import 'package:versionarte/versionarte.dart';
 final GetIt locator = GetIt.instance;
 
 Future<void> setupLocator() async {
-  final bool useMocks = AppConfig.useMocks;
-
-  locator.registerSingleton<SecureStorageLocalData>(
-    const SecureStorageLocalData(),
+  locator.registerSingleton<Dio>(buildDio());
+  locator.registerSingleton<PodcastIndexRemoteData>(
+    const PodcastIndexRemoteData(),
   );
+  locator.registerSingleton<ApplePodcastsRemoteData>(
+    const ApplePodcastsRemoteData(),
+  );
+  locator.registerSingleton<RssRemoteData>(const RssRemoteData());
+
   locator.registerSingleton<PreferencesLocalData>(
     PreferencesLocalData(
       sharedPreferences: await SharedPreferences.getInstance(),
     ),
   );
-  locator.registerSingleton<ThemeModeCubit>(ThemeModeCubit());
-  locator.registerSingleton<ChannelColorsCubit>(ChannelColorsCubit());
-  locator.registerSingleton<SocialSignInService>(
-    useMocks ? const MockSocialSignInService() : const SocialSignInService(),
-  );
-  locator.registerSingleton<AuthRemoteData>(
-    useMocks ? const MockAuthRemoteData() : const AuthRemoteData(),
-  );
   locator.registerSingleton<AppDatabase>(AppDatabase());
-  locator.registerSingleton<FeedLocalData>(const FeedLocalData());
   locator.registerSingleton<SubscriptionsLocalData>(
     const SubscriptionsLocalData(),
   );
-  locator.registerSingleton<FeedRemoteData>(
-    useMocks ? const MockFeedRemoteData() : const FeedRemoteData(),
-  );
-  locator.registerSingleton<SubscriptionsRemoteData>(
-    useMocks
-        ? const MockSubscriptionsRemoteData()
-        : const SubscriptionsRemoteData(),
-  );
-  locator.registerSingleton<OnboardingRemoteData>(
-    useMocks ? const MockOnboardingRemoteData() : const OnboardingRemoteData(),
-  );
-  locator.registerSingleton<OpmlImportRemoteData>(
-    useMocks ? const MockOpmlImportRemoteData() : const OpmlImportRemoteData(),
-  );
-  locator.registerSingleton<ExploreRemoteData>(
-    useMocks ? const MockExploreRemoteData() : const ExploreRemoteData(),
-  );
-  locator.registerSingleton<ChannelRemoteData>(
-    useMocks ? const MockChannelRemoteData() : const ChannelRemoteData(),
-  );
-  locator.registerSingleton<PlaybackRemoteData>(
-    useMocks ? const MockPlaybackRemoteData() : const PlaybackRemoteData(),
-  );
-  locator.registerSingleton<ProfileRemoteData>(
-    useMocks ? const MockProfileRemoteData() : const ProfileRemoteData(),
+  locator.registerSingleton<EpisodesLocalData>(const EpisodesLocalData());
+  locator.registerSingleton<PlaybackLocalData>(const PlaybackLocalData());
+
+  locator.registerSingleton<FeedSync>(FeedSync());
+  locator.registerSingleton<OpmlImporter>(const OpmlImporter());
+  locator.registerSingleton<LegacySubscriptionsMigration>(
+    const LegacySubscriptionsMigration(),
   );
   locator.registerSingleton<PlayerHandler>(await PlayerHandler.init());
   locator.registerSingleton<VersionarteProvider>(
-    useMocks
-        ? const MockVersionarteProvider()
-        : const RemoteConfigVersionarteProvider(),
+    const RemoteConfigVersionarteProvider(),
   );
+
+  locator.registerSingleton<ThemeModeCubit>(ThemeModeCubit());
+  locator.registerSingleton<ChannelColorsCubit>(ChannelColorsCubit());
   locator.registerSingleton<VersionarteCubit>(VersionarteCubit());
   locator.registerSingleton<ChangelogCubit>(ChangelogCubit());
-  locator.registerSingleton<FeedCubit>(FeedCubit());
   locator.registerSingleton<SubscriptionsCubit>(SubscriptionsCubit());
-  locator.registerSingleton<ExploreCategoriesCubit>(ExploreCategoriesCubit());
+  locator.registerSingleton<FeedCubit>(FeedCubit());
   locator.registerSingleton<PlayerCubit>(PlayerCubit());
-  locator.registerSingleton<UserCubit>(UserCubit());
-  // Last, since the interceptor reads tokens from the locator.
-  locator.registerSingleton<Dio>(buildDio());
 }
