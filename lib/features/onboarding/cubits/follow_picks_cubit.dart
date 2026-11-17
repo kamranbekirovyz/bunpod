@@ -24,7 +24,15 @@ class FollowPicksCubit extends Cubit<bool?> {
   Future<void> follow() async {
     emit(null);
 
-    await locator<OnboardingRemoteData>().subscribeMany(picked.toList());
+    final PodcastIndexRemoteData podcastIndex =
+        locator<PodcastIndexRemoteData>();
+    final List<Channel?> channels = await Future.wait([
+      for (final int appleId in picked) podcastIndex.byItunesId(appleId),
+    ]);
+
+    await locator<SubscriptionsLocalData>().subscribe(
+      channels.nonNulls.toList(),
+    );
 
     emit(true);
   }

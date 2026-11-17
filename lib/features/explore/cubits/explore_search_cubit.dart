@@ -47,8 +47,8 @@ class ExploreSearchCubit extends Cubit<ExploreSearch> {
 
     yield (query: query, results: const [], loading: true);
 
-    final List<ChannelPreview> results = await locator<ExploreRemoteData>()
-        .search(query);
+    final List<ChannelPreview> results =
+        await locator<ApplePodcastsRemoteData>().search(query);
 
     yield (query: query, results: results, loading: false);
   }
