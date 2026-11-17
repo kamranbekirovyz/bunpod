@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const String _lastEpisode = 'last_episode';
 const String _themeMode = 'theme_mode';
-const String _secureStorageCleared = 'secure_storage_cleared';
 const String _channelSeeds = 'channel_seeds';
 const String _lastSeenVersion = 'last_seen_version';
+const String _welcomed = 'welcomed';
 
 class PreferencesLocalData {
   const PreferencesLocalData({required this.sharedPreferences});
@@ -27,14 +27,6 @@ class PreferencesLocalData {
       _lastEpisode,
       jsonEncode(episode.toJson()),
     );
-  }
-
-  bool get secureStorageCleared {
-    return sharedPreferences.getBool(_secureStorageCleared) ?? false;
-  }
-
-  Future<void> cacheSecureStorageCleared() {
-    return sharedPreferences.setBool(_secureStorageCleared, true);
   }
 
   ThemeMode get themeMode {
@@ -77,7 +69,9 @@ class PreferencesLocalData {
     return sharedPreferences.setString(_lastSeenVersion, version);
   }
 
-  Future<void> clearUser() async {
-    await sharedPreferences.remove(_lastEpisode);
+  bool get welcomed => sharedPreferences.getBool(_welcomed) ?? false;
+
+  Future<void> cacheWelcomed() {
+    return sharedPreferences.setBool(_welcomed, true);
   }
 }
