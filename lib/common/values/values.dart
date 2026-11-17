@@ -5,3 +5,4 @@ export 'firebase_config.dart';
 export 'shape_values.dart';
 export 'restful_endpoints.dart';
 export 'podcast_index_endpoints.dart';
+export 'apple_podcasts_endpoints.dart';
