@@ -20,7 +20,7 @@ class OpmlSuggestionsCubit extends Cubit<OpmlSuggestionsState> {
     );
 
     try {
-      await locator<ChannelRemoteData>().subscribe(id: id);
+      await locator<SubscriptionsLocalData>().subscribe([option]);
     } catch (_) {
       emit(
         OpmlSuggestionsState(

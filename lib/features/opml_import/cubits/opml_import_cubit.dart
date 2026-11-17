@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bunpod/bunpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +19,10 @@ class OpmlImportCubit extends Cubit<ViewState<OpmlImport>> {
 
     emit(
       await ViewState.guard(() async {
-        return locator<OpmlImportRemoteData>().import(
-          bytes: await files.first.readAsBytes(),
-          fileName: files.first.name,
+        final List<int> bytes = await files.first.readAsBytes();
+
+        return locator<OpmlImporter>().import(
+          utf8.decode(bytes, allowMalformed: true),
         );
       }),
     );
