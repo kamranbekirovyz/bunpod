@@ -9,15 +9,19 @@ class SubscriptionsLocalData {
   Future<List<Channel>> subscriptions() async {
     final List<Subscription> rows =
         await (database.select(database.subscriptions)..orderBy([
-              (row) => OrderingTerm(
-                expression: row.lastEpisodeAt,
-                mode: .desc,
-                nulls: .last,
-              ),
+              (row) {
+                return OrderingTerm(
+                  expression: row.lastEpisodeAt,
+                  mode: .desc,
+                  nulls: .last,
+                );
+              },
             ]))
             .get();
 
-    return [for (final Subscription row in rows) _channel(row)];
+    return [
+      for (final Subscription row in rows) _channel(row),
+    ];
   }
 
   Future<bool> isSubscribed(int channelId) async {

@@ -40,7 +40,6 @@ class Channel {
     );
   }
 
-  // `artwork` is the feed's own cover, `image` often a smaller fallback.
   factory Channel.fromPodcastIndex(Map<String, dynamic> json) {
     final int? newest = json['newestItemPublishTime'];
     final String? artwork = json['artwork'];
@@ -82,8 +81,6 @@ class Channel {
     return schemeOf(context, id: id, image: image);
   }
 
-  /// Building a scheme from a seed is slow, so each one is built once per
-  /// brightness and reused.
   static ColorScheme schemeOf(
     BuildContext context, {
     required int? id,

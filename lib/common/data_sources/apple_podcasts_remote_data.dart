@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:bunpod/bunpod.dart';
 import 'package:dio/dio.dart';
 
-// Apple errors for countries without Apple Podcasts, so calls retry in the US.
 class ApplePodcastsRemoteData {
   const ApplePodcastsRemoteData();
 
