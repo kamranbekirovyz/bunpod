@@ -33,6 +33,12 @@
 - [ ] Localization
 - [ ] Force update mechanism
 
+## Run it
+
+1. Get a free API key and secret at [api.podcastindex.org](https://api.podcastindex.org).
+2. Copy `local.example.json` to `local.json` and fill them in. It's gitignored, so your keys stay on your machine.
+3. `flutter run --dart-define-from-file=local.json`
+
 ## License
 
 Copyright (c) 2025-2026 Kamran Bekirov. All rights reserved. The source is public for viewing only. See [LICENSE](LICENSE).
