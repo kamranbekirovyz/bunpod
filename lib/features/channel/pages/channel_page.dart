@@ -54,15 +54,18 @@ class _ChannelPageState extends State<ChannelPage> {
 
     final Channel? channel = _channelCubit.state;
     final int? id = channel?.id;
+    if (channel == null || id == null) return;
 
-    _followCubit.set(channel?.subscribed);
-    if (id != null) await _episodesCubit.load(id: id);
+    await Future.wait([
+      _followCubit.load(id: id),
+      _episodesCubit.load(channel: channel),
+    ]);
   }
 
   void _toggleFollow() {
-    final int? id = _channelCubit.state?.id;
+    final Channel? channel = _channelCubit.state;
 
-    if (id != null) _followCubit.toggle(id: id);
+    if (channel != null) _followCubit.toggle(channel);
   }
 
   @override

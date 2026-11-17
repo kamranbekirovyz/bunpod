@@ -1,10 +1,10 @@
 import 'package:bunpod/bunpod.dart';
 
 class ChannelEpisodesCubit extends PagedCubit<Episode> {
-  late int _id;
+  late Channel _channel;
 
-  Future<void> load({required int id}) {
-    _id = id;
+  Future<void> load({required Channel channel}) {
+    _channel = channel;
 
     return refresh();
   }
@@ -13,9 +13,14 @@ class ChannelEpisodesCubit extends PagedCubit<Episode> {
   Future<List<Episode>> fetch({
     required int offset,
     required int limit,
-  }) {
-    return locator<ChannelRemoteData>().episodes(
-      id: _id,
+  }) async {
+    final String? feedUrl = _channel.feedUrl;
+    if (feedUrl == null) return const [];
+
+    if (offset == 0) await locator<FeedSync>().sync(_channel);
+
+    return locator<EpisodesLocalData>().episodes(
+      feedUrls: [feedUrl],
       offset: offset,
       limit: limit,
     );
