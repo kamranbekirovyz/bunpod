@@ -12,7 +12,7 @@ class FeedDateGroupSliver extends StatelessWidget {
 
   final FeedDateGroup group;
   final bool first;
-  final Map<int, int> arrivals;
+  final Map<String, int> arrivals;
   final bool fromChannel;
 
   @override
@@ -35,7 +35,7 @@ class FeedDateGroupSliver extends StatelessWidget {
             // Keeps each card's state when new episodes push it down.
             findChildIndexCallback: (key) {
               final int index = episodes.indexWhere((episode) {
-                return ValueKey<int?>(episode.id) == key;
+                return ValueKey<String?>(episode.id) == key;
               });
 
               return index < 0 ? null : index;
@@ -44,7 +44,7 @@ class FeedDateGroupSliver extends StatelessWidget {
               final Episode episode = episodes[index];
 
               return FeedArrival(
-                key: ValueKey<int?>(episode.id),
+                key: ValueKey<String?>(episode.id),
                 order: arrivals[episode.id],
                 child: Padding(
                   padding: const .only(bottom: 8),

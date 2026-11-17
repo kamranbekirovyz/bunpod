@@ -8,14 +8,14 @@ class Feed {
   }) : groups = FeedDateGroup.group(episodes),
        arrivals = {
          for (final (int i, Episode episode) in arrived.indexed)
-           if (episode.id case final int id) id: i,
+           if (episode.id case final String id) id: i,
        };
 
   final List<Episode> episodes;
   final List<FeedDateGroup> groups;
 
   /// Episodes new since the cached copy, by the order they arrive in.
-  final Map<int, int> arrivals;
+  final Map<String, int> arrivals;
 
   /// The same feed with its arrivals already shown.
   Feed get settled => arrivals.isEmpty ? this : Feed(episodes);

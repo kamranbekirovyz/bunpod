@@ -20,10 +20,11 @@ class FeedCubit extends Cubit<FeedState> {
   /// Channels opened this session. Each syncs once, then refreshes on pull.
   final Set<int?> _opened = {};
 
-  /// The followed channels the feeds were last kept in step with.
-  Set<int>? _channels;
+  List<Channel>? _channels;
 
-  FeedLocalData get _local => locator<FeedLocalData>();
+  EpisodesLocalData get _local => locator<EpisodesLocalData>();
+
+  FeedSync get _feedSync => locator<FeedSync>();
 
   final _channelId = BehaviorSubject<int?>();
 
@@ -44,42 +45,50 @@ class FeedCubit extends Cubit<FeedState> {
     return super.close();
   }
 
-  /// Puts every cached feed in the state at once, so each tab opens
   /// instantly.
-  Future<void> restore() async {
-    final Map<int?, List<Episode>> cached = await _local.feeds();
+  Future<void> restore(List<Channel> channels) async {
+    _channels = channels;
 
-    emit(
-      FeedState(
-        feeds: {
-          for (final MapEntry(:key, :value) in cached.entries) key: Feed(value),
-          ...state.feeds,
-        },
-      ),
-    );
+    final Map<int?, Feed> stored = {};
+    for (final int? id in [null, for (final Channel c in channels) c.id]) {
+      final List<Episode>? episodes = await _stored(id);
+      if (episodes != null) stored[id] = Feed(episodes);
+    }
+
+    emit(FeedState(feeds: {...stored, ...state.feeds}));
   }
 
   Future<void> refresh() {
-    return _sync(channelId).timeout(_refreshTimeout, onTimeout: () {});
+    return _sync(
+      channelId,
+      force: true,
+    ).timeout(_refreshTimeout, onTimeout: () {});
   }
 
   /// Keeps the feeds in step with the subscriptions. Unfollowed channels
   /// lose their feeds, and "All" syncs again to pick up or shed episodes.
   Future<void> syncChannels(List<Channel> channels) async {
-    final Set<int> ids = {for (final Channel channel in channels) ?channel.id};
-    final Set<int>? previous = _channels;
-    _channels = ids;
+    final List<Channel>? previous = _channels;
+    _channels = channels;
 
-    if (previous == null || setEquals(previous, ids)) return;
+    if (previous == null || setEquals(_ids(previous), _ids(channels))) return;
 
-    final Set<int> removed = previous.difference(ids);
-    _opened.removeAll(removed);
+    final Set<int> kept = _ids(channels);
+    final List<Channel> removed = [
+      for (final Channel channel in previous)
+        if (!kept.contains(channel.id)) channel,
+    ];
+
+    _opened.removeAll(removed.map((channel) => channel.id));
     emit(
       FeedState(
-        feeds: {...state.feeds}..removeWhere((id, _) => removed.contains(id)),
+        feeds: {...state.feeds}
+          ..removeWhere((id, _) => removed.any((c) => c.id == id)),
       ),
     );
-    await _local.removeFeeds(removed);
+    await _local.removeFeeds({
+      for (final Channel channel in removed) ?channel.feedUrl,
+    });
 
     await _sync(null);
   }
@@ -98,41 +107,67 @@ class FeedCubit extends Cubit<FeedState> {
     if (feed != null) emit(state.withFeed(left, feed.settled));
   }
 
-  /// Shows the cached copy right away, then syncs it with the server.
   Future<void> _open(int? channelId) async {
     if (!_opened.add(channelId)) return;
 
     if (state.feedOf(channelId) == null) {
-      final List<Episode>? cached = await _local.feed(channelId: channelId);
-      if (cached != null && state.feedOf(channelId) == null) {
-        emit(state.withFeed(channelId, Feed(cached)));
+      final List<Episode>? stored = await _stored(channelId);
+      if (stored != null && state.feedOf(channelId) == null) {
+        emit(state.withFeed(channelId, Feed(stored)));
       }
     }
 
     await _sync(channelId);
   }
 
-  Future<void> _sync(int? channelId) async {
-    try {
-      final List<Episode> fresh = await locator<FeedRemoteData>().feed(
-        channelId: channelId,
-      );
-      await _local.cacheFeed(fresh, channelId: channelId);
+  Future<void> _sync(int? channelId, {bool force = false}) async {
+    final List<Channel> channels = _channelsOf(channelId);
 
-      final Feed? shown = state.feedOf(channelId);
-      final Feed feed = Feed(
-        fresh,
-        arrived: shown == null ? const [] : _arrived(shown.episodes, fresh),
-      );
+    await _feedSync.syncAll(channels, force: force);
 
-      emit(state.withFeed(channelId, feed));
-    } catch (error) {
-      logarte.log('feed $channelId sync failed: $error');
-    }
+    final List<Episode> fresh = await _local.episodes(
+      feedUrls: _feedUrls(channels),
+    );
+
+    final Feed? shown = state.feedOf(channelId);
+    final Feed feed = Feed(
+      fresh,
+      arrived: shown == null ? const [] : _arrived(shown.episodes, fresh),
+    );
+
+    emit(state.withFeed(channelId, feed));
+  }
+
+  Future<List<Episode>?> _stored(int? channelId) async {
+    final List<String> feedUrls = _feedUrls(_channelsOf(channelId));
+
+    if (!await _local.refreshed(feedUrls)) return null;
+
+    return _local.episodes(feedUrls: feedUrls);
+  }
+
+  List<Channel> _channelsOf(int? channelId) {
+    final List<Channel> channels = _channels ?? const [];
+    if (channelId == null) return channels;
+
+    return [
+      for (final Channel channel in channels)
+        if (channel.id == channelId) channel,
+    ];
+  }
+
+  List<String> _feedUrls(List<Channel> channels) {
+    return [for (final Channel channel in channels) ?channel.feedUrl];
+  }
+
+  Set<int> _ids(List<Channel> channels) {
+    return {for (final Channel channel in channels) ?channel.id};
   }
 
   List<Episode> _arrived(List<Episode> shown, List<Episode> fresh) {
-    final Set<int?> known = {for (final Episode episode in shown) episode.id};
+    final Set<String?> known = {
+      for (final Episode episode in shown) episode.id,
+    };
 
     return [
       for (final Episode episode in fresh)
