@@ -174,30 +174,13 @@ class _BodyState extends State<_Body> {
             MenuTile(
               icon: Icons.lightbulb_outlined,
               title: 'Suggest a feature',
-              onTap: () {
-                final User user = locator<UserCubit>().state!;
-                UserOrient.identify(
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                );
-
-                UserOrient.openBoard(context);
-              },
+              onTap: () => UserOrient.openBoard(context),
             ),
             MenuTile(
               icon: Icons.alternate_email_outlined,
               title: 'Report an issue',
               onTap: () => ContactSupport.open(context),
             ),
-          ],
-        ),
-        32.gap,
-        MenuSection(
-          label: 'Account',
-          children: [
-            const LogoutTile(),
-            const DeleteAccountTile(),
           ],
         ),
         64.gap,
@@ -217,10 +200,6 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: const StyledBackButton(),
-      actions: [
-        const MenuHeader(),
-        16.gap,
-      ],
     );
   }
 

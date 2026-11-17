@@ -5,14 +5,12 @@ import 'package:logarte/logarte.dart';
 Dio buildDio() {
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: AppConfig.baseUrl,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 20),
-      contentType: Headers.jsonContentType,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: {'User-Agent': AppValues.userAgent},
     ),
   );
 
-  dio.interceptors.add(AuthInterceptor());
   dio.interceptors.add(LogarteDioInterceptor(logarte));
 
   return dio;
