@@ -145,7 +145,7 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
       appBar: FeedAppBar(),
       body: Stack(
         children: [
-          FeedPages(
+          FeedTabView(
             header: _header,
             tabs: _tabs,
             onFeed: _pickPlaying,

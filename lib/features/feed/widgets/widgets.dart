@@ -8,5 +8,5 @@ export 'feed_docked_player.dart';
 export 'feed_channel_tabs.dart';
 export 'feed_now_playing.dart';
 export 'feed_now_playing_card.dart';
-export 'feed_pages.dart';
+export 'feed_tab_view.dart';
 export 'feed_section_header.dart';

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// One episode list per tab, scrolling under the header.
-class FeedPages extends StatelessWidget {
-  const FeedPages({
+class FeedTabView extends StatelessWidget {
+  const FeedTabView({
     super.key,
     required this.header,
     required this.tabs,
