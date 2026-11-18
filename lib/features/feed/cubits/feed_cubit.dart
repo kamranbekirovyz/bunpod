@@ -62,7 +62,7 @@ class FeedCubit extends Cubit<Map<int?, Feed>> {
   Future<void> refresh({
     required bool force,
   }) {
-    return sync(force: true).timeout(
+    return sync(force: force).timeout(
       AppValues.feedRefreshTimeout,
       onTimeout: () {},
     );
