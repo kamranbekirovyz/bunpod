@@ -23,7 +23,9 @@ class _AppResumeListenerState extends State<AppResumeListener> {
     super.initState();
 
     _listener = AppLifecycleListener(
-      onHide: () => _hidden = true,
+      onHide: () {
+        _hidden = true;
+      },
       onShow: () {
         // Shade only makes it inactive.
         if (!_hidden) return;

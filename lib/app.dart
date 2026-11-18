@@ -13,7 +13,9 @@ class App extends StatelessWidget {
         final ThemeMode themeMode = state;
 
         return AppResumeListener(
-          onResume: locator<FeedCubit>().refresh,
+          onResume: () {
+            locator<FeedCubit>().refresh(force: false);
+          },
           child: ChannelColors(
             child: MaterialApp(
               title: AppValues.title,

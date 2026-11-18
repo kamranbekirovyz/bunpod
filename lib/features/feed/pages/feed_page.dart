@@ -146,7 +146,9 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     return Scaffold(
       appBar: FeedAppBar(),
       body: ExpressiveRefreshIndicator(
-        onRefresh: locator<FeedCubit>().refresh,
+        onRefresh: () {
+          return locator<FeedCubit>().refresh(force: true);
+        },
         notificationPredicate: (notification) {
           return notification.depth == 1;
         },

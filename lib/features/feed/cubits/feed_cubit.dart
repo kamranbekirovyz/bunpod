@@ -59,9 +59,13 @@ class FeedCubit extends Cubit<Map<int?, Feed>> {
     emit({...stored, ...state});
   }
 
-  Future<void> refresh() {
-    return sync(force: true)
-        .timeout(AppValues.feedRefreshTimeout, onTimeout: () {});
+  Future<void> refresh({
+    required bool force,
+  }) {
+    return sync(force: true).timeout(
+      AppValues.feedRefreshTimeout,
+      onTimeout: () {},
+    );
   }
 
   /// Keeps the feeds in step with the subscriptions. Unfollowed channels
