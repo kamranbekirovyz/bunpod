@@ -12,32 +12,35 @@ class App extends StatelessWidget {
       builder: (context, state) {
         final ThemeMode themeMode = state;
 
-        return ChannelColors(
-          child: MaterialApp(
-            title: AppValues.title,
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            themeMode: themeMode,
-            theme: MaterialThemes.light,
-            darkTheme: MaterialThemes.dark,
-            scrollBehavior: const AlwaysScrollbarBehavior(),
-            builder: (context, child) {
-              final MediaQueryData mediaQueryData = MediaQuery.of(context);
+        return AppResumeListener(
+          onResume: locator<FeedCubit>().refresh,
+          child: ChannelColors(
+            child: MaterialApp(
+              title: AppValues.title,
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              themeMode: themeMode,
+              theme: MaterialThemes.light,
+              darkTheme: MaterialThemes.dark,
+              scrollBehavior: const AlwaysScrollbarBehavior(),
+              builder: (context, child) {
+                final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-              return MediaQuery(
-                data: mediaQueryData.copyWith(
-                  textScaler: mediaQueryData.textScaler.clamp(
-                    maxScaleFactor: 1.1,
+                return MediaQuery(
+                  data: mediaQueryData.copyWith(
+                    textScaler: mediaQueryData.textScaler.clamp(
+                      maxScaleFactor: 1.1,
+                    ),
                   ),
-                ),
-                // Above the Navigator, so the update notice and the two blocking
-                // screens sit over every route without any of them knowing.
-                child: VersionarteWrapper(
-                  child: child!,
-                ),
-              );
-            },
-            home: const LaunchGate(),
+                  // Above the Navigator, so the update notice and the two blocking
+                  // screens sit over every route without any of them knowing.
+                  child: VersionarteWrapper(
+                    child: child!,
+                  ),
+                );
+              },
+              home: const LaunchGate(),
+            ),
           ),
         );
       },
