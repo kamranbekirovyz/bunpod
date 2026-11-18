@@ -5,32 +5,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-class FeedCubit extends Cubit<FeedState> {
-  FeedCubit() : super(const FeedState()) {
+class FeedCubit extends Cubit<Map<int?, Feed>> {
+  FeedCubit() : super(const {}) {
     _subscriptions = [
       _channelId.listen(_open),
       _channelId.pairwise().listen(_settle),
     ];
   }
 
-  static const Duration _refreshTimeout = Duration(seconds: 15);
-
   late final List<StreamSubscription<Object?>> _subscriptions;
-
-  /// Channels opened this session. Each syncs once, then refreshes on pull.
-  final Set<int?> _opened = {};
 
   List<Channel>? _channels;
 
-  EpisodesLocalData get _local => locator<EpisodesLocalData>();
-
-  FeedSync get _feedSync => locator<FeedSync>();
+  Future<void>? _running;
 
   final _channelId = BehaviorSubject<int?>();
+  final _syncing = BehaviorSubject<bool>.seeded(false);
 
   Stream<int?> get channelId$ => _channelId.stream;
+  Stream<bool> get syncing$ => _syncing.stream;
 
   int? get channelId => _channelId.valueOrNull;
+  bool get syncing => _syncing.value;
+
+  void setSyncing(bool value) {
+    _syncing.add(value);
+  }
 
   void setChannelId(int? channelId) {
     _channelId.add(channelId);
@@ -42,6 +42,7 @@ class FeedCubit extends Cubit<FeedState> {
       subscription.cancel();
     }
     _channelId.close();
+    _syncing.close();
     return super.close();
   }
 
@@ -55,14 +56,13 @@ class FeedCubit extends Cubit<FeedState> {
       if (episodes != null) stored[id] = Feed(episodes);
     }
 
-    emit(FeedState(feeds: {...stored, ...state.feeds}));
+    emit({...stored, ...state});
   }
 
+  // Any tab refreshes everything, since every tab shows a slice of "All".
   Future<void> refresh() {
-    return _sync(
-      channelId,
-      force: true,
-    ).timeout(_refreshTimeout, onTimeout: () {});
+    return sync(force: true)
+        .timeout(AppValues.feedRefreshTimeout, onTimeout: () {});
   }
 
   /// Keeps the feeds in step with the subscriptions. Unfollowed channels
@@ -79,71 +79,76 @@ class FeedCubit extends Cubit<FeedState> {
         if (!kept.contains(channel.id)) channel,
     ];
 
-    _opened.removeAll(removed.map((channel) => channel.id));
-    emit(
-      FeedState(
-        feeds: {...state.feeds}
-          ..removeWhere((id, _) => removed.any((c) => c.id == id)),
-      ),
-    );
-    await _local.removeFeeds({
+    emit({...state}..removeWhere((id, _) => removed.any((c) => c.id == id)));
+    await locator<EpisodesLocalData>().removeFeeds({
       for (final Channel channel in removed) ?channel.feedUrl,
     });
 
-    await _sync(null);
+    // Waits out a running sync, which started with the old channels.
+    await _running;
+    await sync();
   }
 
   void clear() {
     _channels = null;
-    _opened.clear();
-    emit(const FeedState());
+    emit(const {});
   }
 
   /// Arrivals play once, so a revisited tab doesn't replay them.
   void _settle(List<int?> pair) {
     final int? left = pair.first;
 
-    final Feed? feed = state.feedOf(left);
-    if (feed != null) emit(state.withFeed(left, feed.settled));
+    final Feed? feed = state[left];
+    if (feed != null) emit({...state, left: feed.settled});
   }
 
+  // Tabs only read what's stored; [sync] fetches every show at once.
   Future<void> _open(int? channelId) async {
-    if (!_opened.add(channelId)) return;
+    // A sync in flight fills this tab when it lands.
+    await _running;
+    if (state[channelId] != null) return;
 
-    if (state.feedOf(channelId) == null) {
-      final List<Episode>? stored = await _stored(channelId);
-      if (stored != null && state.feedOf(channelId) == null) {
-        emit(state.withFeed(channelId, Feed(stored)));
-      }
+    final Feed feed = Feed(await _episodes(channelId));
+    emit({...state, channelId: feed});
+  }
+
+  // A sync already running is joined, not repeated.
+  Future<void> sync({bool force = false}) {
+    return _running ??= _fetch(force).whenComplete(() => _running = null);
+  }
+
+  Future<void> _fetch(bool force) async {
+    setSyncing(true);
+    try {
+      await locator<FeedSync>().syncAll(_channels ?? const [], force: force);
+    } finally {
+      setSyncing(false);
     }
 
-    await _sync(channelId);
+    for (final int? id in [null, ..._ids(_channels ?? const [])]) {
+      final List<Episode> fresh = await _episodes(id);
+      final Feed? shown = state[id];
+
+      final Feed feed = Feed(
+        fresh,
+        arrived: shown == null ? const [] : _arrived(shown.episodes, fresh),
+      );
+      emit({...state, id: feed});
+    }
   }
 
-  Future<void> _sync(int? channelId, {bool force = false}) async {
-    final List<Channel> channels = _channelsOf(channelId);
-
-    await _feedSync.syncAll(channels, force: force);
-
-    final List<Episode> fresh = await _local.episodes(
-      feedUrls: _feedUrls(channels),
+  Future<List<Episode>> _episodes(int? channelId) {
+    return locator<EpisodesLocalData>().episodes(
+      feedUrls: _feedUrls(_channelsOf(channelId)),
     );
-
-    final Feed? shown = state.feedOf(channelId);
-    final Feed feed = Feed(
-      fresh,
-      arrived: shown == null ? const [] : _arrived(shown.episodes, fresh),
-    );
-
-    emit(state.withFeed(channelId, feed));
   }
 
   Future<List<Episode>?> _stored(int? channelId) async {
     final List<String> feedUrls = _feedUrls(_channelsOf(channelId));
 
-    if (!await _local.refreshed(feedUrls)) return null;
+    if (!await locator<EpisodesLocalData>().refreshed(feedUrls)) return null;
 
-    return _local.episodes(feedUrls: feedUrls);
+    return locator<EpisodesLocalData>().episodes(feedUrls: feedUrls);
   }
 
   List<Channel> _channelsOf(int? channelId) {

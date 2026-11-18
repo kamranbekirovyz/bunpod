@@ -34,6 +34,7 @@ class FeedSync {
     if (!force &&
         refreshedAt != null &&
         DateTime.now().difference(refreshedAt) < _fresh) {
+      logarte.log('⏭️ ${channel.title} · skipped, checked recently');
       return;
     }
 
@@ -48,11 +49,18 @@ class FeedSync {
 
       if (body == null) {
         await _local.touchFeed(url);
-        logarte.log('rss $url status=304 total=${timer.elapsedMilliseconds}');
+        logarte.log(
+          '💤 ${channel.title} · no changes · ${timer.elapsedMilliseconds} ms',
+        );
         return;
       }
 
       final ParsedFeed parsed = RssParser.parse(body.xml);
+      final Set<String> known = await _local.guids(url);
+      final int fresh = parsed.episodes.where((Episode episode) {
+        return !known.contains(episode.id);
+      }).length;
+
       await _local.saveFeed(
         feedUrl: url,
         channel: channel,
@@ -62,12 +70,13 @@ class FeedSync {
       );
 
       logarte.log(
-        'rss $url status=200 total=${timer.elapsedMilliseconds} '
-        'bytes=${body.xml.length} items=${parsed.episodes.length}',
+        '${fresh > 0 ? '🆕' : '📭'} ${channel.title} · $fresh new of '
+        '${parsed.episodes.length} · ${body.xml.length ~/ 1024} KB · '
+        '${timer.elapsedMilliseconds} ms',
       );
     } catch (error) {
       logarte.log(
-        'rss $url status=err total=${timer.elapsedMilliseconds} $error',
+        '❌ ${channel.title} · failed · ${timer.elapsedMilliseconds} ms · $error',
       );
     }
   }

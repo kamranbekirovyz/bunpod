@@ -68,6 +68,16 @@ class EpisodesLocalData {
     });
   }
 
+  Future<Set<String>> guids(String feedUrl) async {
+    final query = database.selectOnly(database.rssEpisodes)
+      ..addColumns([database.rssEpisodes.guid])
+      ..where(database.rssEpisodes.feedUrl.equals(feedUrl));
+
+    return {
+      for (final row in await query.get()) row.read(database.rssEpisodes.guid)!,
+    };
+  }
+
   Future<void> touchFeed(String feedUrl) {
     return (database.update(database.rssFeeds)..where((feed) {
           return feed.feedUrl.equals(feedUrl);

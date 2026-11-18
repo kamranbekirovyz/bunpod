@@ -4,6 +4,8 @@ abstract final class AppValues {
   // Podcast Index asks clients to name themselves.
   static const String userAgent = 'BunPod/1.0';
 
+  static const Duration feedRefreshTimeout = Duration(seconds: 15);
+
   static String get termsUrl => 'https://bunpod.app/terms';
   static String get privacyUrl => 'https://bunpod.app/privacy';
 
