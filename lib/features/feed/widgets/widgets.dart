@@ -10,3 +10,4 @@ export 'feed_now_playing.dart';
 export 'feed_now_playing_card.dart';
 export 'feed_tab_view.dart';
 export 'feed_section_header.dart';
+export 'feed_sync_logo.dart';

@@ -19,40 +19,46 @@ class FeedHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
-      child: Column(
-        mainAxisSize: .min,
-        children: [
-          ValueListenableBuilder<double>(
-            valueListenable: header.shrink,
-            builder: (context, _, _) {
-              return ClipRect(
-                child: Align(
-                  alignment: .bottomCenter,
-                  heightFactor: 1 - header.pushed,
-                  child: Padding(
-                    padding: FeedHeaderController.cardPadding,
-                    child: FeedNowPlaying(
-                      suggested: suggested,
-                      collapse: header.collapse,
+    return GestureDetector(
+      onVerticalDragStart: header.dragStart,
+      onVerticalDragUpdate: header.dragUpdate,
+      onVerticalDragEnd: header.dragEnd,
+      onVerticalDragCancel: header.dragCancel,
+      child: ColoredBox(
+        color: Theme.of(context).colorScheme.surface,
+        child: Column(
+          mainAxisSize: .min,
+          children: [
+            ValueListenableBuilder<double>(
+              valueListenable: header.shrink,
+              builder: (context, _, _) {
+                return ClipRect(
+                  child: Align(
+                    alignment: .bottomCenter,
+                    heightFactor: 1 - header.pushed,
+                    child: Padding(
+                      padding: FeedHeaderController.cardPadding,
+                      child: FeedNowPlaying(
+                        suggested: suggested,
+                        collapse: header.collapse,
+                      ),
                     ),
                   ),
+                );
+              },
+            ),
+            SizedBox(
+              height: FeedHeaderController.tabsHeight,
+              child: Center(
+                child: _Tabs(
+                  tabController: header.tabController,
+                  tabs: tabs,
+                  channels: channels,
                 ),
-              );
-            },
-          ),
-          SizedBox(
-            height: FeedHeaderController.tabsHeight,
-            child: Center(
-              child: _Tabs(
-                tabController: header.tabController,
-                tabs: tabs,
-                channels: channels,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

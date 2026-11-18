@@ -1,4 +1,5 @@
 import 'package:bunpod/bunpod.dart';
+import 'package:expressive_refresh_indicator/expressive_refresh_indicator.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -107,10 +108,11 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
     });
     locator<FeedCubit>()
       ..syncChannels(widget.channels)
+      ..sync()
       ..setChannelId(null);
     _playing =
         locator<PreferencesLocalData>().lastEpisode ??
-        _firstPlaying(locator<FeedCubit>().state.feedOf(null));
+        _firstPlaying(locator<FeedCubit>().state[null]);
   }
 
   @override
@@ -143,34 +145,40 @@ class _FeedViewState extends State<_FeedView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: FeedAppBar(),
-      body: Stack(
-        children: [
-          FeedTabView(
-            header: _header,
-            tabs: _tabs,
-            onFeed: _pickPlaying,
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: FeedHeader(
+      body: ExpressiveRefreshIndicator(
+        onRefresh: locator<FeedCubit>().refresh,
+        notificationPredicate: (notification) {
+          return notification.depth == 1;
+        },
+        child: Stack(
+          children: [
+            FeedTabView(
               header: _header,
               tabs: _tabs,
-              channels: widget.channels,
-              suggested: _playing,
+              onFeed: _pickPlaying,
             ),
-          ),
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: BottomPadding.of(context),
-            child: FeedDockedPlayer(
-              header: _header,
-              suggested: _playing,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: FeedHeader(
+                header: _header,
+                tabs: _tabs,
+                channels: widget.channels,
+                suggested: _playing,
+              ),
             ),
-          ),
-        ],
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: BottomPadding.of(context),
+              child: FeedDockedPlayer(
+                header: _header,
+                suggested: _playing,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

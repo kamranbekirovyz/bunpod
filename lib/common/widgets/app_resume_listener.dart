@@ -25,7 +25,7 @@ class _AppResumeListenerState extends State<AppResumeListener> {
     _listener = AppLifecycleListener(
       onHide: () => _hidden = true,
       onShow: () {
-        // The notification shade doesn't hide the app, so it doesn't count.
+        // Shade only makes it inactive.
         if (!_hidden) return;
 
         _hidden = false;

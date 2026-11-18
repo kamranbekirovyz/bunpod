@@ -59,7 +59,6 @@ class FeedCubit extends Cubit<Map<int?, Feed>> {
     emit({...stored, ...state});
   }
 
-  // Any tab refreshes everything, since every tab shows a slice of "All".
   Future<void> refresh() {
     return sync(force: true)
         .timeout(AppValues.feedRefreshTimeout, onTimeout: () {});
@@ -84,7 +83,7 @@ class FeedCubit extends Cubit<Map<int?, Feed>> {
       for (final Channel channel in removed) ?channel.feedUrl,
     });
 
-    // Waits out a running sync, which started with the old channels.
+    // Running sync has old channels.
     await _running;
     await sync();
   }
@@ -102,9 +101,8 @@ class FeedCubit extends Cubit<Map<int?, Feed>> {
     if (feed != null) emit({...state, left: feed.settled});
   }
 
-  // Tabs only read what's stored; [sync] fetches every show at once.
   Future<void> _open(int? channelId) async {
-    // A sync in flight fills this tab when it lands.
+    // Running sync fills it.
     await _running;
     if (state[channelId] != null) return;
 
@@ -112,7 +110,6 @@ class FeedCubit extends Cubit<Map<int?, Feed>> {
     emit({...state, channelId: feed});
   }
 
-  // A sync already running is joined, not repeated.
   Future<void> sync({bool force = false}) {
     return _running ??= _fetch(force).whenComplete(() => _running = null);
   }

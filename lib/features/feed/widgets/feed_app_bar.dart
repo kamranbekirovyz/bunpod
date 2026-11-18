@@ -1,7 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart'
     hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:expressive_shapes/expressive_shapes.dart';
 
 class FeedAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,18 +12,25 @@ class FeedAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
       title: Row(
         children: [
-          SvgPicture.asset(
-            isDark
-                ? AssetValues.logoHorizontalDark
-                : AssetValues.logoHorizontalLight,
-            height: 36,
+          Expanded(
+            child: Align(
+              alignment: .centerLeft,
+              child: StreamBuilder<bool>(
+                stream: locator<FeedCubit>().syncing$,
+                initialData: locator<FeedCubit>().syncing,
+                builder: (context, snapshot) {
+                  return FeedSyncLogo(
+                    syncing: snapshot.data ?? false,
+                  );
+                },
+              ),
+            ),
           ),
-          const Spacer(),
+          8.gap,
           Tooltip(
             message: 'Explore',
             child: Material(

@@ -1,4 +1,5 @@
 import 'package:bunpod/bunpod.dart';
+import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Drives the feed header from the visible list's scroll. The first [range]
@@ -47,6 +48,21 @@ class FeedHeaderController {
       return controller;
     });
   }
+
+  Drag? _drag;
+
+  void dragStart(DragStartDetails details) {
+    final ScrollController controller = scrollFor(tabController.index);
+    if (!controller.hasClients) return;
+
+    _drag = controller.position.drag(details, () => _drag = null);
+  }
+
+  void dragUpdate(DragUpdateDetails details) => _drag?.update(details);
+
+  void dragEnd(DragEndDetails details) => _drag?.end(details);
+
+  void dragCancel() => _drag?.cancel();
 
   /// Matches a newly selected list to the current header.
   void sync() {

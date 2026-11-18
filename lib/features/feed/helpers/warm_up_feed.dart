@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bunpod/bunpod.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 const Duration _budget = Duration(seconds: 3);
@@ -25,16 +24,12 @@ Future<void> _warmUp(BuildContext context) async {
   await subscriptions.load();
   await feed.restore(subscriptions.state ?? []);
 
-  // Nothing stored yet means the feed page has nothing to sync from.
-  if (feed.state.feedOf(null) == null) {
-    feed.setChannelId(null);
-    await _until(feed, (state) => state.feedOf(null) != null);
-  }
+  if (feed.state[null] == null) await feed.sync();
 
   if (!context.mounted) return;
 
   final Episode? last = locator<PreferencesLocalData>().lastEpisode;
-  final List<Episode> episodes = feed.state.feedOf(null)?.episodes ?? [];
+  final List<Episode> episodes = feed.state[null]?.episodes ?? [];
 
   final Set<String> urls = {
     ?last?.cover,
@@ -46,10 +41,4 @@ Future<void> _warmUp(BuildContext context) async {
     for (final String url in urls)
       precacheImage(ExtendedNetworkImageProvider(url, cache: true), context),
   ]);
-}
-
-Future<void> _until<S>(Cubit<S> cubit, bool Function(S state) test) async {
-  if (test(cubit.state)) return;
-
-  await cubit.stream.firstWhere(test);
 }
