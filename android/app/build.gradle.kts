@@ -37,8 +37,13 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
-        // Firebase Analytics reads this natively before Dart runs.
+        // Firebase starts natively from these before Dart runs, so they must
+        // match the Dart options or initializeApp throws duplicate-app.
         resValue("string", "google_app_id", dartDefines["FIREBASE_ANDROID_APP_ID"] ?: "")
+        resValue("string", "google_api_key", dartDefines["FIREBASE_ANDROID_API_KEY"] ?: "")
+        resValue("string", "gcm_defaultSenderId", dartDefines["FIREBASE_MESSAGING_SENDER_ID"] ?: "")
+        resValue("string", "project_id", dartDefines["FIREBASE_PROJECT_ID"] ?: "")
+        resValue("string", "google_storage_bucket", dartDefines["FIREBASE_STORAGE_BUCKET"] ?: "")
     }
 
     buildFeatures {
