@@ -4,12 +4,18 @@ import 'package:xml/xml.dart';
 class ParsedFeed {
   const ParsedFeed({
     this.title,
+    this.author,
+    this.description,
     this.image,
+    this.language,
     this.episodes = const [],
   });
 
   final String? title;
+  final String? author;
+  final String? description;
   final String? image;
+  final String? language;
   final List<Episode> episodes;
 }
 
@@ -64,7 +70,11 @@ class RssParser {
 
     return ParsedFeed(
       title: _text(channel, 'title'),
+      author: _text(channel, 'itunes:author'),
+      description:
+          _text(channel, 'description') ?? _text(channel, 'itunes:summary'),
       image: image,
+      language: _text(channel, 'language'),
       episodes: episodes,
     );
   }
@@ -107,7 +117,10 @@ class RssParser {
 
     return ParsedFeed(
       title: _text(root, 'title'),
+      author: _text(_child(root, 'author'), 'name'),
+      description: _text(root, 'subtitle'),
       image: image,
+      language: root.getAttribute('xml:lang'),
       episodes: episodes,
     );
   }

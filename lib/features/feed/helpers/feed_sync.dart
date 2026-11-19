@@ -68,6 +68,7 @@ class FeedSync {
         etag: body.etag,
         lastModified: body.lastModified,
       );
+      await locator<SubscriptionsLocalData>().updateFromFeed(url, parsed);
 
       logarte.log(
         '${fresh > 0 ? '🆕' : '📭'} ${channel.title} · $fresh new of '

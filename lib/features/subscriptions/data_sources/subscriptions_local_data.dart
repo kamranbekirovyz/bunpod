@@ -34,6 +34,39 @@ class SubscriptionsLocalData {
     return row != null;
   }
 
+  Future<Channel?> channel({int? id, int? appleId}) async {
+    if (id == null && appleId == null) return null;
+
+    final Subscription? row =
+        await (database.select(database.subscriptions)..where((row) {
+              return id != null
+                  ? row.channelId.equals(id)
+                  : row.appleId.equals(appleId!);
+            }))
+            .getSingleOrNull();
+
+    return row == null ? null : _channel(row);
+  }
+
+  // Missing fields keep what Podcast Index gave at follow time.
+  Future<void> updateFromFeed(String feedUrl, ParsedFeed parsed) {
+    final DateTime? newest = parsed.episodes.firstOrNull?.publishedAt;
+
+    return (database.update(database.subscriptions)..where((row) {
+          return row.feedUrl.equals(feedUrl);
+        }))
+        .write(
+          SubscriptionsCompanion(
+            title: Value.absentIfNull(parsed.title),
+            author: Value.absentIfNull(parsed.author),
+            description: Value.absentIfNull(parsed.description),
+            image: Value.absentIfNull(parsed.image),
+            language: Value.absentIfNull(parsed.language),
+            lastEpisodeAt: Value.absentIfNull(newest),
+          ),
+        );
+  }
+
   // Channels without an id or feed can't be followed, so they're skipped.
   Future<void> subscribe(List<Channel> channels) {
     return database.batch((batch) {

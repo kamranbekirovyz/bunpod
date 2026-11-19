@@ -5,6 +5,12 @@ class ChannelCubit extends Cubit<Channel?> {
   ChannelCubit() : super(null);
 
   Future<void> load({int? id, int? appleId}) async {
+    final Channel? followed = await locator<SubscriptionsLocalData>().channel(
+      id: id,
+      appleId: appleId,
+    );
+    if (followed != null) return emit(followed);
+
     final PodcastIndexRemoteData podcastIndex =
         locator<PodcastIndexRemoteData>();
 
