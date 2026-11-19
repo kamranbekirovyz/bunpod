@@ -12,5 +12,7 @@ Dio buildDio() {
     ),
   );
 
+  dio.interceptors.add(RequestLogInterceptor());
+
   return dio;
 }
