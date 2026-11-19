@@ -4,14 +4,31 @@ import 'package:material_ui/material_ui.dart'
 import 'package:expressive_shapes/expressive_shapes.dart';
 import 'package:motor/motor.dart';
 
-class OpmlCoverStack extends StatelessWidget {
+class OpmlCoverStack extends StatefulWidget {
   const OpmlCoverStack({super.key, required this.channels});
 
   final List<Channel> channels;
 
+  @override
+  State<OpmlCoverStack> createState() => _OpmlCoverStackState();
+}
+
+class _OpmlCoverStackState extends State<OpmlCoverStack> {
   static const double _size = 72;
   static const double _step = 46;
   static const double _ring = 3;
+
+  bool _entered = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // waits out the page transition
+    Future<void>.delayed(kThemeAnimationDuration, () {
+      if (mounted) setState(() => _entered = true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +36,13 @@ class OpmlCoverStack extends StatelessWidget {
     final bool reduceMotion =
         MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 
-    final int count = channels.length;
+    final int count = widget.channels.length;
     final MaterialShapeBorder shape = MaterialShapeBorder(
       shape: ShapeValues.cover,
     );
 
     return Semantics(
-      label: '${channels.length} shows added',
+      label: '${widget.channels.length} shows added',
       excludeSemantics: true,
       // scrolls sideways past the screen edge when there are many
       child: SingleChildScrollView(
@@ -37,8 +54,7 @@ class OpmlCoverStack extends StatelessWidget {
           child: SingleMotionBuilder(
             // fans out from a pile
             motion: const MaterialSpringMotion.expressiveSpatialDefault(),
-            value: 1,
-            from: reduceMotion ? 1 : 0,
+            value: _entered || reduceMotion ? 1 : 0,
             active: !reduceMotion,
             builder: (context, t, _) {
               return Stack(
@@ -63,8 +79,10 @@ class OpmlCoverStack extends StatelessWidget {
                               shape: shape,
                             ),
                             child: SmoothImage(
-                              url: channels[i].image ?? '',
-                              placeholderColor: channels[i].seed(context),
+                              url: widget.channels[i].image ?? '',
+                              placeholderColor: widget.channels[i].seed(
+                                context,
+                              ),
                             ),
                           ),
                         ),

@@ -3,3 +3,4 @@ export 'developer_signature.dart';
 export 'menu_section.dart';
 export 'menu_tile.dart';
 export 'version_indicator.dart';
+export 'menu_move_shows.dart';

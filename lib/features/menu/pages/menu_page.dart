@@ -64,21 +64,13 @@ class _BodyState extends State<_Body> {
                 Navigator.of(context).push(SubscriptionsPage.route());
               },
             ),
-            MenuTile(
-              icon: Icons.library_add_outlined,
-              title: 'Switch from another app',
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) {
-                      return const OpmlImportPage();
-                    },
-                  ),
-                );
-
-                locator<SubscriptionsCubit>().load();
-              },
-            ),
+          ],
+        ),
+        32.gap,
+        MenuSection(
+          label: 'Switching apps?',
+          children: [
+            const MenuMoveShows(),
           ],
         ),
         32.gap,

@@ -7,5 +7,6 @@ export 'opml_import_idle_view.dart';
 export 'opml_import_ready_view.dart';
 export 'opml_import_summary.dart';
 export 'opml_missing_tile.dart';
+export 'opml_shape_stack.dart';
 export 'opml_suggestion_card.dart';
 export 'opml_suggestion_deck.dart';

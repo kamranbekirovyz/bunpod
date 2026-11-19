@@ -7,6 +7,7 @@ export 'features/player/player.dart';
 export 'features/channel/channel.dart';
 export 'features/subscriptions/subscriptions.dart';
 export 'features/opml_import/opml_import.dart';
+export 'features/opml_export/opml_export.dart';
 export 'features/menu/menu.dart';
 export 'features/versionarte/versionarte.dart';
 export 'features/changelog/changelog.dart';

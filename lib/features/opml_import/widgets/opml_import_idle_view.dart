@@ -19,6 +19,8 @@ class OpmlImportIdleView extends StatelessWidget {
         mainAxisAlignment: .end,
         crossAxisAlignment: .stretch,
         children: [
+          const OpmlShapeStack(),
+          32.gap,
           OpmlImportHero(
             title: 'Move to BunPod',
             message:
