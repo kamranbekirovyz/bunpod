@@ -44,7 +44,6 @@ class ExploreSearchField extends StatelessWidget {
                 onChanged: onChanged,
                 textInputAction: .search,
                 autocorrect: false,
-                enableSuggestions: false,
                 cursorColor: cs.primary,
                 style: tt.bodyLarge?.copyWith(
                   color: cs.onSurface,
