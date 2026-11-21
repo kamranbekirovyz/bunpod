@@ -9,7 +9,9 @@
 </p>
 
 <p align="center">
-  <a href="https://testflight.apple.com/join/B7jS52wZ">App Store</a> · <a href="https://play.google.com/store/apps/details?id=app.bunpod">Google Play</a> · <a href="https://bunpod.app">Website</a>
+  <a href="https://testflight.apple.com/join/B7jS52wZ"><img src=".github/assets/app-store.svg" alt="Download on the App Store" height="48" /></a>
+  &nbsp;
+  <a href="https://play.google.com/store/apps/details?id=app.bunpod"><img src=".github/assets/play-store.svg" alt="Get it on Google Play" height="48" /></a>
 </p>
 
 ---
@@ -25,6 +27,8 @@
 - 🌗 Light and dark themes
 - 🙅 No account, your library stays on your device
 - ✈️ Offline listening (coming soon)
+
+More at [bunpod.app](https://bunpod.app).
 
 ## 🛠️ For Flutter devs
 
