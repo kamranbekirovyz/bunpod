@@ -8,6 +8,10 @@
   An open-source podcast player — Flutter and Material 3 Expressive!
 </p>
 
+<p align="center">
+  <a href="https://testflight.apple.com/join/B7jS52wZ">App Store</a> · <a href="https://play.google.com/store/apps/details?id=app.bunpod">Google Play</a> · <a href="https://bunpod.app">Website</a>
+</p>
+
 ---
 
 ## Features
