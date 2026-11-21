@@ -145,6 +145,10 @@ class ChangelogSheet extends StatelessWidget {
                         HapticsHelper.light();
                       },
                     ),
+                    8.gap,
+                    const Center(
+                      child: DeveloperSignature(),
+                    ),
                   ],
                 ),
               ),
