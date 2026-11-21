@@ -41,7 +41,7 @@
 
 ## License
 
-Copyright (c) 2025-2026 Kamran Bekirov. All rights reserved. The source is public for viewing only. See [LICENSE](LICENSE).
+BunPod is open source under the [Apache License 2.0](LICENSE). If you redistribute it or build on it, please keep the [NOTICE](NOTICE) file so the original author stays credited.
 
 ---
 
