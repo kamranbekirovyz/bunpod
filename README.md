@@ -18,17 +18,15 @@
 
 ## 🎧 For listeners
 
-- 🎨 Every show gets its own colors, across the whole app
-- 🫧 Springy, squishy buttons with haptics
-- 🔎 Search and explore shows
-- 🔖 Resume any episode where you left off
-- 🔒 Lock screen controls
-- 📦 Import and export your shows with OPML
-- 🌗 Light and dark themes
-- 🙅 No account, your library stays on your device
-- ✈️ Offline listening (coming soon)
-
-More at [bunpod.app](https://bunpod.app).
+- 🙅 **No sign-up.** Your library stays on your phone
+- 🎨 Every show gets its own colors
+- 👆 Simple to use, with nothing in your way
+- 🌍 Millions of shows from around the world
+- 🔖 Picks up right where you stopped
+- 🔒 Play and skip from your lock screen
+- 📦 Bring your shows from other apps with OPML
+- 🌗 Light and dark mode
+- ✈️ Listen offline (coming soon)
 
 ## 🛠️ For Flutter devs
 
@@ -36,7 +34,7 @@ Built before Flutter shipped Material 3 Expressive.
 
 - 🧬 Shapes, springs, sheets, snackbars and loaders as [standalone packages](packages)
 - 〰️ Wavy progress and shape-morphing controls
-- 🌈 A Material color scheme for every show
+- 🌈 Dynamic color scheme from each show's cover art
 - 🧱 Feature-first structure with Bloc
 - 💾 Local-first with Drift, no backend
 - 🎵 Background audio with just_audio and audio_service
