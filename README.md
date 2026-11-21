@@ -5,27 +5,23 @@
 <h1 align="center">BunPod</h1>
 
 <p align="center">
-  <b>Finally! Podcast player with colors.</b><br />
-  Free, open source and private. No account, no sign-up.
-</p>
-
-<p align="center">
-  <a href="#">iPhone</a> · <a href="#">Android</a> · <a href="https://bunpod.app">Website</a>
+  An open-source podcast player — Flutter and Material 3 Expressive!
 </p>
 
 ---
 
 ## Features
 
-- **Every show in its own colors**, across the whole app
-- **A player you can feel**, with springy buttons and haptics
-- **Search and explore** to find your next show
-- **Never lose your spot** in any episode
-- **Lock screen controls**
-- **Import and export** your library with OPML
-- **Light and dark** themes
-- **No account.** Your library stays on your phone
-- **Offline listening** (coming soon)
+- 🎨 Every show gets its own color scheme, across the whole app
+- 🫧 Springy, squishy buttons with haptics
+- 〰️ Wavy progress and shape-morphing controls
+- 🔎 Search and explore shows
+- 🔖 Resume any episode where you left off
+- 🔒 Lock screen controls
+- 📦 OPML import and export
+- 🌗 Light and dark themes
+- 🙅 No account, your library is stored on your device
+- ✈️ Offline listening (coming soon)
 
 ## Material 3 Expressive, before Flutter shipped it
 
@@ -33,18 +29,14 @@ I built BunPod before Flutter shipped Material 3 Expressive, so its shapes, spri
 
 Some build on the excellent work of Kostia Sokolovskyi.
 
-## Built with
+## Run it
 
-Flutter · Material 3 Expressive · Bloc · Drift · just_audio · Podcast Index
-
-Want to run it? See [DEVELOPMENT.md](DEVELOPMENT.md).
-
-## Why it's open
-
-I built BunPod to show what Flutter can do and to inspire other Flutter developers. Take the animations, learn from them, and use them in your own apps.
-
-Want to say thanks? Use [UserOrient](https://userorient.com), my feedback SDK for Flutter apps, or check out [my other apps](https://kamranbekirov.com).
+[DEVELOPMENT.md](DEVELOPMENT.md)
 
 ## License
 
 [Apache 2.0](LICENSE)
+
+---
+
+<p align="center"><i>Want this level of detail in your Flutter app? <a href="https://kamranbekirov.com" target="_blank" rel="noopener">Let's work together</a></i></p>
