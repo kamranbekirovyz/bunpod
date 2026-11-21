@@ -5,44 +5,46 @@
 <h1 align="center">BunPod</h1>
 
 <p align="center">
-  An open-source podcast player — Flutter and Material 3 Expressive!
+  <b>Finally! Podcast player with colors.</b><br />
+  Free, open source and private. No account, no sign-up.
+</p>
+
+<p align="center">
+  <a href="#">iPhone</a> · <a href="#">Android</a> · <a href="https://bunpod.app">Website</a>
 </p>
 
 ---
 
-## Roadmap
+## Features
 
-🚧 BunPod is a work in progress. If you want to follow the progress, follow me on X at <a href="https://x.com/kamranbekirovyz" target="_blank" rel="noopener">@kamranbekirovyz</a>. If you notice any issues, please <a href="https://github.com/kamranbekirovyz/bunpod/issues" target="_blank" rel="noopener">open an issue</a>.
+- **Every show in its own colors**, across the whole app
+- **A player you can feel**, with springy buttons and haptics
+- **Search and explore** to find your next show
+- **Never lose your spot** in any episode
+- **Lock screen controls**
+- **Import and export** your library with OPML
+- **Light and dark** themes
+- **No account.** Your library stays on your phone
+- **Offline listening** (coming soon)
 
-- [x] Home page 
-- [x] Player page 
-- [x] Channel page 
-- [x] Auth page
-- [x] Welcome page
-- [x] Onboarding
-- [x] Menu page 
-- [x] Explore page 
-- [x] Downloads page 
-- [x] Subscriptions page 
-- [ ] Listen history page 
-- [ ] Paywall 
-- [ ] Empty states of pages
-- [ ] Share to social media
-- [ ] Feedback page
-- [ ] Home widgets 
-- [ ] Localization
-- [ ] Force update mechanism
+## Material 3 Expressive, before Flutter shipped it
 
-## Run it
+I built BunPod before Flutter shipped Material 3 Expressive, so its shapes, springs, wavy progress, sheets, snackbars and loaders live in standalone packages in [`packages/`](packages). Take them and use them in your own apps.
 
-1. Get a free API key and secret at [api.podcastindex.org](https://api.podcastindex.org).
-2. Copy `local.example.json` to `local.json` and fill them in. It's gitignored, so your keys stay on your machine.
-3. `flutter run --dart-define-from-file=local.json`
+Some build on the excellent work of Kostia Sokolovskyi.
+
+## Built with
+
+Flutter · Material 3 Expressive · Bloc · Drift · just_audio · Podcast Index
+
+Want to run it? See [DEVELOPMENT.md](DEVELOPMENT.md).
+
+## Why it's open
+
+I built BunPod to show what Flutter can do and to inspire other Flutter developers. Take the animations, learn from them, and use them in your own apps.
+
+Want to say thanks? Use [UserOrient](https://userorient.com), my feedback SDK for Flutter apps, or check out [my other apps](https://kamranbekirov.com).
 
 ## License
 
-BunPod is open source under the [Apache License 2.0](LICENSE). If you redistribute it or build on it, please keep the [NOTICE](NOTICE) file so the original author stays credited.
-
----
-
-<p align="center"><i>I build Flutter apps — <a href="https://kamranbekirov.com" target="_blank" rel="noopener">kamranbekirov.com</a></i></p>
+[Apache 2.0](LICENSE)
