@@ -14,24 +14,30 @@
 
 ---
 
-## Features
+## 🎧 For listeners
 
-- 🎨 Every show gets its own color scheme, across the whole app
+- 🎨 Every show gets its own colors, across the whole app
 - 🫧 Springy, squishy buttons with haptics
-- 〰️ Wavy progress and shape-morphing controls
 - 🔎 Search and explore shows
 - 🔖 Resume any episode where you left off
 - 🔒 Lock screen controls
-- 📦 OPML import and export
+- 📦 Import and export your shows with OPML
 - 🌗 Light and dark themes
-- 🙅 No account, your library is stored on your device
+- 🙅 No account, your library stays on your device
 - ✈️ Offline listening (coming soon)
 
-## Material 3 Expressive, before Flutter shipped it
+## 🛠️ For Flutter devs
 
-I built BunPod before Flutter shipped Material 3 Expressive, so its shapes, springs, wavy progress, sheets, snackbars and loaders live in standalone packages in [`packages/`](packages). Take them and use them in your own apps.
+Built before Flutter shipped Material 3 Expressive.
 
-Some build on the excellent work of Kostia Sokolovskyi.
+- 🧬 Shapes, springs, sheets, snackbars and loaders as [standalone packages](packages)
+- 〰️ Wavy progress and shape-morphing controls
+- 🌈 A Material color scheme for every show
+- 🧱 Feature-first structure with Bloc
+- 💾 Local-first with Drift, no backend
+- 🎵 Background audio with just_audio and audio_service
+
+Take them and use them in your own apps. Some packages build on the excellent work of Kostia Sokolovskyi.
 
 ## Run it
 
@@ -43,4 +49,8 @@ Some build on the excellent work of Kostia Sokolovskyi.
 
 ---
 
-<p align="center"><i>Want this level of detail in your Flutter app? <a href="https://kamranbekirov.com" target="_blank" rel="noopener">Let's work together</a></i></p>
+<p align="center">
+  <a href="https://kamranbekirov.com" target="_blank" rel="noopener"><img src=".github/assets/kamran.png" alt="Kamran Bekirov" width="72" height="72" /></a>
+</p>
+
+<p align="center"><i>Want your app built with this much care? <a href="https://kamranbekirov.com" target="_blank" rel="noopener">Let's work together</a></i></p>
