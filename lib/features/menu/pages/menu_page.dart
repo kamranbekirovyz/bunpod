@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:userorient_flutter/userorient_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -172,6 +173,26 @@ class _BodyState extends State<_Body> {
               icon: Icons.alternate_email_outlined,
               title: 'Report an issue',
               onTap: () => ContactSupport.open(context),
+            ),
+          ],
+        ),
+        32.gap,
+        MenuSection(
+          label: 'Legal',
+          children: [
+            MenuTile(
+              icon: Icons.description_outlined,
+              title: 'Terms of Service',
+              onTap: () {
+                launchUrl(Uri.parse(AppValues.termsUrl));
+              },
+            ),
+            MenuTile(
+              icon: Icons.privacy_tip_outlined,
+              title: 'Privacy Policy',
+              onTap: () {
+                launchUrl(Uri.parse(AppValues.privacyUrl));
+              },
             ),
           ],
         ),
