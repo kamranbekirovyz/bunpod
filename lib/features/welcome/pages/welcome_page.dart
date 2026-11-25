@@ -1,5 +1,6 @@
 import 'package:bunpod/bunpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -36,7 +37,7 @@ class WelcomePage extends StatelessWidget {
                     crossAxisAlignment: .start,
                     children: <Widget>[
                       const WelcomeLogo(),
-                      const SizedBox(height: 20),
+                      20.gap,
                       Text(
                         'Podcasts, meet expression.',
                         style: text.headlineMedium?.copyWith(
@@ -46,7 +47,7 @@ class WelcomePage extends StatelessWidget {
                           letterSpacing: -0.4,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      12.gap,
                       Text(
                         'Pick a few shows and press play.',
                         style: text.bodyLarge?.copyWith(
@@ -55,8 +56,10 @@ class WelcomePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 28),
+                  32.gap,
                   const _Button(),
+                  16.gap,
+                  _LegalNote(),
                   const BottomPadding(),
                 ],
               ),
@@ -64,6 +67,31 @@ class WelcomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _LegalNote extends StatelessWidget {
+  const _LegalNote();
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme cs = Theme.of(context).colorScheme;
+    final TextTheme text = Theme.of(context).textTheme;
+
+    return LinkedText(
+      text: 'By continuing you agree to the <link>Terms</link> and <link>Privacy Policy</link>.',
+      style: text.bodySmall!.copyWith(
+        color: cs.onSurfaceVariant,
+      ),
+      linkColor: cs.primary,
+      onTap: (label) {
+        launchUrl(
+          Uri.parse(
+            label == 'Terms' ? AppValues.termsUrl : AppValues.privacyUrl,
+          ),
+        );
+      },
     );
   }
 }
@@ -92,7 +120,9 @@ class _Button extends StatelessWidget {
     final TextTheme text = Theme.of(context).textTheme;
 
     return FilledButton(
-      onPressed: () => _start(context),
+      onPressed: () {
+        _start(context);
+      },
       style: FilledButton.styleFrom(
         backgroundColor: cs.primary,
         foregroundColor: cs.onPrimary,
