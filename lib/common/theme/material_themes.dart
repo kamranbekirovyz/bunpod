@@ -2,8 +2,6 @@ import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const MaterialColor seedColor = MaterialColor(0xffF5A623, {});
-
 const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
   builders: {
     .android: FadeForwardsPageTransitionsBuilder(),
